@@ -7,7 +7,14 @@ package maple_tiger_hr.service;
 
 import com.mikex.maple_tiger_hr.model.Employee;
 import com.mikex.maple_tiger_hr.service.HRService;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+
 import java.util.Collection;
+import java.util.Date;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,6 +44,15 @@ public class AbstractHRServiceTests {
         Employee employee = new Employee();
         employee.setFirstName("Sam");
         employee.setLastName("Schultz");
+        
+        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        try {
+            Date date = dateFormat.parse("1971-07-06");
+            employee.setBirth_date(date);
+        } catch (ParseException ex) {
+            Logger.getLogger(AbstractHRServiceTests.class.getName()).log(Level.SEVERE, null, ex);
+        }
+                
         employee.setHome_address("1989 Springland street");
         employee.setPhone_mobile("5879998888");
         this.hrService.saveEmployee(employee);
@@ -44,6 +60,6 @@ public class AbstractHRServiceTests {
         
         Collection<Employee> employees = this.hrService.findEmployeeByLastName("Schultz");
         int found = employees.size();
-        assertThat(employees.size()).isEqualTo(found + 1);
+        assertThat(employees.size()).isEqualTo(1);
     }
 }
