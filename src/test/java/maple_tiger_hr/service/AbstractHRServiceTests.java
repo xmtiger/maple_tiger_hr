@@ -62,4 +62,19 @@ public class AbstractHRServiceTests {
         int found = employees.size();
         assertThat(employees.size()).isEqualTo(1);
     }
+    
+    @Test
+    @Transactional
+    public void shouldUpdateEmployee(){
+        Employee employee = this.hrService.findEmployeeById(1);
+        String oldLastName = employee.getLastName();
+        String newLastName = oldLastName + "X";
+        
+        employee.setLastName(newLastName);
+        this.hrService.saveEmployee(employee);
+        
+        // retrieving new name from database
+        employee = this.hrService.findEmployeeById(1);
+        assertThat(employee.getLastName()).isEqualTo(newLastName);
+    }
 }

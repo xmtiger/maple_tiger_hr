@@ -36,6 +36,38 @@ and open the template in the editor.
                                     - spring-data-jpa
           =============================================================================-->
           
+    <beans profile="jpa,spring-data-jpa">
+        <!-- JPA EntityManagerFactory -->
+        <bean id="entityManagerFactory" class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean"
+                p:dataSource-ref="dataSource">
+            <property name="jpaVendorAdapter">
+                <bean class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter"
+                    p:database="${jpa.database}" p:showSql="${jpa.showSql}"/>   
+                    <!-- both ${jpa.database} and ${jpa.showSql} are defined in file of data-access.properties -->
+                    
+                <!-- the 'database' parameter refers to the database dialect being used.
+                    by default, Hibernate wil use a 'HSQL' dialect because 'jpa.database' has been set to 'HSQL
+                    inside te file spring/data-acess.properties
+                    -->
+            </property>
+            
+            <!-- Both persistence unit and packages to scan are not compatible, persistenceUnit will win -->
+            <property name="persistenceUnitName" value="maple_tiger_hr"/>
+            <property name="packagesToScan" value="com.mikex.maple_tiger_hr"/>
+        </bean>
+        
+        <!-- Transaction manager for a single JPA EntityManagerFactory (alternative to JTA) -->
+        <bean id="transactionManager" class="org.springframework.orm.jpa.JpaTransactionManager"
+              p:entityManagerFactory-ref="entityManagerFactory"/>
+        
+        <!-- 
+            Post-processor to perform exception tranlation on @Repository classes (from native
+            exceptions such as JPA PersistenceException to Spring's DataAccessException hierarchy).
+        -->
+        <bean class="org.springframework.dao.annotation.PersistenceExceptionTranslationPostProcessor"/>
+        
+    </beans>      
+          
     <beans profile = "jdbc">
         <!-- Transaction manager for a single JDBC DataSource (alternative to JPA) -->
         <bean id = "transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager"
@@ -50,6 +82,20 @@ and open the template in the editor.
         </bean>
         
         <context:component-scan base-package="com.mikex.maple_tiger_hr.repository.jdbc"/>
+    </beans>
+    
+    <beans profile="jpa">
+        <!--
+            Loads JPA beans
+            Will automatically be transactional due to @Transactional
+            EntityManager will be auto-injected due to @PersistenceContext
+            PersistenceExceptions wil be auto-translated due to @Repository.
+        -->
+        <context:component-scan base-package="com.mikex.maple_tiger_hr.repository.jpa"/>
+    </beans>
+    
+    <beans profile="spring-data-jpa">
+        <jpa:repositories base-package="com.mikex.maple_tiger_hr.repository.springdatajpa"/>
     </beans>
     
 </beans>
