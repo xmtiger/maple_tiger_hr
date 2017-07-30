@@ -29,7 +29,7 @@ public class JpaEmployeeRepositoryImpl implements EmployeeRepository{
     @Override
     public Collection<Employee> findByLastName(String lastName) throws DataAccessException {
         
-        Query query = this.em.createQuery("SELECT DISTINCT employee FROM Employee employee WHERE employee.lastName LIKE :lastName", Employee.class);
+        Query query = this.em.createQuery("SELECT employee FROM Employee employee WHERE employee.lastName LIKE :lastName");
         query.setParameter("lastName", lastName + "%");
         return query.getResultList();
     }
@@ -37,9 +37,10 @@ public class JpaEmployeeRepositoryImpl implements EmployeeRepository{
     @Override
     public Employee findById(int id) throws DataAccessException {
         
-        Query query = this.em.createQuery("SELECT employee FROM Employee employee WHERE employee.id = :id", Employee.class);
-        query.setParameter("id", id);
-        return (Employee)query.getSingleResult();
+        //Query query = this.em.createQuery("SELECT employee FROM Employee employee left join fetch employee.department employee.id = :id", Employee.class);
+        //query.setParameter("id", id);
+        //return (Employee)query.getSingleResult();
+        return this.em.find(Employee.class, id);
     }
 
     @Override

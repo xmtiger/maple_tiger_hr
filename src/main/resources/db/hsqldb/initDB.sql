@@ -8,15 +8,26 @@
  * Created: 24-Jul-2017
  */
 
-DROP TABLE employee IF EXISTS;
+DROP TABLE employees IF EXISTS;
+DROP TABLE departments IF EXISTS;
 
 
-
-CREATE TABLE employee (
+CREATE TABLE employees (
     id              INTEGER IDENTITY PRIMARY KEY,
     first_name      VARCHAR(30),
     last_name       VARCHAR_IGNORECASE(30),
     birth_date      DATE,
     home_address    VARCHAR(100),
-    phone_mobile    VARCHAR(20)
-)
+    phone_mobile    VARCHAR(20),
+    dept_id         INTEGER NOT NULL
+);
+
+CREATE TABLE departments (
+    id              INTEGER IDENTITY PRIMARY KEY,
+    name            VARCHAR(30),
+    begin_time      DATE,
+    end_time        DATE,
+    address         VARCHAR(100)
+);
+
+ALTER TABLE employees ADD CONSTRAINT fk_dept_employee FOREIGN KEY (dept_id) REFERENCES departments (id); 

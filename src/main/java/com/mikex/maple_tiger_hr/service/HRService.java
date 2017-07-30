@@ -5,6 +5,7 @@
  */
 package com.mikex.maple_tiger_hr.service;
 
+import com.mikex.maple_tiger_hr.model.Department;
 import com.mikex.maple_tiger_hr.model.Employee;
 import org.springframework.dao.DataAccessException;
 
@@ -21,4 +22,8 @@ public interface HRService {
     void saveEmployee(Employee employee) throws DataAccessException;
     
     Collection<Employee> findEmployeeByLastName(String lastName) throws DataAccessException;
+    
+    Department findDepartmentById(int id) throws DataAccessException;
+    
+    
 }

@@ -5,6 +5,7 @@
  */
 package maple_tiger_hr.service;
 
+import com.mikex.maple_tiger_hr.model.Department;
 import com.mikex.maple_tiger_hr.model.Employee;
 import com.mikex.maple_tiger_hr.service.HRService;
 import java.text.DateFormat;
@@ -41,9 +42,12 @@ public class AbstractHRServiceTests {
     @Transactional
     public void shouldInsertEmployee(){
         
+        Department dept = this.hrService.findDepartmentById(2);
+        
+        
         Employee employee = new Employee();
         employee.setFirstName("Sam");
-        employee.setLastName("Schultz");
+        employee.setLastName("Schultz");        
         
         DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
         try {
@@ -55,6 +59,8 @@ public class AbstractHRServiceTests {
                 
         employee.setHome_address("1989 Springland street");
         employee.setPhone_mobile("5879998888");
+        employee.setDepartment(dept);
+        
         this.hrService.saveEmployee(employee);
         assertThat(employee.getId().longValue()).isNotEqualTo(0);
         

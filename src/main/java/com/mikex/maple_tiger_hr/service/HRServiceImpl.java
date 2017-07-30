@@ -5,7 +5,9 @@
  */
 package com.mikex.maple_tiger_hr.service;
 
+import com.mikex.maple_tiger_hr.model.Department;
 import com.mikex.maple_tiger_hr.model.Employee;
+import com.mikex.maple_tiger_hr.repository.DepartmentRepository;
 import com.mikex.maple_tiger_hr.repository.EmployeeRepository;
 import java.util.Collection;
 
@@ -23,10 +25,13 @@ import org.springframework.transaction.annotation.Transactional;
 public class HRServiceImpl implements HRService {
     
     private EmployeeRepository employeeRepository;
+    private DepartmentRepository departmentRepository;
+    
     
     @Autowired
-    public HRServiceImpl(EmployeeRepository employeeRepository){
+    public HRServiceImpl(EmployeeRepository employeeRepository, DepartmentRepository departmentRepository){
         this.employeeRepository = employeeRepository;
+        this.departmentRepository = departmentRepository;
     }
 
     @Override
@@ -46,4 +51,9 @@ public class HRServiceImpl implements HRService {
     public Collection<Employee> findEmployeeByLastName(String lastName) throws DataAccessException {
         return employeeRepository.findByLastName(lastName);        
     }   
+
+    @Override
+    public Department findDepartmentById(int id) throws DataAccessException {
+        return departmentRepository.findDepartmentById(id);
+    }
 }
