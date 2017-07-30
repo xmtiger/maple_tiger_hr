@@ -43,10 +43,11 @@ public class JdbcEmployeeRepositoryImpl implements EmployeeRepository {
     
     private SimpleJdbcInsert insertEmployee;
     
+    @Autowired
     private DepartmentRepository departmentRepository;
     
     @Autowired
-    public JdbcEmployeeRepositoryImpl(DataSource dataSource, DepartmentRepository departmentRepository){
+    public JdbcEmployeeRepositoryImpl(DataSource dataSource){
         
         this.insertEmployee = new SimpleJdbcInsert(dataSource)
                 .withTableName("employees")

@@ -24,15 +24,36 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class HRServiceImpl implements HRService {
     
+    // injection directly to the field
+    // for mutiple alternative beans, use @Qualifier to match the injected bean 
+    @Autowired
     private EmployeeRepository employeeRepository;
+    
+    @Autowired
     private DepartmentRepository departmentRepository;
     
     
+    /*
+    //the first injection method -- inject from constructor
     @Autowired
     public HRServiceImpl(EmployeeRepository employeeRepository, DepartmentRepository departmentRepository){
         this.employeeRepository = employeeRepository;
         this.departmentRepository = departmentRepository;
+    }*/
+    
+    /*
+    // the second injection method -- inject from setter method
+    @Autowired
+    public void setEmployeeRepository(EmployeeRepository employeeRepository) {
+        this.employeeRepository = employeeRepository;
     }
+    
+    @Autowired
+    public void setDepartmentRepository(DepartmentRepository departmentRepository) {
+        this.departmentRepository = departmentRepository;
+    }*/
+    
+    
 
     @Override
     @Transactional(readOnly = true)
