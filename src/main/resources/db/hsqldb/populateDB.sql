@@ -15,3 +15,14 @@ INSERT INTO employees VALUES (1, 'George', 'Franklin', '1977-09-07', '110 W. Lib
 INSERT INTO employees VALUES (2, 'Betty', 'Davis', '1987-06-15', '638 Cardinal Ave.', '6085551749', 2);
 INSERT INTO employees VALUES (3, 'Eduardo', 'Rodriquez', '1982-03-12', '2693 Commerce St.', '6085558763', 3);
 
+INSERT INTO timecodes VALUES (1, 'P2017-07-01', 1, 'charge code for project AAA', 'TRUE', 1, 'TRUE', 
+                                '2017-07-28 09:33:36', 1,
+                                '2017-05-03 10:35:22', 1, 
+                                '2017-07-28 09:33:12', 3);
+
+
+INSERT INTO timesheets VALUES (1, 1, 1, '2017-07-17', 8, '2017-07-21 03:20:22');
+INSERT INTO timesheets VALUES (2, 1, 1, '2017-07-18', 8, '2017-07-21 03:20:22');
+INSERT INTO timesheets VALUES (3, 1, 1, '2017-07-19', 8, '2017-07-21 03:20:22');
+INSERT INTO timesheets VALUES (4, 1, 1, '2017-07-20', 8, '2017-07-21 03:20:22');
+INSERT INTO timesheets VALUES (5, 1, 1, '2017-07-21', 8, '2017-07-21 03:20:22');
