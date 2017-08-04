@@ -34,6 +34,11 @@ public class TreeNode<T extends Comparable<T>> {
     
     public boolean add(TreeNode<T> child){
         
+        if(isRoot()){
+            parent = child;
+            return true;
+        }
+        
         boolean ifChildExist = search(child);
         if(ifChildExist == true)
             return false;
