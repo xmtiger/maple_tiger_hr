@@ -18,6 +18,6 @@ public class IndexPageController {
     
     @RequestMapping("")
     public String indexPage(){
-        return "index";
+        return "treeView";
     }
 }

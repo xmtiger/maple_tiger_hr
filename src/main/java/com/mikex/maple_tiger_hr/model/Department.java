@@ -32,7 +32,7 @@ import org.springframework.format.annotation.DateTimeFormat;
  */
 @Entity
 @Table(name = "departments")
-public class Department extends NamedEntity{
+public class Department extends NamedEntity implements Comparable<Department> {
     
     @Column(name = "begin_time")
     @Temporal(TemporalType.DATE)
@@ -117,6 +117,15 @@ public class Department extends NamedEntity{
 
     public void setAddress(String address) {
         this.address = address;
+    }
+
+    @Override
+    public int compareTo(Department t) {
+        
+        if(this.id.equals(t.id) || this.getName().equals(t.getName()))
+            return 0;
+        else
+            return -1;
     }
 
     
