@@ -32,7 +32,7 @@ import org.springframework.format.annotation.DateTimeFormat;
  */
 @Entity
 @Table(name = "departments")
-public class Department extends NamedEntity implements Comparable<Department> {
+public class Department extends NamedEntity implements Comparable<Department>, Copyable<Department> {
     
     @Column(name = "begin_time")
     @Temporal(TemporalType.DATE)
@@ -128,6 +128,16 @@ public class Department extends NamedEntity implements Comparable<Department> {
             return -1;
     }
 
-    
+    @Override
+    public boolean copyFrom(Department t){       
+        
+        this.setName(t.getName());
+        this.setAddress(t.getAddress());
+        this.setBegin_time(t.getBegin_time());
+        this.setEnd_time(t.getEnd_time());
+        this.setEmployees(t.getEmployees());
+        
+        return true;
+    }
     
 }
