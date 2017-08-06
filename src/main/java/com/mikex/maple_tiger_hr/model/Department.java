@@ -5,6 +5,7 @@
  */
 package com.mikex.maple_tiger_hr.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
@@ -62,6 +63,7 @@ public class Department extends NamedEntity implements Comparable<Department>, C
         this.employees = employees;
     }
     
+    @JsonIgnore
     public void setEmployees(Set<Employee> employees){
         this.employees = employees;
     }
@@ -140,4 +142,11 @@ public class Department extends NamedEntity implements Comparable<Department>, C
         return true;
     }
     
+    @Override
+    public String toString(){
+        return "id: " + getId() + "; name: " + getName() 
+                + "; address: " + this.getAddress() 
+                + "; begin time: " +  this.getBegin_time();
+                
+    }
 }
