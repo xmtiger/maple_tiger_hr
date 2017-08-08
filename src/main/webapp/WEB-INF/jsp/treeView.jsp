@@ -7,31 +7,70 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
-    <head>
-        <meta charset="utf-8">
-        <title>Tree View Page</title>
+    <head>              
         
+        <jsp:include page="./fragments/header.jsp"/>
         
         <link rel="stylesheet" href="resources/core/css/zTreeStyle/demo.css" type="text/css">
         <link rel="stylesheet" href="resources/core/css/zTreeStyle/zTreeStyle.css" type="text/css">
+        
+        <style type="text/css">
+            #maincontainer {
+                width:100%;
+                height: 100%;
+              }
+
+              #leftcolumn {
+                float:left;
+                display:inline-block;
+                width: 220px;
+                height: 100%;
+                background: white;
+              }
+
+              #contentwrapper {
+                float:left;
+                display:inline-block;
+                width: -moz-calc(100% - 220px);
+                width: -webkit-calc(100% - 220px);
+                width: calc(100% - 220px);
+                height: 100%;
+                background-color: white;
+              }
+             
+             div.clear{clear:both;}
+             
+        </style>
+        
     </head>
     <body>
-        <h1>Tree View</h1>
-        
-        <!-- 3 setup a container element -->
-        <div>
-            <ul id="treeDemo" class="ztree"></ul>
+         
+        <div id="maincontainer">
+            <!-- 3 setup a container element -->
+            <div id = "leftcolumn">
+                <ul id="treeDemo" class="ztree"></ul>  
+                <br>
+                <div class="btn-group">
+                    <button id="addButton" type="button" class="btn btn-primary">Add</button>
+                    <button id="editButton" type="button" class="btn btn-primary">Edit</button>
+                    <button id="removeButton" type="button" class="btn btn-primary">Remove</button>
+                </div>
+                <form>
+                <br>
+                Search <input id="search_tree" type="text" /> 
+                </form>
+                
+            </div>   
+            
+            <div id ="contentwrapper">
+                
+                <ul id ="departmentDiv"/>
+            </div>
+            
         </div>
+        <div class="clear"></div>       
         
-        <button>demo button</button>
-        <br>
-        <form>
-            <br>
-            Search <input id="search_tree" type="text" /> 
-        </form>
-        <br>
-        
-        <div id="jstree"></div>        
+        <br>       
         
         <script type="text/javascript" src="resources/core/js/jquery-3.2.1.js"></script>
         <script type="text/javascript" src="resources/core/js/jquery.ztree.core.js"></script>
@@ -49,8 +88,18 @@
             ];
             $(document).ready(function(){
                zTreeObj = $.fn.zTree.init($("#treeDemo"), setting, zNodes);
-            });
+               
+               $("#addButton").click(function(){
+                   //alert("request departmentForm.jsp");
+                   $("#departmentDiv").load("department/new");
+                   //document.location.href="department/new";
+               });
+               
+            });          
+            
         </script>
+        
+        <jsp:include page="./fragments/footer.jsp"/> 
         
     </body>
 </html>

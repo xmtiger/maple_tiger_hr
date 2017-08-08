@@ -8,6 +8,7 @@ package com.mikex.maple_tiger_hr.config;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.support.ResourceBundleMessageSource;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
@@ -20,7 +21,7 @@ import org.springframework.web.servlet.view.JstlView;
  */
 @EnableWebMvc
 @Configuration
-@ComponentScan({"com.mikex.maple_tiger_hr.web"})
+@ComponentScan({"com.mikex.maple_tiger_hr.web", "com.mikex.maple_tiger_hr.validator"})
 public class SpringWebConfig extends WebMvcConfigurerAdapter{
     
     @Override
@@ -35,5 +36,12 @@ public class SpringWebConfig extends WebMvcConfigurerAdapter{
         viewResolver.setPrefix("/WEB-INF/jsp/");
         viewResolver.setSuffix(".jsp");
         return viewResolver;
+    }
+    
+    @Bean
+    public ResourceBundleMessageSource messageSource(){
+        ResourceBundleMessageSource rb = new ResourceBundleMessageSource();
+        rb.setBasenames(new String[]{"messages/validation"});
+        return rb;
     }
 }

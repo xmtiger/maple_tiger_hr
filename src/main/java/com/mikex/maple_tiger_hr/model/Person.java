@@ -23,11 +23,11 @@ import org.springframework.format.annotation.DateTimeFormat;
 public class Person extends BaseEntity {
     
     @Column(name = "first_name")
-    @NotEmpty
+    @NotEmpty(message="Enter first name.")
     protected String firstName;
     
     @Column(name = "last_name")
-    @NotEmpty
+    @NotEmpty(message="Enter last name")
     protected String lastName;
     
     @Column(name = "birth_date")

@@ -46,7 +46,7 @@ public class Department extends NamedEntity implements Comparable<Department>, C
     private Date end_time;
     
     @Column(name = "address")
-    @NotEmpty
+    @NotEmpty(message="Enter an address.")
     private String address;
 
     @OneToMany(mappedBy = "department", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
