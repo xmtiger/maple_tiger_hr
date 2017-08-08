@@ -58,28 +58,14 @@ public class DepartmentController {
         return VIEWS_DEPT_CREATE_OR_UPDATE_FORM;
     }
         
-    @RequestMapping(value = "department/new", method=RequestMethod.POST)    
-    public @ResponseBody DepartmentJsonResponse processCreationForm(@RequestBody Department dept, BindingResult result){
+    @RequestMapping(value = "department/create", method=RequestMethod.POST)    
+    public @ResponseBody DepartmentJsonResponse processCreationForm(@RequestBody Department dept){
         
         DepartmentJsonResponse response = new DepartmentJsonResponse();
+        response.setDepartment(dept);
         
-        logger.debug("processCreationForm");
-                
-        if(result.hasErrors()){
-            
-            Map<String, String> errors = result.getFieldErrors().stream()
-                                    .collect(Collectors.toMap(FieldError::getField, FieldError::getDefaultMessage));
-            
-            response.setValidated(false);
-            response.setErrorMessages(errors);
-            
-        }else{
-            //save department into database
-            
-            response.setValidated(true);
-            response.setDepartment(dept);
-            
-        }
+        logger.debug("processCreationForm");                
+        
         return response;
     }
 }

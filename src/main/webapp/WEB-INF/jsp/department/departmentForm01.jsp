@@ -182,9 +182,11 @@
                     //alert(form_data);
                     
                     // Use Ajax to submit form data
-                    $.post({
-                        url: "department/new",
+                    $.ajax({
+                        url: "department/create",
+                        type: "POST",                           
                         data: form_data,
+                        cache: false,
                         success: function(res){
                             
                             if(res.validated){
