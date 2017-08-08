@@ -13,11 +13,16 @@ import org.springframework.web.bind.annotation.RequestMapping;
  * @author MikeX
  */
 @Controller
-@RequestMapping(value="index.htm")
+
 public class IndexPageController {
     
-    @RequestMapping("")
+    @RequestMapping(value="index.htm")
     public String indexPage(){
         return "treeView";
+    }
+    
+    @RequestMapping(value="index")
+    public String indexJsp(){
+        return "index";
     }
 }

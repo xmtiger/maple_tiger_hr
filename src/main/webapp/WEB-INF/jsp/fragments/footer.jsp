@@ -7,8 +7,3 @@
     </footer>
 </div>
 
-<script src="/resources/core/js/jquery.min.js"></script>
-
-<spring:url value="/resources/core/js/bootstrap.min.js" var="bootstrapJs"/>
-
-<script src="${bootstrapJs}"></script>

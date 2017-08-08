@@ -7,6 +7,7 @@ package com.mikex.maple_tiger_hr.model;
 
 import javax.persistence.Column;
 import javax.persistence.MappedSuperclass;
+import org.hibernate.validator.constraints.NotEmpty;
 
 /**
  *
@@ -16,6 +17,7 @@ import javax.persistence.MappedSuperclass;
 public class NamedEntity extends BaseEntity{
     
     @Column(name = "name")
+    @NotEmpty(message="Enter a name.")
     private String name;
 
     public String getName() {

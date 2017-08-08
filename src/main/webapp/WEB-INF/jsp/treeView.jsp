@@ -1,15 +1,15 @@
-<%-- 
-    Document   : treeView
-    Created on : Aug 4, 2017, 3:12:45 PM
-    Author     : MikeX
---%>
-
-<%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 <!DOCTYPE html>
-<html>
-    <head>              
+<html lang="en">
+    
+    
+    <head> 
+        <title>mapletiger_HR_System</title>
         
-        <jsp:include page="./fragments/header.jsp"/>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+        <!--jsp:include page="./fragments/header.jsp"/-->
         
         <link rel="stylesheet" href="resources/core/css/zTreeStyle/demo.css" type="text/css">
         <link rel="stylesheet" href="resources/core/css/zTreeStyle/zTreeStyle.css" type="text/css">
@@ -42,6 +42,16 @@
              
         </style>
         
+        <spring:url value="/" var="urlHome" />
+        <nav class="navbar navbar-inverse ">
+	<div class="container">
+		<div class="navbar-header">
+			<a class="navbar-brand" href="${urlHome}">Home Page</a>
+		</div>
+		
+	</div>
+        </nav>
+    
     </head>
     <body>
          
@@ -64,7 +74,7 @@
             
             <div id ="contentwrapper">
                 
-                <ul id ="departmentDiv"/>
+                <ul id ="departmentDiv"></ul>
             </div>
             
         </div>

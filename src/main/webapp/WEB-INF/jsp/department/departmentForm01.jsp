@@ -7,11 +7,13 @@
         
         <!-- Latest compiled and minified CSS -->
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery.bootstrapvalidator/0.5.0/css/bootstrapValidator.min.css">
+        
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css">
         <!-- Bootstrap CSS -->
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.3.0/css/datepicker.min.css" />
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.3.0/css/datepicker3.min.css" />
+        
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-validator/0.4.5/js/bootstrapvalidator.min.js"></script>
         
         <title>Department Form Page</title>
         
@@ -31,7 +33,7 @@
         
     </head>
     <body>
-         <form class="well form-horizontal" action=" " method="post"  id="contact_form">
+         <form class="well form-horizontal" action=" " method="post"  id="dept_form">
             <fieldset>
 
                 <!-- Form Name -->
@@ -85,53 +87,29 @@
                 
             </fieldset>
          </form>
-        <br>
-
-        <!--div class="container">
-            <h2>Department Form</h2>
-            <form id="eventForm" action="saveDepartment" method="post" name="departmentForm">
-                <div class="form-group">
-                    <label for="name">Name:</label>
-                    <input type="text" class="form-control" id="name" placeholder="Enter name" name="name">
-                </div>
-                <div class="form-group">
-                    <label for="address">Address:</label>
-                    <input type="text" class="form-control" id="address" placeholder="Enter address" name="address">
-                </div>
-                
-                
-                <div class="form-group">
-                    <label class="col-md-4 control-label" >Begin Date</label>
-                    <div class="col-xs-5 date">
-                        <div class="input-group input-append date" id="datePicker2">
-                            
-                            <input type="text" class="form-control" value="yyyy-mm-dd" name="date" />
-                            <span class="input-group-addon add-on"><span class="glyphicon glyphicon-calendar"></span></span>
-                        </div>
-                    </div>
-                </div>
-                <br>
-                <br>
-              <button type="submit" class="btn btn-default" id="addButton">Submit</button>
-            </form>
-            
-        </div-->
+        <br>       
+        <!-- Result Container  -->
+        <div id="resultContainer" style="display: none;">
+         <hr/>
+         <h4 style="color: green;">JSON Response From Server</h4>
+          <pre style="color: green;">
+            <code></code>
+           </pre>
+        </div>
         
         <!-- jQuery first, then Tether, then Bootstrap JS. -->
         <!-- jQuery library -->
+        <!--script src="resources/core/js/jquery.min.js"></script-->
         
-        <script type="text/javascript" src="resources/core/js/jquery-3.2.1.js"></script>
-
         <!-- Latest compiled JavaScript -->
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.0/jquery.min.js"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
         
         <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.3.0/js/bootstrap-datepicker.min.js"></script>
         
         <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-validator/0.4.5/js/bootstrapvalidator.min.js"></script>
                 
-        <!--script src="/resources/core/js/jquery.js"></script>
-        <script src="https://cdn.jsdelivr.net/jquery.validation/1.17.0/jquery.validate.js"></script-->
+        
         <script type="text/javascript">
             $(document).ready(function() {
                 /* Submit form using Ajax  */
@@ -148,18 +126,21 @@
                     //$('#eventForm').formValidation('revalidateField', 'date');
                 });
                     
-                $('#contact_form').bootstrapValidator({
+                $('#dept_form').bootstrapValidator({
                     // To use feedback icons, ensure that you use Bootstrap v3.1.0 or later
-                    feedbackIcons: {
+                    framework: "bootstrap",
+                    icon: {
                         valid: 'glyphicon glyphicon-ok',
                         invalid: 'glyphicon glyphicon-remove',
                         validating: 'glyphicon glyphicon-refresh'
                     },
                     fields: {
                         name: {
+                            row: '.col-xs-4',
                             validators: {
                                     stringLength: {
                                     min: 2,
+                                    message: 'The minimum length is 2'
                                 },
                                     notEmpty: {
                                     message: 'Please input a name'
@@ -175,28 +156,50 @@
                                     message: 'Please input an address'
                                 }
                             }
+                        },
+                        date: {
+                            validators: {
+                                date: {
+                                    format: 'YYYY-MM-DD',
+                                    message: 'The value is not a valid date'
+                                }
+                            }
                         }
                     }
                 })                
-                .on('success.form.bv', function(e) {
-                    //$('#success_message').slideDown({ opacity: "show" }, "slow") // Do something ...
-                    alert("success function");
-                    $('#contact_form').data('bootstrapValidator').resetForm();
-
-                    // Prevent form submission
-                    e.preventDefault();
-
-                    // Get the form instance
-                    var $form = $(e.target);
-
-                    // Get the BootstrapValidator instance
-                    var bv = $form.data('bootstrapValidator');
-
+                .on('submit', function(e) {
+                    
+                    //alert("success");
+                    //Prevent default submission of form
+                    e.preventDefault();          
+                    
+                    //$("#departmentDiv").load("index");                        
+                    
+                    var form = $('#dept_form');
+                    var arrayData = $(form).serializeArray();
+                    var form_data = JSON.stringify(arrayData);
+                    
+                    //alert(form_data);
+                    
                     // Use Ajax to submit form data
-                    $.post($form.attr('action'), $form.serialize(), function(result) {
-                        console.log(result);
-                    }, 'json');
-                });               
+                    $.post({
+                        url: "department/new",
+                        data: form_data,
+                        success: function(res){
+                            
+                            if(res.validated){
+                                $('#resultContainer').text(JSON.stringify(res.department));
+                                $('#resultContainer').show();
+                            }else{
+                                //Set error messages
+                                $.each(res.errorMessages,function(key,value){
+                                        $('input[name='+key+']').after('<span class="error">'+value+'</span>');
+                                });
+                            }
+                        }
+                    });
+                    
+                });           
                 
             });
     
