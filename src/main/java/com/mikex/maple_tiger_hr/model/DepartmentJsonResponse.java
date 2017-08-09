@@ -5,6 +5,8 @@
  */
 package com.mikex.maple_tiger_hr.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import java.util.Map;
 
 /**
@@ -13,10 +15,15 @@ import java.util.Map;
  */
 public class DepartmentJsonResponse {
     
+    @JsonIgnore
     private Department department;
+    
+    @JsonIgnore
     private boolean validated;
+    
+    @JsonIgnore
     private Map<String, String> errorMessages;
-
+    
     public Department getDepartment() {
         return department;
     }

@@ -37,12 +37,13 @@ public class Department extends NamedEntity implements Comparable<Department>, C
     
     @Column(name = "begin_time")
     @Temporal(TemporalType.DATE)
-    @DateTimeFormat(pattern = "yyyy/MM/dd")
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date begin_time;
     
     @Column(name = "end_time")
     @Temporal(TemporalType.DATE)
-    @DateTimeFormat(pattern = "yyyy/MM/dd")
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    @JsonIgnore         //to avoid json version error from ajax to controller
     private Date end_time;
     
     @Column(name = "address")

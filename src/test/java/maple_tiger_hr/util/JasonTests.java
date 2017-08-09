@@ -8,6 +8,7 @@ package maple_tiger_hr.util;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mikex.maple_tiger_hr.model.Department;
+import com.mikex.maple_tiger_hr.model.DepartmentJsonResponse;
 import com.mikex.maple_tiger_hr.model.Employee;
 import java.io.IOException;
 import java.text.DateFormat;
@@ -96,7 +97,21 @@ public class JasonTests {
                         "}";
         
         Employee employee01 = mapper.readValue(jasonInString, Employee.class);
-        assertThat(employee01.getId()).isNotNull();
+        assertThat(employee01.getLastName()).isNotNull();
         System.out.println("employee name: " + employee01.getFirstName() + " " + employee01.getLastName());
+    }
+    
+    @Test
+    public void testJson2Obj2() throws IOException{
+        ObjectMapper mapper = new ObjectMapper();
+        DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+        mapper.setDateFormat(df);
+        
+        String jasonInString = "{\"name\":\"joe\", \"address\": \"123 springland\", \"begin_time\": \"2015-06-01\"}";
+        
+        Department dept01 = mapper.readValue(jasonInString, Department.class);
+        
+        assertThat(dept01.getName()).isNotNull();
+        System.out.println("dept01:" + dept01.toString());
     }
 }

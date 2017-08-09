@@ -45,7 +45,7 @@
                   <div class="col-md-4 inputGroupContainer">
                   <div class="input-group">
                   <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
-                  <input  name="name" placeholder="Name" class="form-control"  type="text">
+                  <input  name="name" placeholder="Name" class="form-control"  type="text" id="dept_name"/>
                     </div>
                   </div>
                 </div>
@@ -57,7 +57,7 @@
                     <div class="col-md-4 inputGroupContainer">
                     <div class="input-group" >
                   <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
-                  <input name="address" placeholder="Address" class="form-control"  type="text">
+                  <input name="address" placeholder="Address" class="form-control"  type="text" id="dept_address"/>
                     </div>
                   </div>
                 </div>
@@ -69,7 +69,7 @@
                     <div class="col-md-4 date">
                         <div class="input-group input-append date" id="datePicker">
                             
-                            <input type="text" class="form-control" value="yyyy-mm-dd" name="begin_time" />
+                            <input type="text" class="form-control" value="yyyy-mm-dd" name="begin_time" id = "dept_begin_time"/>
                             <span class="input-group-addon add-on"><span class="glyphicon glyphicon-calendar"></span></span>
                         </div>
                     </div>     
@@ -79,7 +79,7 @@
                 <div class="form-group">
                   <label class="col-md-4 control-label"></label>
                   <div class="col-md-4">
-                    <button type="submit" class="btn btn-warning" >Send <span class="glyphicon glyphicon-send"></span></button>
+                    <button id="addButton" type="submit" class="btn btn-warning" >Send <span class="glyphicon glyphicon-send"></span></button>
                   </div>
                 </div>               
                 
@@ -113,7 +113,41 @@
             $(document).ready(function() {
                 /* Submit form using Ajax  */
                 $("#addButton").click(function(){
+                    e.preventDefault();          
                     
+                    //$("#departmentDiv").load("index");                        
+                    
+                    var form = $('#dept_form');
+                    //var arrayData = $(form).serializeArray();
+                    //var form_data2 = JSON.stringify(arrayData);
+                    
+                    var jsonData = {};
+                    $.each($(form).serializeArray(), function() {
+                        jsonData[this.name] = this.value;
+                    });
+                    var form_data = JSON.stringify(jsonData);
+                                               
+                    // Use Ajax to submit form data
+                    $.ajax({
+                        type: "POST",
+                        contentType: "application/json; charset=utf-8",
+                        url: "department/create",
+                        data: form_data,
+                        dataType: "json",                                                                         
+                        
+                        success: function(res){
+                            
+                            if(res.validated){
+                                $('#resultContainer').text(JSON.stringify(res.department));
+                                $('#resultContainer').show();
+                            }else{
+                                //Set error messages
+                                $.each(res.errorMessages,function(key,value){
+                                        $('input[name='+key+']').after('<span class="error">'+value+'</span>');
+                                });
+                            }
+                        }
+                    });
                 });
                 
                 $("#datePicker").datepicker({
@@ -175,18 +209,22 @@
                     //$("#departmentDiv").load("index");                        
                     
                     var form = $('#dept_form');
-                    var arrayData = $(form).serializeArray();
-                    var form_data = JSON.stringify(arrayData);
+                    //var arrayData = $(form).serializeArray();
+                    //var form_data2 = JSON.stringify(arrayData);
                     
-                    //alert(form_data);
-                    
+                    var jsonData = {};
+                    $.each($(form).serializeArray(), function() {
+                        jsonData[this.name] = this.value;
+                    });
+                    var form_data = JSON.stringify(jsonData);
+                                               
                     // Use Ajax to submit form data
                     $.ajax({
                         type: "POST",
-                        contentType: "application/json",
+                        contentType: "application/json; charset=utf-8",
                         url: "department/create",
                         data: form_data,
-                        dataType: 'json',                                                                         
+                        dataType: "json",                                                                         
                         
                         success: function(res){
                             

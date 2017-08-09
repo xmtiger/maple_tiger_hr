@@ -18,6 +18,7 @@ import javax.persistence.MappedSuperclass;
 public class BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @JsonIgnore     
     protected Integer id;
 
     public Integer getId() {

@@ -5,6 +5,7 @@
  */
 package com.mikex.maple_tiger_hr.web;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mikex.maple_tiger_hr.model.Department;
 import com.mikex.maple_tiger_hr.model.DepartmentJsonResponse;
@@ -12,6 +13,7 @@ import com.mikex.maple_tiger_hr.validator.DepartmentFormValidator;
 import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.stream.Collectors;
@@ -43,6 +45,7 @@ public class DepartmentController {
     
     private final Logger logger = LoggerFactory.getLogger(DepartmentController.class);
     
+    //In this program, the ajax and Hiberate validiation are used instead of jstl data binder validation
     //@Autowired
     //DepartmentFormValidator departmentFormValidator;
     
@@ -64,24 +67,45 @@ public class DepartmentController {
         return VIEWS_DEPT_CREATE_OR_UPDATE_FORM;
     }
         
-    @RequestMapping(value = "department/create", method=RequestMethod.POST)    
-    public @ResponseBody DepartmentJsonResponse processCreationForm(@RequestBody String deptStr){
-        
-        ObjectMapper mapper = new ObjectMapper();
-        DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
-        mapper.setDateFormat(df);
-        
-        try {
-            Department dept01 = mapper.readValue(deptStr, Department.class);
-        } catch (IOException ex) {
-            java.util.logging.Logger.getLogger(DepartmentController.class.getName()).log(Level.SEVERE, null, ex);
-        }
+    @RequestMapping(value = "department/create", method=RequestMethod.POST, produces = { MediaType.APPLICATION_JSON_VALUE})    
+    public @ResponseBody DepartmentJsonResponse processCreationForm(@RequestBody @Valid Department dept, BindingResult bindingResult){
         
         DepartmentJsonResponse response = new DepartmentJsonResponse();
-        //response.setDepartment(dept);
         
-        logger.debug("processCreationForm");                
+        if(bindingResult.hasErrors()){
+            
+            //Get error message
+            Map<String, String> errors = bindingResult.getFieldErrors().stream()
+               .collect(
+                     Collectors.toMap(FieldError::getField, FieldError::getDefaultMessage)
+                 );
+         
+            response.setValidated(false);
+            response.setErrorMessages(errors);
+        } else{
+            // implementing business logic to save data into database
+            response.setValidated(true);
+            response.setDepartment(dept);
+        }     
         
         return response;
+        //try {
+            /*JsonNode jNodes = mapper.readTree(deptStr);
+            Iterator<JsonNode> elements = jNodes.elements();
+            while(elements.hasNext()){
+                
+                JsonNode jNode = elements.next();
+                
+                JsonNode nameNode = jNode.get("name");
+                JsonNode valueNode = jNode.get("value");
+                
+                String nodeName = nameNode.textValue();
+                String nodeValue  = valueNode.textValue();
+                System.out.println(nameNode + "; " + nodeValue);
+            }              
+        } catch (IOException ex) {
+             java.util.logging.Logger.getLogger(DepartmentController.class.getName()).log(Level.SEVERE, null, ex);
+        }*/       
+        
     }
 }
