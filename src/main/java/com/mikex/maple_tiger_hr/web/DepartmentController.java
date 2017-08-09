@@ -5,10 +5,15 @@
  */
 package com.mikex.maple_tiger_hr.web;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mikex.maple_tiger_hr.model.Department;
 import com.mikex.maple_tiger_hr.model.DepartmentJsonResponse;
 import com.mikex.maple_tiger_hr.validator.DepartmentFormValidator;
+import java.io.IOException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Map;
+import java.util.logging.Level;
 import java.util.stream.Collectors;
 import javax.validation.Valid;
 import org.slf4j.Logger;
@@ -27,6 +32,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
 
 /**
  *
@@ -59,10 +65,20 @@ public class DepartmentController {
     }
         
     @RequestMapping(value = "department/create", method=RequestMethod.POST)    
-    public @ResponseBody DepartmentJsonResponse processCreationForm(@RequestBody Department dept){
+    public @ResponseBody DepartmentJsonResponse processCreationForm(@RequestBody String deptStr){
+        
+        ObjectMapper mapper = new ObjectMapper();
+        DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+        mapper.setDateFormat(df);
+        
+        try {
+            Department dept01 = mapper.readValue(deptStr, Department.class);
+        } catch (IOException ex) {
+            java.util.logging.Logger.getLogger(DepartmentController.class.getName()).log(Level.SEVERE, null, ex);
+        }
         
         DepartmentJsonResponse response = new DepartmentJsonResponse();
-        response.setDepartment(dept);
+        //response.setDepartment(dept);
         
         logger.debug("processCreationForm");                
         

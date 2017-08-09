@@ -27,11 +27,10 @@
                 color: red;
                 margin-left: 5px;
             }
-        </style>       
-
-        
+        </style>    
         
     </head>
+
     <body>
          <form class="well form-horizontal" action=" " method="post"  id="dept_form">
             <fieldset>
@@ -67,10 +66,10 @@
                 <div class="form-group">
                   <label class="col-md-4 control-label" >Begin Date</label> 
                     <!--div class="col-xs-5 date"-->
-                    <div class="col-md-4" date>
+                    <div class="col-md-4 date">
                         <div class="input-group input-append date" id="datePicker">
                             
-                            <input type="text" class="form-control" value="yyyy-mm-dd" name="date" />
+                            <input type="text" class="form-control" value="yyyy-mm-dd" name="begin_time" />
                             <span class="input-group-addon add-on"><span class="glyphicon glyphicon-calendar"></span></span>
                         </div>
                     </div>     
@@ -183,10 +182,12 @@
                     
                     // Use Ajax to submit form data
                     $.ajax({
+                        type: "POST",
+                        contentType: "application/json",
                         url: "department/create",
-                        type: "POST",                           
                         data: form_data,
-                        cache: false,
+                        dataType: 'json',                                                                         
+                        
                         success: function(res){
                             
                             if(res.validated){
