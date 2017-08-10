@@ -1,9 +1,12 @@
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <!DOCTYPE html>
 <html lang="en">
     
     
     <head> 
+        <c:set var="context" value="${pageContext.request.contextPath}"/>
+        
         <title>mapletiger_HR_System</title>
         
         <meta charset="utf-8">
@@ -11,8 +14,8 @@
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
         <!--jsp:include page="./fragments/header.jsp"/-->
         
-        <link rel="stylesheet" href="resources/core/css/zTreeStyle/demo.css" type="text/css">
-        <link rel="stylesheet" href="resources/core/css/zTreeStyle/zTreeStyle.css" type="text/css">
+        <link rel="stylesheet" href="${context}/resources/core/css/zTreeStyle/demo.css" type="text/css">
+        <link rel="stylesheet" href="${context}/resources/core/css/zTreeStyle/zTreeStyle.css" type="text/css">
         
         <style type="text/css">
             #maincontainer {
@@ -82,8 +85,8 @@
         
         <br>       
         
-        <script type="text/javascript" src="resources/core/js/jquery-3.2.1.js"></script>
-        <script type="text/javascript" src="resources/core/js/jquery.ztree.core.js"></script>
+        <script type="text/javascript" src="${context}/resources/core/js/jquery-3.2.1.js"></script>
+        <script type="text/javascript" src="${context}/resources/core/js/jquery.ztree.core.js"></script>
         
         <script>
             var zTreeObj;
