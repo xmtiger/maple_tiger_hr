@@ -14,14 +14,11 @@ import java.util.Map;
  * @author xmtig
  */
 public class DepartmentJsonResponse {
-    
-    @JsonIgnore
+        
     private Department department;
-    
-    @JsonIgnore
+        
     private boolean validated;
-    
-    @JsonIgnore
+        
     private Map<String, String> errorMessages;
     
     public Department getDepartment() {

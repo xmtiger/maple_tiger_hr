@@ -111,16 +111,22 @@
         
         <script type="text/javascript">
             $(document).ready(function() {
-                /* Submit form using Ajax  */
-                $("#addButton").click(function(){
+                /* Submit form using Ajax. Note it does not work to use button.on("click", function(e)) 
+                 * it muset be using form.on("submit", function(e) to send ajax request */
+                $("#dept_form").on("submit",function(e){
+                    
+                    /*var v = this.data("bootstrapValidator").validate();
+                    if(!v.isValid()){
+                        return;
+                    }*/
+                    
                     e.preventDefault();          
                     
                     //$("#departmentDiv").load("index");                        
                     
                     var form = $('#dept_form');
-                    //var arrayData = $(form).serializeArray();
-                    //var form_data2 = JSON.stringify(arrayData);
                     
+                    /*The following conversion is necessary to send server the correct json data*/
                     var jsonData = {};
                     $.each($(form).serializeArray(), function() {
                         jsonData[this.name] = this.value;
@@ -136,8 +142,9 @@
                         dataType: "json",                                                                         
                         
                         success: function(res){
-                            
+                            //alert("success");
                             if(res.validated){
+                                
                                 $('#resultContainer').text(JSON.stringify(res.department));
                                 $('#resultContainer').show();
                             }else{
@@ -156,7 +163,7 @@
                 }).on('changeDate', function(e) {
                     // Revalidate the date field
                     //alert("datepicker.on");
-                    //$('#eventForm').formValidation('revalidateField', 'date');
+                    $('#dept_form').bootstrapValidator('revalidateField', 'date');
                 });
                     
                 $('#dept_form').bootstrapValidator({
@@ -184,23 +191,27 @@
                             validators: {
                                  stringLength: {
                                     min: 2,
+                                    message: 'The minimum length is 2'
                                 },
                                 notEmpty: {
                                     message: 'Please input an address'
                                 }
                             }
                         },
-                        date: {
+                        begin_time: {
                             validators: {
                                 date: {
                                     format: 'YYYY-MM-DD',
                                     message: 'The value is not a valid date'
+                                },
+                                notEmpty: {
+                                    message: 'Please input or pick a date'
                                 }
                             }
                         }
                     }
-                })                
-                .on('submit', function(e) {
+                });                
+                /*.on('submit', function(e) {
                     
                     //alert("success");
                     //Prevent default submission of form
@@ -240,7 +251,7 @@
                         }
                     });
                     
-                });           
+                }); */       
                 
             });
     
