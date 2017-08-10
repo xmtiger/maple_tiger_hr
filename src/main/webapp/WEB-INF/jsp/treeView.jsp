@@ -85,7 +85,7 @@
         
         <br>       
         
-        <script type="text/javascript" src="${context}/resources/core/js/jquery-3.2.1.js"></script>
+        <script type="text/javascript" src="${context}/resources/core/js/jquery.min.js"></script>
         <script type="text/javascript" src="${context}/resources/core/js/jquery.ztree.core.js"></script>
         
         <script>
