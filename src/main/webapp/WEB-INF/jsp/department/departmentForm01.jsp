@@ -1,19 +1,24 @@
-
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 <!DOCTYPE html>
 <html lang="en">
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
-        
-        <!-- Latest compiled and minified CSS -->
+        <c:set var="context" value="${pageContext.request.contextPath}"/>
+        <!-- Latest compiled and minified CSS -->    
+        <!-- Bootstrap CSS -->
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
         
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css">
-        <!-- Bootstrap CSS -->
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.3.0/css/datepicker.min.css" />
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.3.0/css/datepicker3.min.css" />
         
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-validator/0.4.5/js/bootstrapvalidator.min.js"></script>
+        <!--link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.3.0/css/datepicker.min.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.3.0/css/datepicker3.min.css" /-->
+        
+        <link rel="stylesheet" href="${context}/resources/bootstrapDatePicker/css/bootstrap-datepicker.min.css"/>
+        <link rel="stylesheet" href="${context}/resources/bootstrapDatePicker/css/bootstrap-datepicker3.min.css"/>
+        
+        <link rel="stylesheet" href="${context}/resources/bootstrapValidator/css/bootstrapValidator.min.css" />
         
         <title>Department Form Page</title>
         
@@ -32,7 +37,9 @@
     </head>
 
     <body>
-         <form class="well form-horizontal" action=" " method="post"  id="dept_form">
+        <!-- disable action and method properties of the following form action=" " method="post"
+        Only activate click event and start submit from click function-->
+         <form class="well form-horizontal"   id="dept_form">
             <fieldset>
 
                 <!-- Form Name -->
@@ -69,7 +76,7 @@
                     <div class="col-md-4 date">
                         <div class="input-group input-append date" id="datePicker">
                             
-                            <input type="text" class="form-control" value="yyyy-mm-dd" name="begin_time" id = "dept_begin_time"/>
+                            <input type="text" class="form-control"  name="begin_time" id="dept_begin_time"/>
                             <span class="input-group-addon add-on"><span class="glyphicon glyphicon-calendar"></span></span>
                         </div>
                     </div>     
@@ -79,7 +86,7 @@
                 <div class="form-group">
                   <label class="col-md-4 control-label"></label>
                   <div class="col-md-4">
-                    <button id="addButton" type="submit" class="btn btn-warning" >Send <span class="glyphicon glyphicon-send"></span></button>
+                    <button id="addButton" class="btn btn-warning" >Send <span class="glyphicon glyphicon-send"></span></button>
                   </div>
                 </div>               
                 
@@ -88,53 +95,86 @@
          </form>
         <br>       
         <!-- Result Container  -->
+        <br>
+        <div id="resultContainer_click" style="display: none;">
+         <hr/>
+         <h4 style="color: green;">Submit function Response and JSON Response From Server</h4>
+          <pre style="color: green;">
+            <code></code>
+           </pre>
+        </div>
+        <br>
         <div id="resultContainer" style="display: none;">
          <hr/>
-         <h4 style="color: green;">JSON Response From Server</h4>
+         <h4 style="color: green;">Click function result</h4>
           <pre style="color: green;">
             <code></code>
            </pre>
         </div>
         
+        
         <!-- jQuery first, then Tether, then Bootstrap JS. -->
         <!-- jQuery library -->
-        <!--script src="resources/core/js/jquery.min.js"></script-->
+        <script src="${context}/resources/core/js/jquery.min.js"></script>
         
-        <!-- Latest compiled JavaScript -->
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+        <!-- Latest compiled JavaScript -->      
+        
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
         
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.3.0/js/bootstrap-datepicker.min.js"></script>
+        <!--script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.3.0/js/bootstrap-datepicker.min.js"></script-->
+        <script src="${context}/resources/bootstrapDatePicker/js/bootstrap-datepicker.min.js"></script>
         
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-validator/0.4.5/js/bootstrapvalidator.min.js"></script>
-                
+        <!--script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-validator/0.4.5/js/bootstrapvalidator.min.js"></script-->        
+        <script src= "${context}/resources/bootstrapValidator/js/bootstrapValidator.min.js"> </script>        
         
         <script type="text/javascript">
             $(document).ready(function() {
                 
+                var ctx ="${pageContext.request.contextPath}"; 
+                
+                
                 $("#addButton").on("click",function(e){
+                    e.preventDefault();
+                    
+                    $('#resultContainer_click').text(ctx);
+                    $('#resultContainer_click').show();
+                    
                     var bootstrapValidator = $("#dept_form").data('bootstrapValidator');
                     bootstrapValidator.validate();
-                    if(bootstrapValidator.isValid())
+                    if(bootstrapValidator.isValid()){
+                        $('#resultContainer_click').text("validation is passed in click function");
+                        $('#resultContainer_click').show();
+                        
                         $("#dept_form").submit();
-                    else 
+                    } else{
+                        $('#resultContainer_click').text("validation is not passed in click function");
+                        $('#resultContainer_click').show();
+                        
                         return;
+                    } 
+                        
                 });
                 
                 /* Submit form using Ajax. Note it does not work to use button.on("click", function(e)) 
                  * it muset be using form.on("submit", function(e) to send ajax request */
                 $("#dept_form").on("submit",function(e){
                     
-                    /*var v = this.data("bootstrapValidator").validate();
-                    if(!v.isValid()){
-                        return;
-                    }*/
-                    
-
-                    
                     e.preventDefault();          
-                    
+                                       
+                    var bootstrapValidator = $("#dept_form").data('bootstrapValidator');
+                    bootstrapValidator.validate();
+                    if(bootstrapValidator.isValid()){
+                        $('#resultContainer').text("validation is passed in sumbit function");
+                        $('#resultContainer').show();                        
+                       
+                    } else{
+                        $('#resultContainer').text("validation is not passed in submit function");
+                        $('#resultContainer').show();
+                        
+                        return;
+                    }
                     //$("#departmentDiv").load("index");                        
+                    var url_address = ctx + "/department/create";
                     
                     var form = $('#dept_form');
                     
@@ -149,7 +189,7 @@
                     $.ajax({
                         type: "POST",
                         contentType: "application/json; charset=utf-8",
-                        url: "department/create",
+                        url: url_address,
                         data: form_data,
                         dataType: "json",                                                                         
                         
@@ -162,7 +202,7 @@
                             }else{
                                 //Set error messages
                                 $.each(res.errorMessages,function(key,value){
-                                        $('input[name='+key+']').after('<span class="error">'+value+'</span>');
+                                    $('input[name='+key+']').after('<span class="error">'+value+'</span>');
                                 });
                             }
                         }
@@ -170,8 +210,9 @@
                 });
                 
                 $("#datePicker").datepicker({
-                    autoclose: true,
+                    autoclose: false,
                     format: 'yyyy-mm-dd'
+                    
                 }).on('changeDate', function(e) {
                     // Revalidate the date field
                     //alert("datepicker.on");
