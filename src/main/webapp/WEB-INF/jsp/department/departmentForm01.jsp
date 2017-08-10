@@ -111,6 +111,16 @@
         
         <script type="text/javascript">
             $(document).ready(function() {
+                
+                $("#addButton").on("click",function(e){
+                    var bootstrapValidator = $("#dept_form").data('bootstrapValidator');
+                    bootstrapValidator.validate();
+                    if(bootstrapValidator.isValid())
+                        $("#dept_form").submit();
+                    else 
+                        return;
+                });
+                
                 /* Submit form using Ajax. Note it does not work to use button.on("click", function(e)) 
                  * it muset be using form.on("submit", function(e) to send ajax request */
                 $("#dept_form").on("submit",function(e){
@@ -119,6 +129,8 @@
                     if(!v.isValid()){
                         return;
                     }*/
+                    
+
                     
                     e.preventDefault();          
                     
