@@ -163,7 +163,7 @@
                 }).on('changeDate', function(e) {
                     // Revalidate the date field
                     //alert("datepicker.on");
-                    $('#dept_form').bootstrapValidator('revalidateField', 'date');
+                    $('#dept_form').bootstrapValidator('revalidateField', 'begin_time');
                 });
                     
                 $('#dept_form').bootstrapValidator({
