@@ -76,7 +76,7 @@
                     <div class="col-md-4 date">
                         <div class="input-group input-append date" id="datePicker">
                             
-                            <input type="text" class="form-control"  name="begin_time" id="dept_begin_time"/>
+                            <input type="text" placeholder="YYYY-MM-DD" class="form-control"  name="begin_time" id="dept_begin_time"/>
                             <span class="input-group-addon add-on"><span class="glyphicon glyphicon-calendar"></span></span>
                         </div>
                     </div>     
