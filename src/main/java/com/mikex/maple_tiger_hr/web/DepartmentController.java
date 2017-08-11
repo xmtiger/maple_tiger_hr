@@ -31,6 +31,7 @@ import org.springframework.validation.FieldError;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -70,6 +71,18 @@ public class DepartmentController {
         Department dept = new Department();
         model.put("department", dept);
         return VIEWS_DEPT_CREATE_OR_UPDATE_FORM;
+    }
+    
+    @RequestMapping(value = "department/id/{id}", method = RequestMethod.GET)
+    public @ResponseBody Department departmentCreateOrUpdate(@PathVariable String id){
+        
+        Department dept = new Department();
+        int dep_id = Integer.parseInt(id);
+        if(dep_id > 0){
+            dept = this.hrService.findDepartmentById(dep_id);
+            //return dept;
+        }
+        return dept;
     }
         
     @RequestMapping(value = "department/create", method=RequestMethod.POST, produces = { MediaType.APPLICATION_JSON_VALUE})    

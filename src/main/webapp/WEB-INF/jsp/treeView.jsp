@@ -99,13 +99,36 @@
             {name:"test2", open:false, children:[
                {name:"test2_1"}, {name:"test2_2"}]}
             ];
+            
+            //jQuery function
             $(document).ready(function(){
                zTreeObj = $.fn.zTree.init($("#treeDemo"), setting, zNodes);
                
                $("#addButton").click(function(){
-                   //alert("request departmentForm.jsp");
+                   
+                   $("#departmentDiv").html("the page is loading, please wait...");
+                   
+                   var id = 2;
+                   var request = "department/" + "id/" + id;
+                   
+                   //The following load function successfully shows how the load function works
+                   /*$("#departmentDiv").load(request, function(res, status, xhr){
+                       if(status === "success"){
+                           $("#departmentDiv").html(res);
+                       }
+                   });*/
+                   
+                   /*The following get function shall have similar effects as the upper load function.
+                    * but the get function requires JSON.stringify function to convert object to string*/
+                   /*$.get(request, function(res, status){
+                       if(status === "success"){
+                           $("#departmentDiv").html(JSON.stringify(res));
+                       }
+                   });*/
+                   
+                   //The following load function shows how to request loading a page
                    $("#departmentDiv").load("department/new");
-                   //document.location.href="department/new";
+                   
                });
                
             });          

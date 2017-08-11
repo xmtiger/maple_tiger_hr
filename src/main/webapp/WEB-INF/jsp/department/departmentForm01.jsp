@@ -86,7 +86,7 @@
                 <div class="form-group">
                   <label class="col-md-4 control-label"></label>
                   <div class="col-md-4">
-                    <button id="addButton" class="btn btn-warning" >Send <span class="glyphicon glyphicon-send"></span></button>
+                    <button id="sendButton" class="btn btn-warning" >Send <span class="glyphicon glyphicon-send"></span></button>
                   </div>
                 </div>               
                 
@@ -132,8 +132,9 @@
                 
                 var ctx ="${pageContext.request.contextPath}"; 
                 
-                
-                $("#addButton").on("click",function(e){
+                /*Note: the button id shall be unique, even when this jsp page is loaded from other pages
+                 * otherwise the click function of this button does not work*/
+                $("#sendButton").on("click",function(e){
                     e.preventDefault();
                     
                     $('#resultContainer_click').text(ctx);
