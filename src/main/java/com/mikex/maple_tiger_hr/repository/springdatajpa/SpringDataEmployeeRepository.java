@@ -21,7 +21,7 @@ import org.springframework.data.repository.query.Param;
 public interface SpringDataEmployeeRepository extends EmployeeRepository, Repository<Employee, Integer> {
     
     @Override
-    @Query("SELECT DISTINCT employee FROM Employee employee WHERE employee.lastName LIKE :lastName%")
+    @Query("SELECT employee FROM Employee employee WHERE employee.lastName LIKE :lastName%")
     public Collection<Employee> findByLastName(@Param("lastName") String lastName);
     
     @Override

@@ -7,6 +7,7 @@ package com.mikex.maple_tiger_hr.repository.jpa;
 
 import com.mikex.maple_tiger_hr.model.Department;
 import com.mikex.maple_tiger_hr.repository.DepartmentRepository;
+import java.util.Collection;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -30,6 +31,13 @@ public class JpaDepartmentRepositoryImpl implements DepartmentRepository{
         Query query = this.em.createQuery("SELECT DISTINCT dept FROM Department dept left join fetch dept.employees WHERE dept.id = :id");
         query.setParameter("id", id);
         return (Department) query.getSingleResult();
+    }
+    
+    @Override
+    public Collection<Department> findDepartmentByName(String name) throws DataAccessException{
+        Query query = this.em.createQuery("SELECT dept FROM Department dept left join fetch dept.employees WHERE dept.name = :name");
+        query.setParameter("name", name);
+        return query.getResultList();
     }
 
     @Override

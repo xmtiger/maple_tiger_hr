@@ -7,6 +7,7 @@ package com.mikex.maple_tiger_hr.repository.springdatajpa;
 
 import com.mikex.maple_tiger_hr.model.Department;
 import com.mikex.maple_tiger_hr.repository.DepartmentRepository;
+import java.util.Collection;
 
 import org.springframework.dao.DataAccessException;
 
@@ -25,4 +26,7 @@ public interface SpringDataDepartmentRepository extends DepartmentRepository, Re
     @Query("SELECT DISTINCT dept FROM Department dept left join fetch dept.employees WHERE dept.id = :id")
     public Department findDepartmentById(@Param("id") int id) throws DataAccessException;
     
+    @Override
+    @Query("SELECT dept FROM Department dept left join fetch dept.employees WHERE dept.name = :name")
+    public Collection<Department> findDepartmentByName(@Param("name") String name) throws DataAccessException;
 }

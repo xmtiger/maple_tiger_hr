@@ -7,7 +7,9 @@ package com.mikex.maple_tiger_hr.repository.jdbc;
 
 import com.mikex.maple_tiger_hr.model.Department;
 import com.mikex.maple_tiger_hr.repository.DepartmentRepository;
+import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.sql.DataSource;
@@ -59,7 +61,25 @@ public class JdbcDepartmentRepositoryImpl implements DepartmentRepository{
         
         return department;
     }    
-
+    
+    @Override
+    public Collection<Department> findDepartmentByName(String name) throws DataAccessException{
+        List<Department> departments;
+        try{
+            Map<String, Object> params = new HashMap<>();
+            params.put("name", name);
+            departments = this.namedParameterJdbcTemplate.query(
+                    "SELECT id, name, begin_time, end_time, address FROM departments WHERE name = :name", 
+                    params, 
+                    BeanPropertyRowMapper.newInstance(Department.class));
+            
+        } catch (EmptyResultDataAccessException ex){
+            throw new ObjectRetrievalFailureException(Department.class, name);
+        }
+        
+        return departments;
+    }
+    
     @Override
     public void save(Department department) throws DataAccessException {
         

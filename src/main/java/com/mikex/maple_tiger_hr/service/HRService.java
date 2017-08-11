@@ -25,5 +25,7 @@ public interface HRService {
     
     Department findDepartmentById(int id) throws DataAccessException;
     
+    Collection<Department> findDeaprtmentByName(String name) throws DataAccessException;
     
+    void saveDepartment(Department department) throws DataAccessException;
 }

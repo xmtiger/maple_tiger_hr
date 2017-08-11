@@ -77,4 +77,14 @@ public class HRServiceImpl implements HRService {
     public Department findDepartmentById(int id) throws DataAccessException {
         return departmentRepository.findDepartmentById(id);
     }
+    
+    @Override
+    public Collection<Department> findDeaprtmentByName(String name) throws DataAccessException{
+        return departmentRepository.findDepartmentByName(name);
+    }
+    
+    @Override
+    public void saveDepartment(Department department) throws DataAccessException{
+        departmentRepository.save(department);
+    }
 }

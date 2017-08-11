@@ -39,6 +39,12 @@ public class AbstractHRServiceTests {
     }
     
     @Test
+    public void shouldFindDepartmentByName(){
+        Collection<Department> departments = this.hrService.findDeaprtmentByName("engineering");
+        assertThat(departments.size()).isEqualTo(1);
+    }
+    
+    @Test
     @Transactional
     public void shouldInsertEmployee(){
         
@@ -71,6 +77,29 @@ public class AbstractHRServiceTests {
     
     @Test
     @Transactional
+    public void shouldInsertDepartment(){
+        Department dept = new Department();
+        dept.setName("Civil Structural");
+        dept.setAddress("123 Springland, Verdun, Q.C");
+        
+        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        try {
+            Date date = dateFormat.parse("1971-07-06");
+            dept.setBegin_time(date);
+        } catch (ParseException ex) {
+            Logger.getLogger(AbstractHRServiceTests.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        this.hrService.saveDepartment(dept);
+        assertThat(dept.getId().intValue()).isNotEqualTo(0);
+        
+        Collection<Department> departments = this.hrService.findDeaprtmentByName("Civil Structural");
+        int found = departments.size();
+        assertThat(departments.size()).isEqualTo(1);
+    } 
+    
+    @Test
+    @Transactional
     public void shouldUpdateEmployee(){
         Employee employee = this.hrService.findEmployeeById(1);
         String oldLastName = employee.getLastName();
@@ -82,5 +111,19 @@ public class AbstractHRServiceTests {
         // retrieving new name from database
         employee = this.hrService.findEmployeeById(1);
         assertThat(employee.getLastName()).isEqualTo(newLastName);
+    }
+    
+    @Test
+    @Transactional
+    public void shouldUpdateDepartment(){
+        Department department = this.hrService.findDepartmentById(1);
+        String oldName = department.getName();
+        String newName = oldName + "X";
+        
+        department.setName(newName);
+        this.hrService.saveDepartment(department);
+        
+        department = this.hrService.findDepartmentById(1);
+        assertThat(department.getName()).isEqualTo(newName);
     }
 }

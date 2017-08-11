@@ -6,6 +6,7 @@
 package com.mikex.maple_tiger_hr.repository;
 
 import com.mikex.maple_tiger_hr.model.Department;
+import java.util.Collection;
 import org.springframework.dao.DataAccessException;
 
 /**
@@ -15,6 +16,8 @@ import org.springframework.dao.DataAccessException;
 public interface DepartmentRepository {
     
     Department findDepartmentById(int id) throws DataAccessException;
+    
+    Collection<Department> findDepartmentByName(String name) throws DataAccessException;
     
     void save(Department department) throws DataAccessException;
 }
