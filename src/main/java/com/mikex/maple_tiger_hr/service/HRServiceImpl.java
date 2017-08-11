@@ -74,16 +74,19 @@ public class HRServiceImpl implements HRService {
     }   
 
     @Override
+    @Transactional(readOnly = true)
     public Department findDepartmentById(int id) throws DataAccessException {
         return departmentRepository.findDepartmentById(id);
     }
     
     @Override
+    @Transactional(readOnly = true)
     public Collection<Department> findDeaprtmentByName(String name) throws DataAccessException{
         return departmentRepository.findDepartmentByName(name);
     }
     
     @Override
+    @Transactional
     public void saveDepartment(Department department) throws DataAccessException{
         departmentRepository.save(department);
     }

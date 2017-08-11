@@ -9,7 +9,9 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mikex.maple_tiger_hr.model.Department;
 import com.mikex.maple_tiger_hr.model.DepartmentJsonResponse;
+import com.mikex.maple_tiger_hr.service.HRService;
 import com.mikex.maple_tiger_hr.validator.DepartmentFormValidator;
+
 import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -42,6 +44,9 @@ import org.springframework.web.bind.annotation.RestController;
  */
 @Controller
 public class DepartmentController {
+    
+    @Autowired
+    protected HRService hrService;
     
     private final Logger logger = LoggerFactory.getLogger(DepartmentController.class);
     
@@ -84,6 +89,11 @@ public class DepartmentController {
             response.setErrorMessages(errors);
         } else{
             // implementing business logic to save data into database
+            this.hrService.saveDepartment(dept);
+            int deptId = dept.getId();
+            
+            logger.debug("deptId = " + deptId + "===============================================");
+            
             response.setValidated(true);
             response.setDepartment(dept);
         }     
