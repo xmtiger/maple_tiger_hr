@@ -10,10 +10,12 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mikex.maple_tiger_hr.model.Department;
 import com.mikex.maple_tiger_hr.model.DepartmentJsonResponse;
 import com.mikex.maple_tiger_hr.service.HRService;
+import com.mikex.maple_tiger_hr.util.TreeNode;
 import com.mikex.maple_tiger_hr.validator.DepartmentFormValidator;
 
 import java.io.IOException;
 import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Iterator;
 import java.util.Map;
@@ -71,19 +73,7 @@ public class DepartmentController {
         Department dept = new Department();
         model.put("department", dept);
         return VIEWS_DEPT_CREATE_OR_UPDATE_FORM;
-    }
-    
-    @RequestMapping(value = "department/id/{id}", method = RequestMethod.GET)
-    public @ResponseBody Department departmentCreateOrUpdate(@PathVariable String id){
-        
-        Department dept = new Department();
-        int dep_id = Integer.parseInt(id);
-        if(dep_id > 0){
-            dept = this.hrService.findDepartmentById(dep_id);
-            //return dept;
-        }
-        return dept;
-    }
+    }   
         
     @RequestMapping(value = "department/create", method=RequestMethod.POST, produces = { MediaType.APPLICATION_JSON_VALUE})    
     public @ResponseBody DepartmentJsonResponse processCreationForm(@RequestBody @Valid Department dept, BindingResult bindingResult){
@@ -130,5 +120,72 @@ public class DepartmentController {
              java.util.logging.Logger.getLogger(DepartmentController.class.getName()).log(Level.SEVERE, null, ex);
         }*/       
         
+    }
+    
+    @RequestMapping(value = "department/id/{id}", method = RequestMethod.GET)
+    public @ResponseBody Department departmentCreateOrUpdate(@PathVariable String id){
+        
+        Department dept = new Department();
+        int dep_id = Integer.parseInt(id);
+        if(dep_id > 0){
+            dept = this.hrService.findDepartmentById(dep_id);
+            //return dept;
+        }
+        return dept;
+    }
+    
+    @RequestMapping(value = "department/all", method = RequestMethod.GET)
+    public @ResponseBody TreeNode showAllDepartments() throws ParseException{
+        
+        TreeNode tree = new TreeNode();
+        
+        int id = 0;
+        
+        Department dept01 = new Department();
+        dept01.setId(++id);
+        dept01.setName("Management");
+        dept01.setAddress("121 willibrord, verdun, Q.C");        
+        dept01.setBegin_time((new SimpleDateFormat("YYYY-MM-dd").parse("2017-05-01")));
+        
+        TreeNode<Department> treeNode01 = new TreeNode(dept01);
+        tree.add(treeNode01);
+
+        Department dept02 = new Department();
+        dept02.setId(++id);
+        dept02.setName("Engineering");
+        dept02.setAddress("121 willibrord, verdun, Q.C");        
+        dept02.setBegin_time((new SimpleDateFormat("YYYY-MM-dd").parse("2017-05-01")));
+        
+        TreeNode<Department> treeNode02 = new TreeNode(dept02);
+        tree.add(treeNode02);
+        
+        Department dept03 = new Department();
+        dept03.setId(++id);
+        dept03.setName("Accounting");
+        dept03.setAddress("121 willibrord, verdun, Q.C");        
+        dept03.setBegin_time((new SimpleDateFormat("YYYY-MM-dd").parse("2017-05-01")));
+        
+        TreeNode<Department> treeNode03 = new TreeNode(dept03);
+        tree.add(treeNode03);
+        
+        Department dept021 = new Department();
+        dept021.setId(++id);
+        dept021.setName("Civil Structural");
+        dept021.setAddress("121 willibrord, verdun, Q.C");        
+        dept021.setBegin_time((new SimpleDateFormat("YYYY-MM-dd").parse("2017-05-01")));
+        
+        TreeNode<Department> treeNode021 = new TreeNode(dept021);
+        treeNode02.add(treeNode021);
+                
+        Department dept022 = new Department();
+        dept022.setId(++id);
+        dept022.setName("Mechanical");
+        dept022.setAddress("121 willibrord, verdun, Q.C");        
+        dept022.setBegin_time((new SimpleDateFormat("YYYY-MM-dd").parse("2017-05-01")));
+        
+        TreeNode<Department> treeNode022 = new TreeNode(dept022);
+        treeNode02.add(treeNode022);
+        
+        return tree;
     }
 }
