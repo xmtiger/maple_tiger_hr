@@ -94,5 +94,10 @@ public class JdbcDepartmentRepositoryImpl implements DepartmentRepository{
                     parameterSource);
         }
     }
+
+    @Override
+    public Collection<Department> findAllDepartments() throws DataAccessException {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
     
 }

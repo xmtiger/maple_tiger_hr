@@ -26,6 +26,8 @@ public class JpaDepartmentRepositoryImpl implements DepartmentRepository{
     @PersistenceContext
     private EntityManager em;
     
+    /*Note: The Selection sentence shows "Department" (rather than "Departments"), 
+    * which I think is the Class name of the Class "Department" rather than the table name "departments" */
     @Override
     public Department findDepartmentById(int id) throws DataAccessException {
         Query query = this.em.createQuery("SELECT DISTINCT dept FROM Department dept left join fetch dept.employees WHERE dept.id = :id");
@@ -50,4 +52,9 @@ public class JpaDepartmentRepositoryImpl implements DepartmentRepository{
         
     }
     
+    @Override
+    public Collection<Department> findAllDepartments() throws DataAccessException {
+        Query query = this.em.createQuery("SELECT dept FROM Department dept");
+        return query.getResultList();
+    }
 }

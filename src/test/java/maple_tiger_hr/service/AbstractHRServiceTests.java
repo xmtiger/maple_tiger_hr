@@ -40,8 +40,14 @@ public class AbstractHRServiceTests {
     
     @Test
     public void shouldFindDepartmentByName(){
-        Collection<Department> departments = this.hrService.findDeaprtmentByName("engineering");
+        Collection<Department> departments = this.hrService.findDepartmentByName("engineering");
         assertThat(departments.size()).isEqualTo(1);
+    }
+    
+    @Test
+    public void shouldFindAllDepartments(){
+        Collection<Department> departments = this.hrService.findAllDepartments();
+        assertThat(departments.size()).isGreaterThan(2);
     }
     
     @Test
@@ -93,7 +99,7 @@ public class AbstractHRServiceTests {
         this.hrService.saveDepartment(dept);
         assertThat(dept.getId().intValue()).isNotEqualTo(0);
         
-        Collection<Department> departments = this.hrService.findDeaprtmentByName("Civil Structural");
+        Collection<Department> departments = this.hrService.findDepartmentByName("Civil Structural");
         int found = departments.size();
         assertThat(departments.size()).isEqualTo(1);
     } 

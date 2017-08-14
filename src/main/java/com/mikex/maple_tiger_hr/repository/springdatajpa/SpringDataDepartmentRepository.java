@@ -29,4 +29,8 @@ public interface SpringDataDepartmentRepository extends DepartmentRepository, Re
     @Override
     @Query("SELECT dept FROM Department dept left join fetch dept.employees WHERE dept.name = :name")
     public Collection<Department> findDepartmentByName(@Param("name") String name) throws DataAccessException;
+    
+    @Override
+    @Query("SELECT dept FROM Department dept")
+    public Collection<Department> findAllDepartments() throws DataAccessException ;
 }

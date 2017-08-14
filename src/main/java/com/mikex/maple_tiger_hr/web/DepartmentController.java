@@ -135,57 +135,9 @@ public class DepartmentController {
     }
     
     @RequestMapping(value = "department/all", method = RequestMethod.GET)
-    public @ResponseBody TreeNode showAllDepartments() throws ParseException{
+    public @ResponseBody TreeNode<Department> showAllDepartments() throws ParseException{
         
-        TreeNode tree = new TreeNode();
-        
-        int id = 0;
-        
-        Department dept01 = new Department();
-        dept01.setId(++id);
-        dept01.setName("Management");
-        dept01.setAddress("121 willibrord, verdun, Q.C");        
-        dept01.setBegin_time((new SimpleDateFormat("YYYY-MM-dd").parse("2017-05-01")));
-        
-        TreeNode<Department> treeNode01 = new TreeNode(dept01);
-        tree.add(treeNode01);
-
-        Department dept02 = new Department();
-        dept02.setId(++id);
-        dept02.setName("Engineering");
-        dept02.setAddress("121 willibrord, verdun, Q.C");        
-        dept02.setBegin_time((new SimpleDateFormat("YYYY-MM-dd").parse("2017-05-01")));
-        
-        TreeNode<Department> treeNode02 = new TreeNode(dept02);
-        tree.add(treeNode02);
-        
-        Department dept03 = new Department();
-        dept03.setId(++id);
-        dept03.setName("Accounting");
-        dept03.setAddress("121 willibrord, verdun, Q.C");        
-        dept03.setBegin_time((new SimpleDateFormat("YYYY-MM-dd").parse("2017-05-01")));
-        
-        TreeNode<Department> treeNode03 = new TreeNode(dept03);
-        tree.add(treeNode03);
-        
-        Department dept021 = new Department();
-        dept021.setId(++id);
-        dept021.setName("Civil Structural");
-        dept021.setAddress("121 willibrord, verdun, Q.C");        
-        dept021.setBegin_time((new SimpleDateFormat("YYYY-MM-dd").parse("2017-05-01")));
-        
-        TreeNode<Department> treeNode021 = new TreeNode(dept021);
-        treeNode02.add(treeNode021);
-                
-        Department dept022 = new Department();
-        dept022.setId(++id);
-        dept022.setName("Mechanical");
-        dept022.setAddress("121 willibrord, verdun, Q.C");        
-        dept022.setBegin_time((new SimpleDateFormat("YYYY-MM-dd").parse("2017-05-01")));
-        
-        TreeNode<Department> treeNode022 = new TreeNode(dept022);
-        treeNode02.add(treeNode022);
-        
-        return tree;
+        TreeNode<Department> departments = this.hrService.getTreeFromDepartments();
+        return departments;
     }
 }

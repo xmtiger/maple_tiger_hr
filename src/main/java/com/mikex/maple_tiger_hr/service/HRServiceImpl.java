@@ -9,7 +9,10 @@ import com.mikex.maple_tiger_hr.model.Department;
 import com.mikex.maple_tiger_hr.model.Employee;
 import com.mikex.maple_tiger_hr.repository.DepartmentRepository;
 import com.mikex.maple_tiger_hr.repository.EmployeeRepository;
+import com.mikex.maple_tiger_hr.util.TreeNode;
+import java.text.SimpleDateFormat;
 import java.util.Collection;
+import java.util.Iterator;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Profile;
@@ -81,7 +84,7 @@ public class HRServiceImpl implements HRService {
     
     @Override
     @Transactional(readOnly = true)
-    public Collection<Department> findDeaprtmentByName(String name) throws DataAccessException{
+    public Collection<Department> findDepartmentByName(String name) throws DataAccessException{
         return departmentRepository.findDepartmentByName(name);
     }
     
@@ -89,5 +92,29 @@ public class HRServiceImpl implements HRService {
     @Transactional
     public void saveDepartment(Department department) throws DataAccessException{
         departmentRepository.save(department);
+    }
+    
+    @Override
+    @Transactional
+    public Collection<Department> findAllDepartments() throws DataAccessException{
+        return departmentRepository.findAllDepartments();
+        
+    }
+    
+    @Override
+    public TreeNode<Department> getTreeFromDepartments(){
+        TreeNode<Department> tree = new TreeNode<>();
+        
+        Collection<Department> departments = this.departmentRepository.findAllDepartments();
+        Iterator<Department> iter_departments = departments.iterator();
+        while(iter_departments.hasNext()){
+            
+            Department curDepartment = iter_departments.next();
+            TreeNode<Department> curTreeNode = new TreeNode(curDepartment);
+            //add the current node into the tree, and the adding procedure shall be implemented in the methods of the Class TreeNode 
+            tree.addNode(curTreeNode);
+        }       
+        
+        return tree;
     }
 }

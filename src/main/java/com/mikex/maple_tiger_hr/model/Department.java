@@ -12,6 +12,7 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.TreeSet;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -21,6 +22,10 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.persistence.FetchType;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
 
 import org.hibernate.validator.constraints.NotEmpty;
 import org.springframework.beans.support.MutableSortDefinition;
@@ -33,7 +38,7 @@ import org.springframework.format.annotation.DateTimeFormat;
  */
 @Entity
 @Table(name = "departments")
-public class Department extends NamedEntity implements Comparable<Department>, Copyable<Department> {
+public class Department extends NamedEntity implements Comparable<Department>, Copyable<Department>, Familyable<Department> {
     
     @Column(name = "begin_time")
     @Temporal(TemporalType.DATE)
@@ -43,15 +48,54 @@ public class Department extends NamedEntity implements Comparable<Department>, C
     @Column(name = "end_time")
     @Temporal(TemporalType.DATE)
     @DateTimeFormat(pattern = "yyyy-MM-dd")
-    @JsonIgnore         //to avoid json version error from ajax to controller
+    @JsonIgnore         //to avoid json version error from ajax to controller, when coversion with json data type.
     private Date end_time;
     
     @Column(name = "address")
     @NotEmpty(message="Enter an address.")
     private String address;
-
+    
+    //mappedBy means the class field name 
     @OneToMany(mappedBy = "department", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    //@JsonIgnore 
     private Set<Employee> employees;
+    
+    //The following fields are for department relationship
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinTable(name = "department_relationship", joinColumns = @JoinColumn(name = "id_child"),
+            inverseJoinColumns = @JoinColumn(name = "id_father"))
+    @JsonIgnore //to avoid infinite recursive definition actions.
+    private Department father;
+    
+    @OneToMany(fetch = FetchType.EAGER)
+    @JoinTable(name = "department_relationship", joinColumns = @JoinColumn(name = "id_father"),
+            inverseJoinColumns = @JoinColumn(name = "id_child"))
+    @JsonIgnore //to avoid infinite recursive definition actions.
+    private Set<Department> children;
+
+    /*public boolean addChild(Department child){
+        if(this.children == null){
+            children = new TreeSet<Department>();
+        }
+        
+        return children.add(child);
+    }*/
+    
+    public Department getFather() {
+        return father;
+    }
+
+    public void setFather(Department father) {
+        this.father = father;
+    }
+
+    public Set<Department> getChildren() {
+        return children;
+    }
+
+    public void setChildren(Set<Department> children) {
+        this.children = children;
+    }   
     
     protected Set<Employee> getEmployeesInternal(){
         if(this.employees == null){
@@ -62,9 +106,8 @@ public class Department extends NamedEntity implements Comparable<Department>, C
     
     protected void setEmployeesInternal(Set<Employee> employees){
         this.employees = employees;
-    }
+    }    
     
-    @JsonIgnore
     public void setEmployees(Set<Employee> employees){
         this.employees = employees;
     }
@@ -149,5 +192,39 @@ public class Department extends NamedEntity implements Comparable<Department>, C
                 + "; address: " + this.getAddress() 
                 + "; begin time: " +  this.getBegin_time();
                 
+    }
+
+    @Override
+    public boolean isTheFather(Department t) {
+        if(t == null)
+            return false;
+        
+        if(t.father == null)
+            return false;
+        
+        if( t.father.getId().equals(this.getId()))
+            return true;        
+        
+        /* the same can not be treated as unique name
+        if(t.father.getName().equals(this.getName()))
+            return true;
+        */
+        
+        return false;
+    }
+
+    @Override
+    public boolean isTheChildren(Department t) {
+        if(t == null)
+            return false;
+        
+        if(this.father == null)
+            return false;
+        
+        
+        if(this.father.getId().equals(t.getId()))
+                return true;
+                
+        return false;
     }
 }

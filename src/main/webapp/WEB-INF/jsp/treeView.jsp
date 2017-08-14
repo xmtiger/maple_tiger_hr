@@ -110,7 +110,12 @@
                     
                     if(objFromServer.data !== null){
                         this.id = objFromServer.data.id;
-                        this.name = objFromServer.data.name;
+                        if(objFromServer.dataType === "Department"){
+                            this.name = objFromServer.data.name;
+                        } else if(objFromServer.dataType === "Employee"){
+                            this.name = objFromServer.data.firstName + " " + objFromServer.data.lastName;
+                        }
+                        
                     }
                         
                     if(objFromServer.children.length !== 0){                   
@@ -119,7 +124,8 @@
                             this.children[i] = new TreeNodeConverter(objFromServer.children[i]);
                             this.children[i].childrenFunc(objFromServer.children[i]);
                         }
-                    }
+                    }           
+                    
                 };    
             }
             
@@ -139,14 +145,14 @@
                 };
             }
             var root = new Department("", "", "", "");
-            var dept01 = new Department("1","Management", "123 Springland", "2010-09-08");
-            var dept02 = new Department("2","Engineering", "123 Springland", "2010-09-08");
-            var dept021 = new Department("3","Civil", "123 Springland", "2010-09-08");
-            var dept022 = new Department("4","Structural", "123 Springland", "2010-09-08");
+            var dept01 = new Department("1","Management01", "123 Springland", "2010-09-08");
+            var dept02 = new Department("2","Engineering01", "123 Springland", "2010-09-08");
+            var dept021 = new Department("3","Civil01", "123 Springland", "2010-09-08");
+            var dept022 = new Department("4","Structural01", "123 Springland", "2010-09-08");
             dept02.children[dept02.children.length] = dept021;
             dept02.children[dept02.children.length] = dept022;
             
-            var dept03 = new Department("5","Accounting", "123 Springland", "2010-09-08");
+            var dept03 = new Department("5","Accounting01", "123 Springland", "2010-09-08");
             
             root.children[root.children.length] = dept01;
             root.children[root.children.length] = dept02;
@@ -229,6 +235,8 @@
                     
                     $.get(request, function(res, status){
                         if(status === "success"){
+                            
+                            //$("#departmentDiv").html(JSON.stringify(res));
                             
                             var tree_test = new TreeNodeConverter(res);
                             tree_test.childrenFunc(res);

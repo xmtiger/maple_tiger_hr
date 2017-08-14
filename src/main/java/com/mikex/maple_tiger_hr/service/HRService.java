@@ -7,6 +7,7 @@ package com.mikex.maple_tiger_hr.service;
 
 import com.mikex.maple_tiger_hr.model.Department;
 import com.mikex.maple_tiger_hr.model.Employee;
+import com.mikex.maple_tiger_hr.util.TreeNode;
 import org.springframework.dao.DataAccessException;
 
 import java.util.Collection;
@@ -25,7 +26,11 @@ public interface HRService {
     
     Department findDepartmentById(int id) throws DataAccessException;
     
-    Collection<Department> findDeaprtmentByName(String name) throws DataAccessException;
+    Collection<Department> findDepartmentByName(String name) throws DataAccessException;
     
     void saveDepartment(Department department) throws DataAccessException;
+    
+    Collection<Department> findAllDepartments() throws DataAccessException;
+    
+    TreeNode<Department> getTreeFromDepartments();
 }

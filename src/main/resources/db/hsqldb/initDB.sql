@@ -7,8 +7,10 @@
  * Author:  xmtig
  * Created: 24-Jul-2017
  */
-
+/*table employee and department_relationship dependent on department must be dropped first, 
+then the table department can be dropped */
 DROP TABLE employees IF EXISTS;
+DROP TABLE department_relationship IF EXISTS;
 DROP TABLE departments IF EXISTS;
 DROP TABLE timecodes IF EXISTS;
 DROP TABLE timesheets IF EXISTS;
@@ -31,6 +33,14 @@ CREATE TABLE departments (
     end_time        DATE,
     address         VARCHAR(255)
 );
+
+CREATE TABLE department_relationship(
+    id_father       INTEGER NOT NULL,
+    id_child        INTEGER NOT NULL
+);
+
+ALTER TABLE department_relationship ADD CONSTRAINT fk_dept_father FOREIGN KEY (id_father) REFERENCES departments (id);
+ALTER TABLE department_relationship ADD CONSTRAINT fk_dept_child FOREIGN KEY (id_child) REFERENCES departments (id);
 
 ALTER TABLE employees ADD CONSTRAINT fk_dept_employee FOREIGN KEY (dept_id) REFERENCES departments (id); 
 

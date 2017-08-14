@@ -20,4 +20,6 @@ public interface DepartmentRepository {
     Collection<Department> findDepartmentByName(String name) throws DataAccessException;
     
     void save(Department department) throws DataAccessException;
+    
+    Collection<Department> findAllDepartments() throws DataAccessException;
 }

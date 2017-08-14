@@ -5,7 +5,9 @@
  */
 package com.mikex.maple_tiger_hr.util;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.mikex.maple_tiger_hr.model.Copyable;
+import com.mikex.maple_tiger_hr.model.Familyable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -13,17 +15,36 @@ import java.util.List;
  *
  * @author MikeX
  */
-public class TreeNode<T extends Comparable<T> & Copyable<T>> {
+public class TreeNode<T extends Comparable<T> & Copyable<T> & Familyable<T>> {
     
     /**
    * This node's parent node.  If this is the root of the tree then
    * the parent will be <code>null</code>.
    */        
+    @JsonIgnore
     private TreeNode<T> parent;
     
     private T data;
     
     private List<TreeNode<T>> children = new ArrayList<>();
+    
+    private String dataType;
+
+    public TreeNode<T> getParent() {
+        return parent;
+    }
+
+    public void setParent(TreeNode<T> parent) {
+        this.parent = parent;
+    }
+
+    public String getDataType() {
+        return dataType;
+    }
+
+    public void setDataType(String dataType) {
+        this.dataType = dataType;
+    }
     
     public TreeNode(){
         
@@ -31,7 +52,55 @@ public class TreeNode<T extends Comparable<T> & Copyable<T>> {
     
     public TreeNode(T node){
         data = node;
+        dataType = node.getClass().getSimpleName();
     }
+    
+    //add the node into the tree, the tree shall have automatically funciton to adjust the branch, leaf, etc..
+    public boolean addNode(TreeNode<T> nodeToBeAdded){
+        
+        boolean ifAdded = false;
+                
+        //firstly, compare with the current node
+        if(this.data != null){
+            boolean isFather = this.data.isTheFather(nodeToBeAdded.data);
+            if(isFather){
+                nodeToBeAdded.parent = this;
+                return this.children.add(nodeToBeAdded);
+            }  
+
+            boolean isChild = this.data.isTheChildren(nodeToBeAdded.data);
+            if(isChild){
+                this.parent.children.add(nodeToBeAdded);
+                this.parent.children.remove(this);
+                
+                this.parent = nodeToBeAdded;
+                nodeToBeAdded.children.add(this);
+                
+                return true;
+            }
+        }       
+                
+        //then, compare with the children of the current node
+        for(TreeNode<T> t: this.children){
+            ifAdded = t.addNode(nodeToBeAdded);
+            
+            if(ifAdded)
+                return true;            
+        }
+
+        if(!ifAdded && isRoot()){
+            if(this.parent != null){
+                ifAdded = this.parent.children.add(nodeToBeAdded);
+                nodeToBeAdded.parent = this.parent;
+            }else{
+                ifAdded = this.children.add(nodeToBeAdded);
+                nodeToBeAdded.parent = this;
+            }            
+        }
+                
+        return ifAdded;
+    }
+    
     
     public boolean add(TreeNode<T> child){
         

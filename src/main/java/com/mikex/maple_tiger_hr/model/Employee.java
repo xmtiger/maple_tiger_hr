@@ -5,6 +5,7 @@
  */
 package com.mikex.maple_tiger_hr.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
@@ -33,6 +34,7 @@ public class Employee extends Person {
     
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "dept_id")
+    @JsonIgnore
     private Department department;
 
     
