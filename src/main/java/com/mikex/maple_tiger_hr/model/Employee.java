@@ -23,7 +23,7 @@ import org.hibernate.validator.constraints.NotEmpty;
  */
 @Entity
 @Table(name = "employees")
-public class Employee extends Person {
+public class Employee extends Person implements Comparable<Employee>, Familyable<Employee> {
          
     @Column(name = "home_address")
     private String home_address;
@@ -61,5 +61,25 @@ public class Employee extends Person {
     public void setDepartment(Department department) {
         this.department = department;
     } 
+
+    @Override
+    public int compareTo(Employee t) {
+        if(this.id.equals(t.id))
+            return 0;
+        
+        return -1;
+        
+    }
+
+    @Override
+    public boolean isTheFather(Employee t) {
+        return false;
+        
+    }
+
+    @Override
+    public boolean isTheChildren(Employee t) {
+        return false;
+    }
     
 }

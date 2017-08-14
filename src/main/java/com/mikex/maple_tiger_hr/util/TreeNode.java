@@ -6,8 +6,11 @@
 package com.mikex.maple_tiger_hr.util;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.mikex.maple_tiger_hr.model.BaseEntity;
 import com.mikex.maple_tiger_hr.model.Copyable;
 import com.mikex.maple_tiger_hr.model.Familyable;
+import com.mikex.maple_tiger_hr.model.NamedEntity;
+import com.mikex.maple_tiger_hr.model.Person;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -15,7 +18,7 @@ import java.util.List;
  *
  * @author MikeX
  */
-public class TreeNode<T extends Comparable<T> & Copyable<T> & Familyable<T>> {
+public class TreeNode<T extends Comparable<T> & Familyable<T>> {
     
     /**
    * This node's parent node.  If this is the root of the tree then
@@ -29,7 +32,30 @@ public class TreeNode<T extends Comparable<T> & Copyable<T> & Familyable<T>> {
     private List<TreeNode<T>> children = new ArrayList<>();
     
     private String dataType;
+    
+    //Another way is to use interface "Nameable & IdAble", but I decided to use instanceof to do the type conversion...
+    @JsonIgnore
+    private Integer id;     //To have an id, the T must be child class of BaseEntity 
+    
+    private String name;    //To have an name, the T must be child class of NamedEntity or Person.
 
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    
     public TreeNode<T> getParent() {
         return parent;
     }
@@ -53,6 +79,15 @@ public class TreeNode<T extends Comparable<T> & Copyable<T> & Familyable<T>> {
     public TreeNode(T node){
         data = node;
         dataType = node.getClass().getSimpleName();
+        if(node instanceof BaseEntity){
+            id = ((BaseEntity)node).getId();
+        }
+        
+        if(node instanceof NamedEntity){
+            name = ((NamedEntity)node).getName();
+        }else if(node instanceof Person){
+            name = ((Person)node).getFirstName() + " " + ((Person)node).getLastName();
+        }
     }
     
     //add the node into the tree, the tree shall have automatically funciton to adjust the branch, leaf, etc..
@@ -162,10 +197,11 @@ public class TreeNode<T extends Comparable<T> & Copyable<T> & Familyable<T>> {
     public boolean update(TreeNode<T> t){
         for(TreeNode<T> node : children){           
             
-            //only remove leaf 
+            // no need for copy
             if(node.data.compareTo(t.data) == 0){                
-                
-                return node.data.copyFrom(t.data);                
+                node.setData(t.data);
+                return true;
+                //return node.data.copyFrom(t.data);                
             }
             
             if(node.update(t))

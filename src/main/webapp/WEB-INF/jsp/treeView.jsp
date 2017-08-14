@@ -94,14 +94,18 @@
             function TreeNodeConverter(objFromServer){
                 this.id = "";
                 this.name = "";
-                
+                this.dataType = objFromServer.dataType;
+                //this children array includes both departments and employees
                 this.children = [];
                 
                 this.IfOpenFunc = function IfHasChildren(objFromServer){
-                    if(objFromServer.children.length > 0)
-                        return true;
-                    else
-                        return false;
+                    if(objFromServer.dataType === "Department"){
+                        if(objFromServer.children.length > 0)
+                            return true;
+                        else
+                            return false;
+                    }
+                    return true;
                 };
                 
                 this.open = this.IfOpenFunc(objFromServer);
@@ -112,18 +116,40 @@
                         this.id = objFromServer.data.id;
                         if(objFromServer.dataType === "Department"){
                             this.name = objFromServer.data.name;
-                        } else if(objFromServer.dataType === "Employee"){
-                            this.name = objFromServer.data.firstName + " " + objFromServer.data.lastName;
-                        }
-                        
-                    }
-                        
-                    if(objFromServer.children.length !== 0){                   
+                            this.dataType = objFromServer.dataType;                            
+                            
+                            var i = 0;
+                            
+                            if(objFromServer.children.length !== 0){                   
                     
-                        for(var i=0; i<objFromServer.children.length; i++){
-                            this.children[i] = new TreeNodeConverter(objFromServer.children[i]);
-                            this.children[i].childrenFunc(objFromServer.children[i]);
-                        }
+                                for(; i<objFromServer.children.length; i++){
+
+                                    this.children[i] = new TreeNodeConverter(objFromServer.children[i]);
+                                    this.children[i].childrenFunc(objFromServer.children[i]);
+
+                                }
+                            }    
+                            
+                            for(var j = 0; j < objFromServer.data.employees.length; j++){
+                                this.children[j+i] = new TreeNodeConverter(objFromServer.data.employees[j]);
+                                this.children[j+i].name = objFromServer.data.employees[j].firstName + " " + objFromServer.data.employees[j].lastName;
+                                this.children[j+i].dataType = "Employee";
+                            }
+                            
+                        } 
+                        
+                    }else{
+                        //for the root "null" object:
+                        
+                        if(objFromServer.children.length !== 0){                   
+                    
+                            for(var i=0; i<objFromServer.children.length; i++){
+
+                                this.children[i] = new TreeNodeConverter(objFromServer.children[i]);
+                                this.children[i].childrenFunc(objFromServer.children[i]);
+
+                            }
+                        }   
                     }           
                     
                 };    
@@ -240,7 +266,7 @@
                             
                             var tree_test = new TreeNodeConverter(res);
                             tree_test.childrenFunc(res);
-                            $("#departmentDiv").html(JSON.stringify(tree_test));
+                            $("#departmentDiv").html(JSON.stringify(res));
                             /*reset zTree with data from server*/
                             $.fn.zTree.init($("#treeDemo"), setting, tree_test);
                         }

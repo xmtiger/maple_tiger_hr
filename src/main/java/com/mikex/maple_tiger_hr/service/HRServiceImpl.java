@@ -117,4 +117,25 @@ public class HRServiceImpl implements HRService {
         
         return tree;
     }
+    
+    public TreeNode getTreeFromDepartmentsWithEmployees(){
+        TreeNode<Department> tree = new TreeNode<>();
+        
+        Collection<Department> departments = this.departmentRepository.findAllDepartments();
+        Iterator<Department> iter_departments = departments.iterator();
+        while(iter_departments.hasNext()){
+            
+            Department curDepartment = iter_departments.next();
+            TreeNode<Department> curTreeNode = new TreeNode(curDepartment);
+            //add the current node into the tree, and the adding procedure shall be implemented in the methods of the Class TreeNode 
+            tree.addNode(curTreeNode);
+            
+            for(Employee employee : curDepartment.getEmployees()){
+                //TreeNode<Employee> curTreeNode_Employee = new TreeNode(employee);
+                //curTreeNode.add(curTreeNode_Employee);
+            }
+        } 
+        
+        return tree;
+    }
 }
