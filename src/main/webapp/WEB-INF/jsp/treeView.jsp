@@ -121,15 +121,16 @@
                             var i = 0;
                             
                             if(objFromServer.children.length !== 0){                   
-                    
+                                // the children is department object
                                 for(; i<objFromServer.children.length; i++){
 
                                     this.children[i] = new TreeNodeConverter(objFromServer.children[i]);
                                     this.children[i].childrenFunc(objFromServer.children[i]);
 
                                 }
-                            }    
+                            } 
                             
+                            //the children is employee object
                             for(var j = 0; j < objFromServer.data.employees.length; j++){
                                 this.children[j+i] = new TreeNodeConverter(objFromServer.data.employees[j]);
                                 this.children[j+i].name = objFromServer.data.employees[j].firstName + " " + objFromServer.data.employees[j].lastName;
