@@ -112,7 +112,7 @@ public class HRServiceImpl implements HRService {
             Department curDepartment = iter_departments.next();
             TreeNode<Department> curTreeNode = new TreeNode(curDepartment);
             //add the current node into the tree, and the adding procedure shall be implemented in the methods of the Class TreeNode 
-            tree.addNode(curTreeNode);
+            tree.addNode1(curTreeNode);
         }       
         
         return tree;
@@ -128,7 +128,7 @@ public class HRServiceImpl implements HRService {
             Department curDepartment = iter_departments.next();
             TreeNode<Department> curTreeNode = new TreeNode(curDepartment);
             //add the current node into the tree, and the adding procedure shall be implemented in the methods of the Class TreeNode 
-            tree.addNode(curTreeNode);
+            tree.addNode1(curTreeNode);
             
             for(Employee employee : curDepartment.getEmployees()){
                 //TreeNode<Employee> curTreeNode_Employee = new TreeNode(employee);

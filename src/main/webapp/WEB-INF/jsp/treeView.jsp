@@ -148,7 +148,8 @@
             };   
                         
             function ContainsKeyValue( obj, key, value ){
-                if( obj[key] === value ) return true;
+                if( obj[key] === value ) 
+                    return true;
                 for( eachOne in obj )
                 {
                     if( obj[eachOne] !== null && obj[eachOne][key] === value ){
@@ -161,6 +162,22 @@
                     }
                 }
                 return false;
+            };
+            
+            function FindKeyValue( obj, key, value ){
+                if( obj[key] === value ) 
+                    return null;
+                for( eachOne in obj )
+                {
+                    if( obj[eachOne] !== null && obj[eachOne][key] === value ){
+                        return obj[eachOne][key];
+                    }
+                    if( typeof obj[eachOne] === "object" && obj[eachOne]!== null ){
+                        var found = FindKeyValue( obj[eachOne], key, value );
+                        return found;
+                    }
+                }
+                return null;
             };
             
             var typeOfBranchOfTree = "Department";

@@ -23,7 +23,7 @@ public class TreeNode<T extends Comparable<T> & Familyable<T>> {
     /**
    * This node's parent node.  If this is the root of the tree then
    * the parent will be <code>null</code>.
-   */        
+   */         
     @JsonIgnore
     private TreeNode<T> parent;
     
@@ -88,6 +88,88 @@ public class TreeNode<T extends Comparable<T> & Familyable<T>> {
         }else if(node instanceof Person){
             name = ((Person)node).getFirstName() + " " + ((Person)node).getLastName();
         }
+    }
+    
+    public boolean addNode1(TreeNode<T> nodeToBeAdded){
+        boolean ifAdded = false;
+        
+        if(this.data != null && this.dataType != null){
+            //compare the current node
+            if(this.data.isTheFather(nodeToBeAdded.data)){
+                nodeToBeAdded.parent = this;
+                return this.children.add(nodeToBeAdded);
+                
+            }
+            
+            if(nodeToBeAdded.data.isTheFather(this.data)){
+                this.parent.children.add(nodeToBeAdded);
+                this.parent.children.remove(this);
+                
+                this.parent = nodeToBeAdded;
+                return nodeToBeAdded.children.add(this);
+                              
+            }
+            
+            List<TreeNode<T>> list_children = new ArrayList<>();
+            
+            for(TreeNode<T> curNode : this.children){
+                if(curNode.data.isTheFather(nodeToBeAdded.data)){
+                    nodeToBeAdded.parent = curNode;
+                    return curNode.children.add(nodeToBeAdded);
+                }
+                
+                if(nodeToBeAdded.data.isTheFather(curNode.data)){
+                    //list_children.add(curNode);
+                    curNode.parent = nodeToBeAdded;
+                    nodeToBeAdded.children.add(curNode);
+                    list_children.add(curNode);
+                    continue;
+                }
+                
+                //recursive 
+                ifAdded = curNode.addNode1(nodeToBeAdded); 
+                //if(ifAdded == true)
+                //    return true;
+            }
+            
+            if(!list_children.isEmpty()){
+                this.children.removeAll(list_children);
+                return this.children.add(nodeToBeAdded);
+            }
+            
+        } else{
+            //empty, go to next level. 
+            // search its children
+            List<TreeNode<T>> list_children = new ArrayList<>();
+            
+            for(TreeNode<T> curNode : this.children){
+                if(curNode.data.isTheFather(nodeToBeAdded.data)){
+                    nodeToBeAdded.parent = curNode;
+                    return curNode.children.add(nodeToBeAdded);
+                }
+                
+                if(nodeToBeAdded.data.isTheFather(curNode.data)){
+                    curNode.parent = nodeToBeAdded;
+                    nodeToBeAdded.children.add(curNode);
+                    list_children.add(curNode);
+                    continue;
+                }
+                
+                //recursive 
+                ifAdded = curNode.addNode1(nodeToBeAdded);    
+                //if(ifAdded == true)
+                //    return true;
+            }
+            
+            if(!list_children.isEmpty()){
+                this.children.removeAll(list_children);
+                return this.children.add(nodeToBeAdded);
+            }else{
+                return this.children.add(nodeToBeAdded);
+            }
+        }
+        
+        return false;
     }
     
     //add the node into the tree, the tree shall have automatically funciton to adjust the branch, leaf, etc..

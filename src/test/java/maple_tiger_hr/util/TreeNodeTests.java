@@ -34,7 +34,7 @@ public class TreeNodeTests {
         
         TreeNode<Department> treeNode01 = new TreeNode(dept01);
         
-        assertThat(tree.addNode(treeNode01)).isTrue();
+        assertThat(tree.addNode1(treeNode01)).isTrue();
         
         Department dept02 = new Department();
         dept02.setId(++id);
@@ -43,7 +43,7 @@ public class TreeNodeTests {
         dept02.setBegin_time((new SimpleDateFormat("YYYY-MM-dd").parse("2017-05-01")));
         
         TreeNode<Department> treeNode02 = new TreeNode(dept02);
-        assertThat(tree.addNode(treeNode02)).isTrue();
+        assertThat(tree.addNode1(treeNode02)).isTrue();
         
         Department dept03 = new Department();
         dept03.setId(++id);
@@ -52,7 +52,7 @@ public class TreeNodeTests {
         dept03.setBegin_time((new SimpleDateFormat("YYYY-MM-dd").parse("2017-05-01")));
         
         TreeNode<Department> treeNode03 = new TreeNode(dept03);
-        assertThat(tree.addNode(treeNode03)).isTrue();
+        assertThat(tree.addNode1(treeNode03)).isTrue();
         
         Department dept021 = new Department();
         dept021.setId(++id);
@@ -64,7 +64,7 @@ public class TreeNodeTests {
         //dept02.addChild(dept021);
         
         TreeNode<Department> treeNode021 = new TreeNode(dept021);
-        assertThat(tree.addNode(treeNode021)).isTrue();
+        assertThat(tree.addNode1(treeNode021)).isTrue();
         
         Department dept022 = new Department();
         dept022.setId(++id);
@@ -75,7 +75,7 @@ public class TreeNodeTests {
         //dept02.addChild(dept022);
         
         TreeNode<Department> treeNode022 = new TreeNode(dept022);
-        assertThat(tree.addNode(treeNode022)).isTrue();
+        assertThat(tree.addNode1(treeNode022)).isTrue();
                 
         System.out.println(tree);
         
@@ -89,7 +89,7 @@ public class TreeNodeTests {
         //dept02.addChild(dept021);
         
         TreeNode<Department> treeNode0211 = new TreeNode(dept0211);
-        assertThat(tree.addNode(treeNode0211)).isTrue();
+        assertThat(tree.addNode1(treeNode0211)).isTrue();
         
         
         //test update method
