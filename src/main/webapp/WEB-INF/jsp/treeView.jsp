@@ -91,20 +91,19 @@
         <script type="text/javascript" src="${context}/resources/zTree/js/jquery.ztree.all.min.js"></script>
         
         <script>
-            /*Search if the key exists in the indicated object*/
+            /*Search if the key exists in the indicated object. 
+             * Use maxSerchLeves to define how deep the search shall go. 1 means search current level*/
             function ShallowSearchKeysInJson(obj, keyToBeSearched, maxSearchLevels){
                 this.search_result = false;
-                this.level = 0;
-                //this.levels = 2;
-                
-                this.level++;
-                if(this.level >= maxSearchLevels)
+                             
+                maxSearchLevels--;
+                if(maxSearchLevels < 0 )
                     return this.search_result;
                 
                 Object.keys(obj).forEach(function(key){
                    if(key === keyToBeSearched){
                         this.search_result = true;
-                        
+                        return true;        //note: this return only jump out forEach function, not the ouside function ShallowSearchKeysInJson(...)
                    } 
                 });
                 
@@ -207,10 +206,11 @@
                                 }
                             } 
                             
-                            var ifKeyEmployeesExist = ShallowSearchKeysInJson(objFromServer, keyOfLeafOfBranchOfTree, 2);
+                            var ifKeyEmployeesExist = ShallowSearchKeysInJson(objFromServer, keyOfLeafOfBranchOfTree,2);
 
                             if(ifKeyEmployeesExist === true){
-                                //the children is employee object, note the leaf details still tightly bonded with certain type. Here is "employee".
+                                //the children is employee object, note the leaf here still tightly bonded with certain type. Here is "employee".
+                                //this shall be improved with general type 
                                 for(var j = 0; j < objFromServer.data.employees.length; j++){
                                     this.children[j+i] = new TreeNodeConverter(objFromServer.data.employees[j]);
                                     this.children[j+i].name = objFromServer.data.employees[j].firstName + " " + objFromServer.data.employees[j].lastName;
