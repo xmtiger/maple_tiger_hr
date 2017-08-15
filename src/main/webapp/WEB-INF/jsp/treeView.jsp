@@ -91,6 +91,83 @@
         <script type="text/javascript" src="${context}/resources/zTree/js/jquery.ztree.all.min.js"></script>
         
         <script>
+            /*Search if the key exists in the indicated object*/
+            function ShallowSearchKeysInJson(obj, keyToBeSearched, maxSearchLevels){
+                this.search_result = false;
+                this.level = 0;
+                //this.levels = 2;
+                
+                this.level++;
+                if(this.level >= maxSearchLevels)
+                    return this.search_result;
+                
+                Object.keys(obj).forEach(function(key){
+                   if(key === keyToBeSearched){
+                        this.search_result = true;
+                        
+                   } 
+                });
+                
+                if(this.search_result === true)
+                    return true;             
+                                
+                for( eachOne in obj){
+                    if(typeof obj[eachOne] === "object"){
+                        this.search_result = ShallowSearchKeysInJson(obj[eachOne], keyToBeSearched, maxSearchLevels);
+                        
+                        if(this.search_result === true)
+                            return true;
+                    }
+                }
+                
+                return this.search_result;
+            }; 
+            
+            function DeepSearchKeysInJson(obj, keyToBeSearched){
+                this.search_result = false;
+                
+                Object.keys(obj).forEach(function(key){
+                   if(key === keyToBeSearched){
+                        this.search_result = true;
+                        
+                   } 
+                });
+                
+                if(this.search_result === true)
+                    return true;
+                
+                for( eachOne in obj){
+                    if(typeof obj[eachOne] === "object"){
+                        this.search_result = DeepSearchKeysInJson(obj[eachOne], keyToBeSearched);
+                        
+                        if(this.search_result === true)
+                            return true;
+                    }
+                }
+                
+                return this.search_result;
+            };   
+                        
+            function ContainsKeyValue( obj, key, value ){
+                if( obj[key] === value ) return true;
+                for( eachOne in obj )
+                {
+                    if( obj[eachOne] !== null && obj[eachOne][key] === value ){
+                        return true;
+                    }
+                    if( typeof obj[eachOne] === "object" && obj[eachOne]!== null ){
+                        var found = ContainsKeyValue( obj[eachOne], key, value );
+                        if( found === true ) 
+                            return true;
+                    }
+                }
+                return false;
+            };
+            
+            var typeOfBranchOfTree = "Department";
+            var keyOfLeafOfBranchOfTree = "employees";
+            var typeOfLeafOfTree = "Employee";
+            
             function TreeNodeConverter(objFromServer){
                 this.id = "";
                 this.name = "";
@@ -99,7 +176,7 @@
                 this.children = [];
                 
                 this.IfOpenFunc = function IfHasChildren(objFromServer){
-                    if(objFromServer.dataType === "Department"){
+                    if(objFromServer.dataType === typeOfBranchOfTree){
                         if(objFromServer.children.length > 0)
                             return true;
                         else
@@ -114,7 +191,7 @@
                     
                     if(objFromServer.data !== null){
                         this.id = objFromServer.data.id;
-                        if(objFromServer.dataType === "Department"){
+                        if(objFromServer.dataType === typeOfBranchOfTree){
                             this.name = objFromServer.data.name;
                             this.dataType = objFromServer.dataType;                            
                             
@@ -130,18 +207,22 @@
                                 }
                             } 
                             
-                            //the children is employee object
-                            for(var j = 0; j < objFromServer.data.employees.length; j++){
-                                this.children[j+i] = new TreeNodeConverter(objFromServer.data.employees[j]);
-                                this.children[j+i].name = objFromServer.data.employees[j].firstName + " " + objFromServer.data.employees[j].lastName;
-                                this.children[j+i].dataType = "Employee";
-                            }
+                            var ifKeyEmployeesExist = ShallowSearchKeysInJson(objFromServer, keyOfLeafOfBranchOfTree, 2);
+
+                            if(ifKeyEmployeesExist === true){
+                                //the children is employee object, note the leaf details still tightly bonded with certain type. Here is "employee".
+                                for(var j = 0; j < objFromServer.data.employees.length; j++){
+                                    this.children[j+i] = new TreeNodeConverter(objFromServer.data.employees[j]);
+                                    this.children[j+i].name = objFromServer.data.employees[j].firstName + " " + objFromServer.data.employees[j].lastName;
+                                    //note: employee does not have type due to field members of Department
+                                    this.children[j+i].dataType = typeOfLeafOfTree;
+                                }
+                            }                                                          
                             
                         } 
                         
                     }else{
-                        //for the root "null" object:
-                        
+                        //for the root "null" object:                        
                         if(objFromServer.children.length !== 0){                   
                     
                             for(var i=0; i<objFromServer.children.length; i++){
@@ -154,7 +235,7 @@
                     }           
                     
                 };    
-            }
+            };
             
             function Department(id, name, address, begin_time) {
                 this.id = id;
@@ -170,7 +251,8 @@
                     else 
                         this.open = false;
                 };
-            }
+            };
+            
             var root = new Department("", "", "", "");
             var dept01 = new Department("1","Management01", "123 Springland", "2010-09-08");
             var dept02 = new Department("2","Engineering01", "123 Springland", "2010-09-08");
