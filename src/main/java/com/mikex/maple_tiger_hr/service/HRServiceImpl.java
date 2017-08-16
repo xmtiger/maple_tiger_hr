@@ -115,7 +115,10 @@ public class HRServiceImpl implements HRService {
             tree.addNode1(curTreeNode);
         }       
         
-        return tree;
+        if(tree.getChildren().size() == 1)
+            return tree.getChildren().get(0);
+        else
+            return tree;
     }
     
     public TreeNode getTreeFromDepartmentsWithEmployees(){

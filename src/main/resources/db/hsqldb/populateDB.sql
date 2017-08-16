@@ -17,7 +17,7 @@ INSERT INTO departments VALUES (6, 'Yamax Group', '1990-03-01', '1990-03-01', '2
 INSERT INTO department_relationship VALUES(3, 4);
 INSERT INTO department_relationship VALUES(3, 5);
 INSERT INTO department_relationship VALUES(6, 1);
-/*INSERT INTO department_relationship VALUES(6, 2);*/
+INSERT INTO department_relationship VALUES(6, 2);
 INSERT INTO department_relationship VALUES(6, 3);
 
 INSERT INTO employees VALUES (1, 'George', 'Franklin', '1977-09-07', '110 W. Liberty St.', '6085551023', 1);

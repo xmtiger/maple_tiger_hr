@@ -185,24 +185,16 @@
             var typeOfLeafOfTree = "Employee";
             
             function TreeNodeConverter(objFromServer){
-                this.id = "";
-                this.name = "";
+                this.id = -1;
+                this.name = "";     //name property is used by ZTree
+                //the objFromServer shall have dataType field, since it is warpped with TreeNode Class
                 this.dataType = objFromServer.dataType;
                 //this children array includes both departments and employees
                 this.children = [];
+                this.open = false;  //open property is used by ZTree           
                 
-                this.IfOpenFunc = function IfHasChildren(objFromServer){
-                    if(objFromServer.dataType === typeOfBranchOfTree){
-                        if(objFromServer.children.length > 0)
-                            return true;
-                        else
-                            return false;
-                    }
-                    return true;
-                };
-                
-                this.open = this.IfOpenFunc(objFromServer);
-                
+                /*In this function, the TreeNodeConveter objects are made with matching properties from objFromServer
+                * It is very important function for showing nodes in ZTree  */
                 this.childrenFunc = function(objFromServer){
                     
                     if(objFromServer.data !== null){
@@ -215,6 +207,7 @@
                             
                             if(objFromServer.children.length !== 0){                   
                                 // the children is department object
+                                this.open = true;
                                 for(; i<objFromServer.children.length; i++){
 
                                     this.children[i] = new TreeNodeConverter(objFromServer.children[i]);
@@ -226,10 +219,12 @@
                             var ifKeyEmployeesExist = ShallowSearchKeysInJson(objFromServer, keyOfLeafOfBranchOfTree,2);
 
                             if(ifKeyEmployeesExist === true){
+                                this.open = true;
                                 //the children is employee object, note the leaf here still tightly bonded with certain type. Here is "employee".
                                 //this shall be improved with general type 
                                 for(var j = 0; j < objFromServer.data.employees.length; j++){
                                     this.children[j+i] = new TreeNodeConverter(objFromServer.data.employees[j]);
+                                    this.children[j+i].id = objFromServer.data.employees[j].id;
                                     this.children[j+i].name = objFromServer.data.employees[j].firstName + " " + objFromServer.data.employees[j].lastName;
                                     //note: employee does not have type due to field members of Department
                                     this.children[j+i].dataType = typeOfLeafOfTree;
@@ -241,7 +236,8 @@
                     }else{
                         //for the root "null" object:                        
                         if(objFromServer.children.length !== 0){                   
-                    
+                            this.open = true;
+                            
                             for(var i=0; i<objFromServer.children.length; i++){
 
                                 this.children[i] = new TreeNodeConverter(objFromServer.children[i]);
@@ -364,11 +360,12 @@
                             
                             //$("#departmentDiv").html(JSON.stringify(res));
                             
-                            var tree_test = new TreeNodeConverter(res);
-                            tree_test.childrenFunc(res);
+                            var tree_nodes = new TreeNodeConverter(res);
+                            tree_nodes.childrenFunc(res);                            
+                            
                             $("#departmentDiv").html(JSON.stringify(res));
                             /*reset zTree with data from server*/
-                            $.fn.zTree.init($("#treeDemo"), setting, tree_test);
+                            $.fn.zTree.init($("#treeDemo"), setting, tree_nodes);
                         }
                     });
                 });
