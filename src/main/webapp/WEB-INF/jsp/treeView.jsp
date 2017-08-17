@@ -10,10 +10,10 @@
         <c:set var="context" value="${pageContext.request.contextPath}"/>
         <title>mapletiger_HR_System</title>
         
-        <link rel="stylesheet" href="${context}/resources/bootstrap3.3.7/css/bootstrap.min.css" type="text/css"/>
+        <link rel="stylesheet" href="${context}/resources/vendors/bootstrap3.3.7/css/bootstrap.min.css" type="text/css"/>
         <!--jsp:include page="./fragments/header.jsp"/-->        
         
-        <link rel="stylesheet" href="${context}/resources/zTree/css/zTreeStyle/zTreeStyle.css" type="text/css"/>
+        <link rel="stylesheet" href="${context}/resources/vendors/zTree/css/zTreeStyle/zTreeStyle.css" type="text/css"/>
         
         <style type="text/css">
             #maincontainer {
@@ -118,9 +118,9 @@
         
         <br>       
         
-        <script type="text/javascript" src="${context}/resources/core/js/jquery.min.js"></script>
-        <script type="text/javascript" src="${context}/resources/bootstrap3.3.7/js/bootstrap.min.js"></script>
-        <script type="text/javascript" src="${context}/resources/zTree/js/jquery.ztree.all.min.js"></script>
+        <script type="text/javascript" src="${context}/resources/vendors/jquery/js/jquery.min.js"></script>
+        <script type="text/javascript" src="${context}/resources/vendors/bootstrap3.3.7/js/bootstrap.min.js"></script>
+        <script type="text/javascript" src="${context}/resources/vendors/zTree/js/jquery.ztree.all.min.js"></script>
         
         <script>
             /*Search if the key exists in the indicated object. 

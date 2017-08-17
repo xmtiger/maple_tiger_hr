@@ -8,17 +8,17 @@
         <c:set var="context" value="${pageContext.request.contextPath}"/>
         <!-- Latest compiled and minified CSS -->    
         <!-- Bootstrap CSS -->
-        <script type="text/javascript" src="${context}/resources/bootstrap3.3.7/js/bootstrap.min.js"></script>
+        <script type="text/javascript" src="${context}/resources/vendors/bootstrap3.3.7/js/bootstrap.min.js"></script>
         <!--link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"/-->
        <!--link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css"/-->
         
         <!--link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.3.0/css/datepicker.min.css" />
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.3.0/css/datepicker3.min.css" /-->
         
-        <link rel="stylesheet" href="${context}/resources/bootstrapDatePicker/css/bootstrap-datepicker.min.css"/>
-        <link rel="stylesheet" href="${context}/resources/bootstrapDatePicker/css/bootstrap-datepicker3.min.css"/>
+        <link rel="stylesheet" href="${context}/resources/vendors/bootstrapDatePicker/css/bootstrap-datepicker.min.css"/>
+        <link rel="stylesheet" href="${context}/resources/vendors/bootstrapDatePicker/css/bootstrap-datepicker3.min.css"/>
         
-        <link rel="stylesheet" href="${context}/resources/bootstrapValidator/css/bootstrapValidator.min.css" />
+        <link rel="stylesheet" href="${context}/resources/vendors/bootstrapValidator/css/bootstrapValidator.min.css" />
         
         <title>Department Form Page</title>
         
@@ -115,14 +115,14 @@
         
         <!-- jQuery first, then Tether, then Bootstrap JS. -->
         <!-- jQuery library -->
-        <script src="${context}/resources/core/js/jquery.min.js"></script>
+        <script src="${context}/resources/vendors/jquery/js/jquery.min.js"></script>
         
         <!-- Latest compiled JavaScript -->              
-        <script type="text/javascript" src="${context}/resources/bootstrap3.3.7/js/bootstrap.min.js"></script>
+        <script src="${context}/resources/vendors/bootstrap3.3.7/js/bootstrap.min.js"></script>
 
-        <script src="${context}/resources/bootstrapDatePicker/js/bootstrap-datepicker.min.js"></script>
+        <script src="${context}/resources/vendors/bootstrapDatePicker/js/bootstrap-datepicker.min.js"></script>
    
-        <script src= "${context}/resources/bootstrapValidator/js/bootstrapValidator.min.js"> </script>        
+        <script src= "${context}/resources/vendors/bootstrapValidator/js/bootstrapValidator.min.js"> </script>        
         
         <script type="text/javascript">
             $(document).ready(function() {
