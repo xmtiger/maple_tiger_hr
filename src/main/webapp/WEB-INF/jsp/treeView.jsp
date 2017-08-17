@@ -10,10 +10,9 @@
         <c:set var="context" value="${pageContext.request.contextPath}"/>
         <title>mapletiger_HR_System</title>
         
-        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"/>
-        <!--jsp:include page="./fragments/header.jsp"/-->
+        <link rel="stylesheet" href="${context}/resources/bootstrap3.3.7/css/bootstrap.min.css" type="text/css"/>
+        <!--jsp:include page="./fragments/header.jsp"/-->        
         
-        <link rel="stylesheet" href="${context}/resources/core/css/zTreeStyle/demo.css" type="text/css"/>
         <link rel="stylesheet" href="${context}/resources/zTree/css/zTreeStyle/zTreeStyle.css" type="text/css"/>
         
         <style type="text/css">
@@ -49,12 +48,37 @@
 
         <c:set var="urlHome" value="${context}" />
         <nav class="navbar navbar-inverse ">
-            <div class="container">
-                    <div class="navbar-header">
-                            <a class="navbar-brand" href="${urlHome}">Home Page</a>
-                    </div>
+            <div class="container-fluid">
+                
+                <div class="navbar-header">
+                    <a class="navbar-brand" href="${urlHome}">Home Page</a>
+                </div>
+                
+                <ul class="nav navbar-nav">
+
+                    <li class="dropdown">
+                        <a id="department_menu" class="dropdown-toggle" data-toggle="dropdown" href="#" >DEPARTMENT<span class="caret"></span></a>
+                        <ul class="dropdown-menu">
+                            <li><a href="#">Page 1-1</a></li>
+                            <li><a href="#">Page 1-2</a></li>
+                            <li><a href="#">Page 1-3</a></li>
+                        </ul>   
+                    </li>
+                    
+                    <li class="dropdown"><a class="dropdown-toggle" data-toggle="dropdown" href="#">Page 1 <span class="caret"></span></a>
+                        <ul class="dropdown-menu">
+                          <li><a href="#">Page 1-1</a></li>
+                          <li><a href="#">Page 1-2</a></li>
+                          <li><a href="#">Page 1-3</a></li>
+                        </ul>
+                    </li>
+                    
+                    <li><a href="#">Page 2</a></li>
+                    <li><a href="#">Page 3</a></li>
+                </ul>                   
 
             </div>
+                
         </nav>
     
     
@@ -63,7 +87,13 @@
             <!-- 3 setup a container element -->
             <div id = "leftcolumn">
                 
-                <ul id="treeDemo" class="ztree"></ul>  
+                
+                    <div style="height:300px; min-height:0px; max-height: 75%; border: 1px solid black">
+                        <ul id="treeDemo" class="ztree"></ul>  
+                    </div>
+                
+                
+                
                 <br>
                 <div class="btn-group">
                     <button id="addButton" type="button" class="btn btn-primary">Add</button>
@@ -88,6 +118,7 @@
         <br>       
         
         <script type="text/javascript" src="${context}/resources/core/js/jquery.min.js"></script>
+        <script type="text/javascript" src="${context}/resources/bootstrap3.3.7/js/bootstrap.min.js"></script>
         <script type="text/javascript" src="${context}/resources/zTree/js/jquery.ztree.all.min.js"></script>
         
         <script>
@@ -250,6 +281,7 @@
                 };    
             };
             
+            //the following is for testing purpose.
             function Department(id, name, address, begin_time) {
                 this.id = id;
                 this.name = name;
@@ -318,7 +350,7 @@
             
             var tree_json = JSON.stringify(tree_test);
             $("#departmentDiv").html(tree_json);
-            
+            //the upper portion is for testing purpose.
             
             var zTreeObj;
             // zTree configuration information, refer to API documentation (setting details)
@@ -344,10 +376,17 @@
                 //The required data can be customerized object which includes name, children.
                 zTreeObj = $.fn.zTree.init($("#treeDemo"), setting, tree_test);
                 
+                //click of deparment menu
+                $("#department_menu").click(function(e){
+                    //e.preventDefault();
+                    $("#departmentDiv").html("click department menu");
+                });
+                
+                //
                 $("#editButton").click(function(){
                     //The follwing section shows how to load data from server
                     var request = "department/" + "all";
-
+                    
                     //The following load function successfully shows how the load function works
                     /*$("#departmentDiv").load(request, function(res, status, xhr){
                         if(status === "success"){
