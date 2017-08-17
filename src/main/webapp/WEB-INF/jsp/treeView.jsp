@@ -59,9 +59,10 @@
                     <li class="dropdown">
                         <a id="department_menu" class="dropdown-toggle" data-toggle="dropdown" href="#" >DEPARTMENT<span class="caret"></span></a>
                         <ul class="dropdown-menu">
-                            <li><a href="#">Page 1-1</a></li>
-                            <li><a href="#">Page 1-2</a></li>
-                            <li><a href="#">Page 1-3</a></li>
+                            <li><a href="#" id="department_menu_display">Dispaly</a></li>
+                            <li><a href="#" id="department_menu_add">Add</a></li>
+                            <li><a href="#" id="department_menu_edit">Edit</a></li>
+                            <li><a href="#" id="department_menu_delete">Remove</a></li>
                         </ul>   
                     </li>
                     
@@ -377,28 +378,23 @@
                 zTreeObj = $.fn.zTree.init($("#treeDemo"), setting, tree_test);
                 
                 //click of deparment menu
-                $("#department_menu").click(function(e){
-                    //e.preventDefault();
-                    $("#departmentDiv").html("click department menu");
-                });
-                
-                //
-                $("#editButton").click(function(){
+                $("#department_menu_display").click(function(e){
+                    e.preventDefault(); /*e.preventDefault is to prevent link to the href address*/
+                    $("#departmentDiv").html("Please wait, the data is loading...");
+                    
                     //The follwing section shows how to load data from server
                     var request = "department/" + "all";
-                    
-                    //The following load function successfully shows how the load function works
-                    /*$("#departmentDiv").load(request, function(res, status, xhr){
-                        if(status === "success"){
-                            $("#departmentDiv").html(res);
-                        }
-                    });*/
-                    
-                    $.get(request, function(res, status){
-                        if(status === "success"){
-                            
-                            //$("#departmentDiv").html(JSON.stringify(res));
-                            
+                    var data_sent = null;
+                    // Use Ajax to submit form data
+                    $.ajax({
+                        type: "GET",
+                        contentType: "application/json; charset=utf-8",
+                        url: request,
+                        data: data_sent,
+                        dataType: "json", 
+                                                
+                        success: function(res){
+                            //alert("success");
                             var tree_nodes = new TreeNodeConverter(res);
                             tree_nodes.childrenFunc(res);                            
                             
@@ -408,10 +404,20 @@
                         }
                     });
                 });
+                
+                //
+                $("#editButton").click(function(){
+                    //The follwing section shows how to load data from server
+                    var request = "department/" + "all";
+                    
+                    
+                    
+                    
+                });
                
                 $("#addButton").click(function(){
                    
-                    $(this).prop("disabled", true);  // this also works well for the current button 
+                    //$(this).prop("disabled", true);  // this also works well for the current button 
                    
                     //The following works fine for buttons in group with same class type
                     //$(".btn-primary").prop('disabled', true);

@@ -8,9 +8,9 @@
         <c:set var="context" value="${pageContext.request.contextPath}"/>
         <!-- Latest compiled and minified CSS -->    
         <!-- Bootstrap CSS -->
-        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"/>
-        
-        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css"/>
+        <script type="text/javascript" src="${context}/resources/bootstrap3.3.7/js/bootstrap.min.js"></script>
+        <!--link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"/-->
+       <!--link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css"/-->
         
         <!--link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.3.0/css/datepicker.min.css" />
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.3.0/css/datepicker3.min.css" /-->
@@ -117,14 +117,11 @@
         <!-- jQuery library -->
         <script src="${context}/resources/core/js/jquery.min.js"></script>
         
-        <!-- Latest compiled JavaScript -->      
-        
-        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-        
-        <!--script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.3.0/js/bootstrap-datepicker.min.js"></script-->
+        <!-- Latest compiled JavaScript -->              
+        <script type="text/javascript" src="${context}/resources/bootstrap3.3.7/js/bootstrap.min.js"></script>
+
         <script src="${context}/resources/bootstrapDatePicker/js/bootstrap-datepicker.min.js"></script>
-        
-        <!--script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-validator/0.4.5/js/bootstrapvalidator.min.js"></script-->        
+   
         <script src= "${context}/resources/bootstrapValidator/js/bootstrapValidator.min.js"> </script>        
         
         <script type="text/javascript">
@@ -264,48 +261,7 @@
                             }
                         }
                     }
-                });                
-                /*.on('submit', function(e) {
-                    
-                    //alert("success");
-                    //Prevent default submission of form
-                    e.preventDefault();          
-                    
-                    //$("#departmentDiv").load("index");                        
-                    
-                    var form = $('#dept_form');
-                    //var arrayData = $(form).serializeArray();
-                    //var form_data2 = JSON.stringify(arrayData);
-                    
-                    var jsonData = {};
-                    $.each($(form).serializeArray(), function() {
-                        jsonData[this.name] = this.value;
-                    });
-                    var form_data = JSON.stringify(jsonData);
-                                               
-                    // Use Ajax to submit form data
-                    $.ajax({
-                        type: "POST",
-                        contentType: "application/json; charset=utf-8",
-                        url: "department/create",
-                        data: form_data,
-                        dataType: "json",                                                                         
-                        
-                        success: function(res){
-                            
-                            if(res.validated){
-                                $('#resultContainer').text(JSON.stringify(res.department));
-                                $('#resultContainer').show();
-                            }else{
-                                //Set error messages
-                                $.each(res.errorMessages,function(key,value){
-                                        $('input[name='+key+']').after('<span class="error">'+value+'</span>');
-                                });
-                            }
-                        }
-                    });
-                    
-                }); */       
+                });               
                 
             });
     
