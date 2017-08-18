@@ -59,7 +59,8 @@
                     <li class="dropdown">
                         <a id="department_menu" class="dropdown-toggle" data-toggle="dropdown" href="#" >DEPARTMENT<span class="caret"></span></a>
                         <ul class="dropdown-menu">
-                            <li><a href="#" id="department_menu_display">Dispaly</a></li>
+                            <li><a href="#" id="department_menu_display">Dispaly All</a></li>
+                            <li class="divider"></li>
                             <li><a href="#" id="department_menu_add">Add</a></li>
                             <li><a href="#" id="department_menu_edit">Edit</a></li>
                             <li><a href="#" id="department_menu_delete">Remove</a></li>
