@@ -1,7 +1,7 @@
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <!DOCTYPE html>
-<html lang="en">    
+<html lang="en" >    
     
     <head>        
         
@@ -44,10 +44,10 @@
         </style>        
     </head>
     
-    <body>
+    <body ng-app="app" ng-controller="rootController">
 
         <c:set var="urlHome" value="${context}" />
-        <nav class="navbar navbar-inverse ">
+        <nav class="navbar navbar-inverse">
             <div class="container-fluid">
                 
                 <div class="navbar-header">
@@ -56,10 +56,10 @@
                 
                 <ul class="nav navbar-nav">
 
-                    <li class="dropdown">
+                    <li class="dropdown" ng-controller="departmentController as deptCtrl">
                         <a id="department_menu" class="dropdown-toggle" data-toggle="dropdown" href="#" >DEPARTMENT<span class="caret"></span></a>
                         <ul class="dropdown-menu">
-                            <li><a href="#" id="department_menu_display">Dispaly All</a></li>
+                            <li><a href="#" id="department_menu_display" ng-click="displayAll()">Dispaly All</a></li>
                             <li class="divider"></li>
                             <li><a href="#" id="department_menu_add">Add</a></li>
                             <li><a href="#" id="department_menu_edit">Edit</a></li>
@@ -122,6 +122,13 @@
         <script type="text/javascript" src="${context}/resources/vendors/jquery/js/jquery.min.js"></script>
         <script type="text/javascript" src="${context}/resources/vendors/bootstrap3.3.7/js/bootstrap.min.js"></script>
         <script type="text/javascript" src="${context}/resources/vendors/zTree/js/jquery.ztree.all.min.js"></script>
+        <!-- angular js -->
+        <script type="text/javascript" src="${context}/resources/vendors/angularJS/js/angular.min.js"></script>
+        <script type="text/javascript" src="${context}/resources/core/js/app.js"></script>        
+        <script type="text/javascript" src="${context}/resources/core/js/service/app_utils.js"></script>
+        <script type="text/javascript" src="${context}/resources/core/js/service/department_service.js"></script>        
+        <script type="text/javascript" src="${context}/resources/core/js/controller/department_controller.js"></script>
+        <script type="text/javascript" src="${context}/resources/core/js/controller/rootController.js"></script>
         
         <script>
             /*Search if the key exists in the indicated object. 
@@ -303,8 +310,8 @@
                 //zTreeObj = $.fn.zTree.init($("#treeDemo"), setting, tree_test);
                 
                 //click of deparment menu
-                $("#department_menu_display").click(function(e){
-                    e.preventDefault(); /*e.preventDefault is to prevent link to the href address*/
+                /*$("#department_menu_display").click(function(e){
+                    e.preventDefault(); //e.preventDefault is to prevent link to the href address
                     $("#departmentDiv").html("Please wait, the data is loading...");
                     
                     //The follwing section shows how to load data from server
@@ -324,11 +331,11 @@
                             tree_nodes.childrenFunc(res);                            
                             
                             $("#departmentDiv").html(JSON.stringify(res));
-                            /*reset zTree with data from server*/
+                            //reset zTree with data from server
                             $.fn.zTree.init($("#xmTreeView"), setting, tree_nodes);
                         }
                     });
-                });
+                });*/
                 
                 //
                 $("#editButton").click(function(){
