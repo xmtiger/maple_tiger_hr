@@ -7,14 +7,16 @@
 
 "use strict";
 
-angular.module("app").controller("rootController", ["$scope", "departmentService", function($scope, departmentService){
+angular.module("app").controller("rootController", ["$scope", "$rootScope", function($scope, $rootScope){
         
     var self = this;
-    self.departmentsFromServer = {};
+    //self.departmentsFromServer = {};
     
         
     $scope.$on("DisplayAllDepartments", function(event, msg){
         console.log("received displayAllDepartments message");
+        
+        $rootScope.$broadcast("zTree_displayAllDepartments");
     });
     
 }]);

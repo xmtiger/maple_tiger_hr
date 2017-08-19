@@ -91,7 +91,7 @@
                 
                 
                     <div style="height:300px; min-height:0px; max-height: 75%; border: 1px solid black">
-                        <ul id="xmTreeView" class="ztree"></ul>  
+                        <ul ztree id="xmTreeView" class="ztree" ng-model ="selectNode"></ul>  
                     </div>
                 
                 

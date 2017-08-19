@@ -111,5 +111,75 @@ angular.module('app_utils').factory('UtilService', [ function(){
         }
         return null;
     };
+    
+    var typeOfBranchOfTree = "Department";
+    var keyOfLeafOfBranchOfTree = "employees";
+    var typeOfLeafOfTree = "Employee";
+    
+    function TreeNodeConverter(objFromServer){
+        this.id = -1;
+        this.name = "";     //name property is used by ZTree
+        //the objFromServer shall have dataType field, since it is warpped with TreeNode Class
+        this.dataType = objFromServer.dataType;
+        //this children array includes both departments and employees
+        this.children = [];
+        this.open = false;  //open property is used by ZTree           
+
+        /*In this function, the TreeNodeConveter objects are made with matching properties from objFromServer
+        * It is very important function for showing nodes in ZTree  */
+        this.childrenFunc = function(objFromServer){
+
+            if(objFromServer.data !== null){
+                this.id = objFromServer.data.id;
+                if(objFromServer.dataType === typeOfBranchOfTree){
+                    this.name = objFromServer.data.name;
+                    this.dataType = objFromServer.dataType;                            
+
+                    var i = 0;
+
+                    if(objFromServer.children.length !== 0){                   
+                        // the children is department object
+                        this.open = true;
+                        for(; i<objFromServer.children.length; i++){
+
+                            this.children[i] = new TreeNodeConverter(objFromServer.children[i]);
+                            this.children[i].childrenFunc(objFromServer.children[i]);
+
+                        }
+                    } 
+
+                    var ifKeyEmployeesExist = ShallowSearchKeysInJson(objFromServer, keyOfLeafOfBranchOfTree,2);
+
+                    if(ifKeyEmployeesExist === true){
+                        this.open = true;
+                        //the children is employee object, note the leaf here still tightly bonded with certain type. Here is "employee".
+                        //this shall be improved with general type 
+                        for(var j = 0; j < objFromServer.data.employees.length; j++){
+                            this.children[j+i] = new TreeNodeConverter(objFromServer.data.employees[j]);
+                            this.children[j+i].id = objFromServer.data.employees[j].id;
+                            this.children[j+i].name = objFromServer.data.employees[j].firstName + " " + objFromServer.data.employees[j].lastName;
+                            //note: employee does not have type due to field members of Department
+                            this.children[j+i].dataType = typeOfLeafOfTree;
+                        }
+                    }                                                          
+
+                } 
+
+            }else{
+                //for the root "null" object:                        
+                if(objFromServer.children.length !== 0){                   
+                    this.open = true;
+
+                    for(var i=0; i<objFromServer.children.length; i++){
+
+                        this.children[i] = new TreeNodeConverter(objFromServer.children[i]);
+                        this.children[i].childrenFunc(objFromServer.children[i]);
+
+                    }
+                }   
+            }           
+
+        };    
+    };
 
 }]);
