@@ -17,7 +17,7 @@ angular.module("app_department").controller("departmentController", ["$scope", "
             function(d){
                 departmentService.departmentsFromServer = d;
                 console.log("fetchAllDepartments" + d);
-                $scope.$emit("DisplayAllDepartments" );
+                $scope.$emit("DisplayAllDepartments" , d);
             },
             function(errResponse){
                 console.error("Error while fetching all departments");

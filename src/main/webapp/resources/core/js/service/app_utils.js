@@ -11,123 +11,154 @@
  'use strict';
 
 angular.module('app_utils').factory('UtilService', [ function(){
-    
+            
     var factory = {
         ShallowSearchKeysInJson: ShallowSearchKeysInJson,
         DeepSearchKeysInJson: DeepSearchKeysInJson,
-        ContainsKeyValue:ContainsKeyValue,
-        FindKeyValue:FindKeyValue
+        ContainsKeyValue : ContainsKeyValue,
+        FindKeyValue : FindKeyValue,
+        TreeNodeConverter : TreeNodeConverter,
+        TreeNodesGenerator : TreeNodesGenerator
     };
 
     return factory;
 
     /*Search if the key exists in the indicated object. 
              * Use maxSerchLeves to define how deep the search shall go. 1 means search current level*/
+    
     function ShallowSearchKeysInJson(obj, keyToBeSearched, maxSearchLevels){
-        this.search_result = false;
-
+                
         maxSearchLevels--;
         if(maxSearchLevels < 0 )
-            return this.search_result;
-
-        Object.keys(obj).forEach(function(key){
-           if(key === keyToBeSearched){
-                this.search_result = true;
+            return false;
+        
+        var find = false;
+        
+        //note: In javascript, by using angular.forEach function, every "return" is to return higher level of angular.forEach function.
+        angular.forEach(obj, function(value, key){
+            
+            if(find === true)
+                return true;
+            
+            if(key === keyToBeSearched){  
+                find = true;
                 return true;        //note: this return only jump out forEach function, not the ouside function ShallowSearchKeysInJson(...)
-           } 
-        });
-
-        if(this.search_result === true)
-            return true;             
-
-        for( eachOne in obj){
-            if(typeof obj[eachOne] === "object"){
-                this.search_result = ShallowSearchKeysInJson(obj[eachOne], keyToBeSearched, maxSearchLevels);
-
-                if(this.search_result === true)
-                    return true;
+            } 
+            
+            if((find === false) && (angular.isObject(value) === true)){
+                                
+                find = ShallowSearchKeysInJson(value, keyToBeSearched, maxSearchLevels);
+                
+                if(find === true)
+                    return true;                
             }
-        }
-
-        return this.search_result;
+        });          
+        
+        return find;
     }; 
             
 
     function DeepSearchKeysInJson(obj, keyToBeSearched){
-        this.search_result = false;
-
-        Object.keys(obj).forEach(function(key){
-           if(key === keyToBeSearched){
-                this.search_result = true;
-
-           } 
-        });
-
-        if(this.search_result === true)
-            return true;
-
-        for( eachOne in obj){
-            if(typeof obj[eachOne] === "object"){
-                this.search_result = DeepSearchKeysInJson(obj[eachOne], keyToBeSearched);
-
-                if(this.search_result === true)
-                    return true;
+                
+        var find = false;
+        
+        //note: In javascript, by using angular.forEach function, every "return" is to return higher level of angular.forEach function.
+        angular.forEach(obj, function(value, key){
+            
+            if(find === true)
+                return true;
+            
+            if(key === keyToBeSearched){  
+                find = true;
+                return true;        //note: this return only jump out forEach function, not the ouside function ShallowSearchKeysInJson(...)
+            } 
+            
+            if((find === false) && (angular.isObject(value) === true)){
+                                
+                find = DeepSearchKeysInJson(value, keyToBeSearched);
+                
+                if(find === true)
+                    return true;                
             }
-        }
-
-        return this.search_result;
+        });          
+        
+        return find;
     };
 
 
-    function ContainsKeyValue( obj, key, value ){
-        if( obj[key] === value ) 
-            return true;
-        for( eachOne in obj )
-        {
-            if( obj[eachOne] !== null && obj[eachOne][key] === value ){
+    function ContainsKeyValue( obj, keyToBeMatched, valueToBeMatched ){
+        var find = false;
+        
+        //note: In javascript, by using angular.forEach function, every "return" is to return higher level of angular.forEach function.
+        angular.forEach(obj, function(value, key){
+            
+            if(find === true)
+                return true;
+            
+            if(key === keyToBeMatched && obj === valueToBeMatched){
+                find = true;
                 return true;
             }
-            if( typeof obj[eachOne] === "object" && obj[eachOne]!== null ){
-                var found = ContainsKeyValue( obj[eachOne], key, value );
-                if( found === true ) 
-                    return true;
+                                    
+            if((find === false) && (angular.isObject(value) === true)){
+                
+                find = ContainsKeyValue(value, keyToBeMatched, valueToBeMatched);
+                
+                if(find === true)
+                    return true;                
             }
-        }
-        return false;
+        });          
+        
+        return find;        
     };
 
-    function FindKeyValue( obj, key, value ){
-        if( obj[key] === value ) 
-            return null;
-        for( eachOne in obj )
-        {
-            if( obj[eachOne] !== null && obj[eachOne][key] === value ){
-                return obj[eachOne][key];
+    function FindKeyValue( obj, keyToBeMatched, valueToBeFound ){
+        //note: In javascript, by using angular.forEach function, every "return" is to return higher level of angular.forEach function.
+        var find = {};
+        
+        angular.forEach(obj, function(value, key){
+            
+            if(find !== null)
+                return find;
+            
+            
+            if (typeof value !== "undefined" && value !== null) {
+                if(key === keyToBeMatched ){
+                    find = value;
+                    return value;
+                }else{
+                    return null;
+                }
             }
-            if( typeof obj[eachOne] === "object" && obj[eachOne]!== null ){
-                var found = FindKeyValue( obj[eachOne], key, value );
-                return found;
+            
+            if((find === null) && (angular.isObject(value) === true)){
+                
+                find = FindKeyValue(value, keyToBeMatched, valueToBeFound);
+                
+                if(find !== null)
+                    return find;                
             }
-        }
-        return null;
-    };
-    
-    var typeOfBranchOfTree = "Department";
-    var keyOfLeafOfBranchOfTree = "employees";
-    var typeOfLeafOfTree = "Employee";
+            
+            return find;
+        });  
+    };  
+        
     
     function TreeNodeConverter(objFromServer){
+                        
         this.id = -1;
         this.name = "";     //name property is used by ZTree
         //the objFromServer shall have dataType field, since it is warpped with TreeNode Class
         this.dataType = objFromServer.dataType;
         //this children array includes both departments and employees
         this.children = [];
-        this.open = false;  //open property is used by ZTree           
+        this.open = false;  //open property is used by ZTree   
+        
+        
 
         /*In this function, the TreeNodeConveter objects are made with matching properties from objFromServer
         * It is very important function for showing nodes in ZTree  */
-        this.childrenFunc = function(objFromServer){
+        this.childrenFunc = function(objFromServer, typeOfBranchOfTree, typeOfLeafOfTree, keyOfLeafOfBranchOfTree){
 
             if(objFromServer.data !== null){
                 this.id = objFromServer.data.id;
@@ -143,7 +174,7 @@ angular.module('app_utils').factory('UtilService', [ function(){
                         for(; i<objFromServer.children.length; i++){
 
                             this.children[i] = new TreeNodeConverter(objFromServer.children[i]);
-                            this.children[i].childrenFunc(objFromServer.children[i]);
+                            this.children[i].childrenFunc(objFromServer.children[i], typeOfBranchOfTree, typeOfLeafOfTree, keyOfLeafOfBranchOfTree);
 
                         }
                     } 
@@ -173,7 +204,7 @@ angular.module('app_utils').factory('UtilService', [ function(){
                     for(var i=0; i<objFromServer.children.length; i++){
 
                         this.children[i] = new TreeNodeConverter(objFromServer.children[i]);
-                        this.children[i].childrenFunc(objFromServer.children[i]);
+                        this.children[i].childrenFunc(objFromServer.children[i], typeOfBranchOfTree, typeOfLeafOfTree, keyOfLeafOfBranchOfTree);
 
                     }
                 }   
@@ -181,5 +212,15 @@ angular.module('app_utils').factory('UtilService', [ function(){
 
         };    
     };
+    
+    function TreeNodesGenerator(objFromServer){
+        this.typeOfBranchOfTree = "Department";        
+        this.typeOfLeafOfTree = "Employee";
+        this.keyOfLeafOfBranchOfTree = "employees";
+        
+        var tree_nodes = new TreeNodeConverter(objFromServer);
+        tree_nodes.childrenFunc(objFromServer, this.typeOfBranchOfTree, this.typeOfLeafOfTree, this.keyOfLeafOfBranchOfTree);
+        return tree_nodes;
+    }
 
 }]);

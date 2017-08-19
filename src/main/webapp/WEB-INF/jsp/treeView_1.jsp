@@ -133,7 +133,7 @@
         <script>
             /*Search if the key exists in the indicated object. 
              * Use maxSerchLeves to define how deep the search shall go. 1 means search current level*/
-            function ShallowSearchKeysInJson(obj, keyToBeSearched, maxSearchLevels){
+            /*function ShallowSearchKeysInJson(obj, keyToBeSearched, maxSearchLevels){
                 this.search_result = false;
                              
                 maxSearchLevels--;
@@ -233,8 +233,8 @@
                 this.children = [];
                 this.open = false;  //open property is used by ZTree           
                 
-                /*In this function, the TreeNodeConveter objects are made with matching properties from objFromServer
-                * It is very important function for showing nodes in ZTree  */
+                //In this function, the TreeNodeConveter objects are made with matching properties from objFromServer
+                //It is very important function for showing nodes in ZTree  
                 this.childrenFunc = function(objFromServer){
                     
                     if(objFromServer.data !== null){
@@ -288,7 +288,7 @@
                     }           
                     
                 };    
-            };
+            };*/
             
             
             
@@ -300,9 +300,9 @@
             $("#departmentDiv").html("Welcome to using Maple_Tiger_HR System");
             //the upper portion is for testing purpose.
             
-            var zTreeObj;
+            //var zTreeObj;
             // zTree configuration information, refer to API documentation (setting details)
-            var setting = {};   
+            //var setting = {};   
            
             //jQuery function
             $(document).ready(function(){

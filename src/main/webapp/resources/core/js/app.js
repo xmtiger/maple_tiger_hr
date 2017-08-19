@@ -29,11 +29,16 @@ app.directive('ztree',function(){
             //$scope.$emit("menu",attrs["value"]);//此处attrs["value"]为ul中的value值，此处作为标记使用 
             //接受控制器返回的菜单的消息 
             $scope.$on("zTree_displayAllDepartments",function(event,data){ 
-                console.log("received zTree_displayAllDepartments");
-                //$.fn.zTree.init(element, setting, data);//进行初始化树形菜单 
-                //var zTree = $.fn.zTree.getZTreeObj("ztree"); 
-                //var selectName = $("#selectName").val(); 
+                console.log("received zTree_displayAllDepartments" + data);
                 
+                var util_service = angular.element(document.body).injector().get('UtilService');
+                //console.log("get util_service" + util_service);
+                //var tree_nodes = tree_nodes || {};
+                var tree_nodes = util_service.TreeNodesGenerator(data);
+                console.log(tree_nodes);
+                                       
+                $.fn.zTree.init(element, setting, tree_nodes);//进行初始化树形菜单 
+                                
             }); 
             
             //The following section is for the testing and initialization of zTree
@@ -71,8 +76,8 @@ app.directive('ztree',function(){
             tree_test.children[tree_test.children.length] = dept03;
 
             tree_test.IfOpenFunc();
-            
-            $.fn.zTree.init(element, setting, tree_test);
+            // this is to show the JQuery function still works, and the variable "element" is binded with zTree element
+            $.fn.zTree.init(element, setting, tree_test);   
         } 
     } ;
 }); 

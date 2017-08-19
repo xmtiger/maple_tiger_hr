@@ -14,9 +14,9 @@ angular.module("app").controller("rootController", ["$scope", "$rootScope", func
     
         
     $scope.$on("DisplayAllDepartments", function(event, msg){
-        console.log("received displayAllDepartments message");
+        console.log("received displayAllDepartments message", msg);
         
-        $rootScope.$broadcast("zTree_displayAllDepartments");
+        $rootScope.$broadcast("zTree_displayAllDepartments", msg);
     });
     
 }]);
