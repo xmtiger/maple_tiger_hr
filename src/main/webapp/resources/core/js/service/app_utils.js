@@ -13,8 +13,8 @@
 angular.module('app_utils').factory('UtilService', [ function(){
             
     var factory = {
-        ShallowSearchKeysInJson: ShallowSearchKeysInJson,
-        DeepSearchKeysInJson: DeepSearchKeysInJson,
+        ShallowSearchKeyInJson: ShallowSearchKeyInJson,
+        DeepSearchKeyInJson: DeepSearchKeyInJson,
         ContainsKeyValue : ContainsKeyValue,
         FindKeyValue : FindKeyValue,
         TreeNodeConverter : TreeNodeConverter,
@@ -26,7 +26,7 @@ angular.module('app_utils').factory('UtilService', [ function(){
     /*Search if the key exists in the indicated object. 
              * Use maxSerchLeves to define how deep the search shall go. 1 means search current level*/
     
-    function ShallowSearchKeysInJson(obj, keyToBeSearched, maxSearchLevels){
+    function ShallowSearchKeyInJson(obj, keyToBeSearched, maxSearchLevels){
                 
         maxSearchLevels--;
         if(maxSearchLevels < 0 )
@@ -47,7 +47,7 @@ angular.module('app_utils').factory('UtilService', [ function(){
             
             if((find === false) && (angular.isObject(value) === true)){
                                 
-                find = ShallowSearchKeysInJson(value, keyToBeSearched, maxSearchLevels);
+                find = ShallowSearchKeyInJson(value, keyToBeSearched, maxSearchLevels);
                 
                 if(find === true)
                     return true;                
@@ -58,7 +58,7 @@ angular.module('app_utils').factory('UtilService', [ function(){
     }; 
             
 
-    function DeepSearchKeysInJson(obj, keyToBeSearched){
+    function DeepSearchKeyInJson(obj, keyToBeSearched){
                 
         var find = false;
         
@@ -75,7 +75,7 @@ angular.module('app_utils').factory('UtilService', [ function(){
             
             if((find === false) && (angular.isObject(value) === true)){
                                 
-                find = DeepSearchKeysInJson(value, keyToBeSearched);
+                find = DeepSearchKeyInJson(value, keyToBeSearched);
                 
                 if(find === true)
                     return true;                
@@ -85,7 +85,7 @@ angular.module('app_utils').factory('UtilService', [ function(){
         return find;
     };
 
-
+    //it is required to be tested(2017-08-19)
     function ContainsKeyValue( obj, keyToBeMatched, valueToBeMatched ){
         var find = false;
         
@@ -111,7 +111,8 @@ angular.module('app_utils').factory('UtilService', [ function(){
         
         return find;        
     };
-
+    
+    //it is required to be tested(2017-08-19)
     function FindKeyValue( obj, keyToBeMatched, valueToBeFound ){
         //note: In javascript, by using angular.forEach function, every "return" is to return higher level of angular.forEach function.
         var find = {};
@@ -179,8 +180,8 @@ angular.module('app_utils').factory('UtilService', [ function(){
                         }
                     } 
 
-                    var ifKeyEmployeesExist = ShallowSearchKeysInJson(objFromServer, keyOfLeafOfBranchOfTree,2);
-
+                    var ifKeyEmployeesExist = ShallowSearchKeyInJson(objFromServer, keyOfLeafOfBranchOfTree,2);
+                    
                     if(ifKeyEmployeesExist === true){
                         this.open = true;
                         //the children is employee object, note the leaf here still tightly bonded with certain type. Here is "employee".
@@ -213,13 +214,10 @@ angular.module('app_utils').factory('UtilService', [ function(){
         };    
     };
     
-    function TreeNodesGenerator(objFromServer){
-        this.typeOfBranchOfTree = "Department";        
-        this.typeOfLeafOfTree = "Employee";
-        this.keyOfLeafOfBranchOfTree = "employees";
-        
+    function TreeNodesGenerator(objFromServer, branchType,leafType, leafKey){
+                
         var tree_nodes = new TreeNodeConverter(objFromServer);
-        tree_nodes.childrenFunc(objFromServer, this.typeOfBranchOfTree, this.typeOfLeafOfTree, this.keyOfLeafOfBranchOfTree);
+        tree_nodes.childrenFunc(objFromServer, branchType, leafType, leafKey);
         return tree_nodes;
     }
 

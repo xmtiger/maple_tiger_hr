@@ -34,11 +34,34 @@ app.directive('ztree',function(){
                 var util_service = angular.element(document.body).injector().get('UtilService');
                 //console.log("get util_service" + util_service);
                 //var tree_nodes = tree_nodes || {};
-                var tree_nodes = util_service.TreeNodesGenerator(data);
+                var branchType = "Department";        
+                var leafType = "Employee";
+                var leafKey = "employees";
+                
+                var tree_nodes = util_service.TreeNodesGenerator(data, branchType, leafType, leafKey);
                 console.log(tree_nodes);
                                        
                 $.fn.zTree.init(element, setting, tree_nodes);//进行初始化树形菜单 
                                 
+            }); 
+            
+            $scope.$on("zTree_ifOneNodeSelected",function(event,data){ 
+                console.log("zTree received message of zTree_ifOneNodeSelected", data);
+                
+                //judge if one node is selected, 
+                //then send the selected node information to the root controller
+                var treeObj = $.fn.zTree.getZTreeObj(element[0].id);  
+                if(treeObj !== null){
+                    var nodes = treeObj.getSelectedNodes();
+                    if(nodes !== null){
+                        
+                        //use the first selected node to be sent to the root controller.
+                        var firstNode = nodes[0];
+                        console.log("zTree got the selected node, and send it to the root controller");
+                        $scope.$emit("zTreeNodeSelected",firstNode);
+                    }
+                   
+                }
             }); 
             
             //The following section is for the testing and initialization of zTree

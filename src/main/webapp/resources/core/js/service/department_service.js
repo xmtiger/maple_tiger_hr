@@ -14,16 +14,23 @@ angular.module("app").factory("departmentService", ["$http", "$q", function($htt
     
     var REST_SERVICE_URI = "department/";
     
+    var uri_path = {};
+    
     var factory = {
-        fetchAllDepartments : fetchAllDepartments
+        fetchAllDepartments : fetchAllDepartments,
+        setURI : setURI,
+        saveOrUpdateDepartment : saveOrUpdateDepartment
     };
     
     return factory;
     
+    function setURI(location){
+        this.uri_path = location;
+    }
+    
     function fetchAllDepartments(){
         var deferred = $q.defer();
-        
-        var request = REST_SERVICE_URI + "all";
+        var request = this.uri_path + REST_SERVICE_URI + "all";
         
         $http.get(request).then(
             function(response){
@@ -36,6 +43,10 @@ angular.module("app").factory("departmentService", ["$http", "$q", function($htt
         );
 
         return deferred.promise;        
+    }
+    
+    function saveOrUpdateDepartment(){
+        console.log("begin departmentService on function saveOrUpdateDepartment()");
     }
         
 }]);
