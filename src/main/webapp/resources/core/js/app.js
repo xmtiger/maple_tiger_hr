@@ -11,8 +11,8 @@ var app = angular.module("app",["ngRoute","ngSanitize","app_department"]);
 
 app.config(['$routeProvider', function($routeProvider){
     $routeProvider.
-            when("/department/new",{
-                templateUrl : "department/new",
+            when("/department/new1",{
+                templateUrl : "department/new1",
                 controller : "departmentController"
             }).
             otherwise({

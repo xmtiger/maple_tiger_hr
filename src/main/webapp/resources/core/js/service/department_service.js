@@ -31,6 +31,7 @@ angular.module("app").factory("departmentService", ["$http", "$q", function($htt
     function fetchAllDepartments(){
         var deferred = $q.defer();
         var request = this.uri_path + REST_SERVICE_URI + "all";
+        request = request.replace("/#", "");
         
         $http.get(request).then(
             function(response){
@@ -45,15 +46,22 @@ angular.module("app").factory("departmentService", ["$http", "$q", function($htt
         return deferred.promise;        
     }
     
-    function saveOrUpdateDepartment(){
+    function saveOrUpdateDepartment($scope, $sce, $compile, $injector){
         console.log("begin departmentService on function saveOrUpdateDepartment()");
         
         var deferred = $q.defer();
         var request = this.uri_path + REST_SERVICE_URI + "new";
-        console.log(request);
+        request = request.replace("/#", "");
+                
         $http.get(request, {format:'html'}).then(
             function(response){
-                deferred.resolve(response.data);
+                //deferred.resolve(response.data);
+                //The following successfully converts the html data from response to the parent bind page.
+                
+                $scope.bindPage = $sce.trustAsHtml(response.data);
+                
+                //process compile
+                $compile($scope.bindPage)($scope);                           
             },
             function(errResponse){
                 console.error("Error while fetching new department form");
@@ -61,7 +69,7 @@ angular.module("app").factory("departmentService", ["$http", "$q", function($htt
             }        
         );
 
-        return deferred.promise; 
+        return deferred.promise;
     }
         
 }]);

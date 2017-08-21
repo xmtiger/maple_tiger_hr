@@ -7,12 +7,12 @@
 
 "use strict";
 
-angular.module("app").controller("rootController", ["$scope", "$rootScope","departmentService","$location","$sce","$document",
-    function($scope, $rootScope, departmentService, $location, $sce, $document){ 
+angular.module("app").controller("rootController", ["$scope", "$rootScope","departmentService","$location","$sce","$compile", "$injector",
+    function($scope, $rootScope, departmentService, $location, $sce, $compile, $injector){ 
         
     var self = this;    
     
-    //$scope.bindPage = "Welcome to using maple_tiger_hr System"; //This is the inital welcome text.
+    $scope.bindPage = "Welcome to using maple_tiger_hr System"; //This is the inital welcome text.
             
     $scope.$on("DisplayAllDepartments", function(event, msg){
         console.log("received displayAllDepartments message", msg);
@@ -38,20 +38,15 @@ angular.module("app").controller("rootController", ["$scope", "$rootScope","depa
             //start departmentForm.jsp to let user input new department information
             //$location.path("/department/new"); 
             departmentService.setURI($location.path());
-            var response = departmentService.saveOrUpdateDepartment(data);
-            var result = $document[0].getElementById("bindPage");
-            if(result !== null){
-                var div = angular.element(result);
-                if(div !== null){
-                    div.html(response);
-                }
-                
-            }
-            
-            //console.log(response);
-            //$scope.bindPage = response;
+            departmentService.saveOrUpdateDepartment($scope, $sce, $compile, $injector);
+             
         }
         
     });
+    
+    $scope.departmentFormSubmit = function(){
+        
+        console.log("root controller deparetmentFormSubmit()");
+    };
     
 }]);

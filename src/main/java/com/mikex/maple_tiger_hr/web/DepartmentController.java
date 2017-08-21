@@ -57,7 +57,7 @@ public class DepartmentController {
     //@Autowired
     //DepartmentFormValidator departmentFormValidator;
     
-    private static final String VIEWS_DEPT_CREATE_OR_UPDATE_FORM = "department/departmentForm01";
+    private static final String VIEWS_DEPT_CREATE_OR_UPDATE_FORM = "department/departmentForm01_1";
     
     /*@InitBinder
     protected void initBinder(WebDataBinder binder){
