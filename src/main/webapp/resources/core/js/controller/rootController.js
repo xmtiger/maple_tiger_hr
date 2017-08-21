@@ -7,11 +7,13 @@
 
 "use strict";
 
-angular.module("app").controller("rootController", ["$scope", "$rootScope","departmentService",
-    function($scope, $rootScope, departmentService){
+angular.module("app").controller("rootController", ["$scope", "$rootScope","departmentService","$location","$sce","$document",
+    function($scope, $rootScope, departmentService, $location, $sce, $document){ 
         
     var self = this;    
-        
+    
+    //$scope.bindPage = "Welcome to using maple_tiger_hr System"; //This is the inital welcome text.
+            
     $scope.$on("DisplayAllDepartments", function(event, msg){
         console.log("received displayAllDepartments message", msg);
         
@@ -32,10 +34,22 @@ angular.module("app").controller("rootController", ["$scope", "$rootScope","depa
         if(data === null || data === undefined || data.length === 0){
             console.log("no node selected");
         }else{
-            
+            console.log("$location.path(/department/new)");
             //start departmentForm.jsp to let user input new department information
+            //$location.path("/department/new"); 
+            departmentService.setURI($location.path());
+            var response = departmentService.saveOrUpdateDepartment(data);
+            var result = $document[0].getElementById("bindPage");
+            if(result !== null){
+                var div = angular.element(result);
+                if(div !== null){
+                    div.html(response);
+                }
+                
+            }
             
-            //departmentService.saveOrUpdateDepartment(data);
+            //console.log(response);
+            //$scope.bindPage = response;
         }
         
     });

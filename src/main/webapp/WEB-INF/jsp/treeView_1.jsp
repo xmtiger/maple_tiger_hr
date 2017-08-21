@@ -111,7 +111,9 @@
             
             <div id ="contentwrapper" >
                 <br>
-                <ul id="departmentDiv" ></ul>
+                <ul id="bindPage" ></ul>
+                <!--ul id="bindPage" ng-bind-html="bindPage"></ul-->
+                <ul id="bindView" ng-view="bindView"></ul>
             </div>
             
         </div>
@@ -124,6 +126,9 @@
         <script type="text/javascript" src="${context}/resources/vendors/zTree/js/jquery.ztree.all.min.js"></script>
         <!-- angular js -->
         <script type="text/javascript" src="${context}/resources/vendors/angularJS/js/angular.min.js"></script>
+        <script type="text/javascript" src="${context}/resources/vendors/angularJS/js/angular-route.min.js"></script>       
+        <script type="text/javascript" src="${context}/resources/vendors/angularJS/js/angular-sanitize.min.js"></script>  
+                
         <script type="text/javascript" src="${context}/resources/core/js/app.js"></script>        
         <script type="text/javascript" src="${context}/resources/core/js/service/app_utils.js"></script>
         <script type="text/javascript" src="${context}/resources/core/js/service/department_service.js"></script>        
@@ -147,7 +152,7 @@
             //jQuery function
             $(document).ready(function(){
                 
-                $("#departmentDiv").html("Welcome to using Maple_Tiger_HR System");
+                //$("#departmentDiv").html("Welcome to using Maple_Tiger_HR System");
                 //The required data can be customerized object which includes name, children.
                                
                 //
@@ -159,7 +164,7 @@
                     //The following works fine for buttons in group with same class type
                     //$(".btn-primary").prop('disabled', true);
 
-                    $("#departmentDiv").html("the page is loading, please wait...");
+                    $("#bindPage").html("the page is loading, please wait...");
 
                     var id = 2;
                     var request = "department/" + "id/" + id;
@@ -180,7 +185,7 @@
                     });*/
 
                     //The following load function shows how to request loading a page
-                    $("#departmentDiv").load("department/new");
+                    $("#bindPage").load("department/new");
                    
                    
                 });

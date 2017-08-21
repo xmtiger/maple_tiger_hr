@@ -7,7 +7,18 @@
 
 var app_utils = angular.module("app_utils", []);
 var app_department = angular.module("app_department", ["app_utils"]);
-var app = angular.module("app",["app_department"]);
+var app = angular.module("app",["ngRoute","ngSanitize","app_department"]);
+
+app.config(['$routeProvider', function($routeProvider){
+    $routeProvider.
+            when("/department/new",{
+                templateUrl : "department/new",
+                controller : "departmentController"
+            }).
+            otherwise({
+                redirectTo: "#"
+            });
+}]);
 
 // Two-way bound treeView
 //树形结构 

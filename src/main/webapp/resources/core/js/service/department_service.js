@@ -47,6 +47,21 @@ angular.module("app").factory("departmentService", ["$http", "$q", function($htt
     
     function saveOrUpdateDepartment(){
         console.log("begin departmentService on function saveOrUpdateDepartment()");
+        
+        var deferred = $q.defer();
+        var request = this.uri_path + REST_SERVICE_URI + "new";
+        console.log(request);
+        $http.get(request, {format:'html'}).then(
+            function(response){
+                deferred.resolve(response.data);
+            },
+            function(errResponse){
+                console.error("Error while fetching new department form");
+                deferred.reject(errResponse);
+            }        
+        );
+
+        return deferred.promise; 
     }
         
 }]);
