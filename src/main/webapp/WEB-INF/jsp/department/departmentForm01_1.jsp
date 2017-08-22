@@ -36,7 +36,7 @@
         
         <script>
             // The dynamic registration of the controller must be done before the definition of the indicated ng-controller
-            angular.module("app").controller("DepartmentFormController", ["$scope","departmentService",function($scope, departmentService){
+            angular.module("app").controller("DepartmentFormController", ["$scope","departmentService", "$location",function($scope, departmentService, $location){
 
                     $scope.departmentFormSubmit = function(){
                         console.log("departmentFormController-departmentController-addDepartment()");
