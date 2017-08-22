@@ -57,11 +57,22 @@ angular.module("app").factory("departmentService", ["$http", "$q", function($htt
             function(response){
                 //deferred.resolve(response.data);
                 //The following successfully converts the html data from response to the parent bind page.
+                var template = $sce.trustAsHtml(response.data);
+                //var template2 = angular.element(template);
+                //$compile(template2)($scope);
+                //$scope.contentTest = template;
                 
-                $scope.bindPage = $sce.trustAsHtml(response.data);
-                
+                $scope.bindPage = template;
+                //$scope.bindtest = response.data;
                 //process compile
-                $compile($scope.bindPage)($scope);                           
+                //$compile(template)($scope); 
+                
+                // Convert the html to an actual DOM node
+                
+                // Append it to the directive element
+                //$scope.bindPage = template2;
+                // And let Angular $compile it
+                
             },
             function(errResponse){
                 console.error("Error while fetching new department form");

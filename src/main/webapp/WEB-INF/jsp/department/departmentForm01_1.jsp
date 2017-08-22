@@ -86,7 +86,7 @@
                 <div class="form-group">
                   <label class="col-md-4 control-label"></label>
                   <div class="col-md-4">
-                    <button id="sendButton" class="btn btn-warning" >Send <span class="glyphicon glyphicon-send"></span></button>
+                      <button ng-click="departmentFormSubmit()" id="sendButton" class="btn btn-warning" >Send <span class="glyphicon glyphicon-send"></span></button>
                   </div>
                 </div>               
                 

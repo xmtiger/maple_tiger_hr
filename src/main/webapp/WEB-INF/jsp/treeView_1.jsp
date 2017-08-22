@@ -111,8 +111,10 @@
             
             <div id ="contentwrapper" >
                 <br>
-                <!--ul id="bindPage" ng-bind="bindPage" ></ul-->
-                <ul id="bindPage" ng-bind-html="bindPage"></ul>
+                <div bind-page ng-bind-html="bindPage" ></div>
+                
+                
+                <!--ul id="bindPage" ng-bind-html="bindPage"></ul-->
                 <!--ul id="bindView" ng-view="bindView"></ul-->
             </div>
             

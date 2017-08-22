@@ -20,6 +20,44 @@ app.config(['$routeProvider', function($routeProvider){
             });
 }]);
 
+//dynamic div to dynamically add html pages
+app.directive('bindPage', function ($compile, $parse) {
+    return {
+        link: function(scope, element, attr){
+            var parsed = $parse(attr.ngBindHtml);
+            function getStringValue() { return (parsed(scope) || '').toString(); }
+
+            //Recompile if the template changes
+            scope.$watch(getStringValue, function() {
+                console.log("compile");
+                $compile(element, null, -9999)(scope);  //The -9999 makes it skip directives so that we do not recompile ourselves
+            });
+        }         
+    };
+    
+    /*return {
+        controller: function( $scope, $element, $attrs, $transclude ) {
+            console.log( $attrs.log + ' (controller)' );
+            
+            $scope.departmentFormSubmit = function(){
+                console.log("dept form submit");
+            };
+            
+        },
+        compile: function compile( tElement, tAttributes ) {
+            console.log( tAttributes.log + ' (compile)'  );
+            return {
+                pre: function preLink( scope, element, attributes ) {
+                    console.log( attributes.log + ' (pre-link)'  );
+                },
+                post: function postLink( scope, element, attributes ) {
+                    console.log( attributes.log + ' (post-link)'  );
+                }
+            };
+         }
+     };  */
+});
+
 // Two-way bound treeView
 //树形结构 
 app.directive('ztree',function(){ 

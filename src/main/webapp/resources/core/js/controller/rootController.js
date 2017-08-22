@@ -36,12 +36,10 @@ angular.module("app").controller("rootController", ["$scope", "$rootScope","depa
         }else{
             console.log("$location.path(/department/new)");
             //start departmentForm.jsp to let user input new department information
-            //$location.path("/department/new"); 
+            //$location.path("/department/new");                         
             departmentService.setURI($location.path());
-            departmentService.saveOrUpdateDepartment($scope, $sce, $compile, $injector);
-             
-        }
-        
+            departmentService.saveOrUpdateDepartment($scope, $sce, $compile, $injector);             
+        }        
     });
     
     $scope.departmentFormSubmit = function(){
