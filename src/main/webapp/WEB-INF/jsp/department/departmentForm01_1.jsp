@@ -34,12 +34,26 @@
             }
         </style>    
         
+        <script>
+            // The dynamic registration of the controller must be done before the definition of the indicated ng-controller
+            angular.module("app").controller("DepartmentFormController", ["$scope","departmentService",function($scope, departmentService){
+
+                    $scope.departmentFormSubmit = function(){
+                        console.log("departmentFormController-departmentController-addDepartment()");
+
+                        //perform the database actions here.
+
+                    };
+                }]);
+            
+        </script>
+        
     </head>
 
     <body>
         <!-- disable action and method properties of the following form action=" " method="post"
         Only activate click event and start submit from click function-->
-        <form class="well form-horizontal"   id="dept_form" ng-submit="departmentFormSubmit()">
+        <form class="well form-horizontal"   id="dept_form" ng-submit="departmentFormSubmit()" ng-controller="DepartmentFormController">
             <fieldset>
 
                 <!-- Form Name -->
@@ -86,7 +100,7 @@
                 <div class="form-group">
                   <label class="col-md-4 control-label"></label>
                   <div class="col-md-4">
-                      <button ng-click="departmentFormSubmit()" id="sendButton" class="btn btn-warning" >Send <span class="glyphicon glyphicon-send"></span></button>
+                      <button id="sendButton" class="btn btn-warning" >Send <span class="glyphicon glyphicon-send"></span></button>
                   </div>
                 </div>               
                 
@@ -128,12 +142,12 @@
                 
         <script type="text/javascript">
             $(document).ready(function() {
-                
-                var ctx ="${pageContext.request.contextPath}"; 
-                
+                              
                 /*Note: the button id shall be unique, even when this jsp page is loaded from other pages
                  * otherwise the click function of this button does not work*/
-                /*$("#sendButton").on("click",function(e){
+                /*  var ctx ="${pageContext.request.contextPath}";
+                    
+                    $("#sendButton").on("click",function(e){
                     e.preventDefault();
                     
                     $('#resultContainer_click').text(ctx);
@@ -145,14 +159,11 @@
                         $('#resultContainer_click').text("validation is passed in click function");
                         $('#resultContainer_click').show();
                         
-                        $("#dept_form").submit();
+                        $("#dept_form").submit();                       
                     } else{
                         $('#resultContainer_click').text("validation is not passed in click function");
-                        $('#resultContainer_click').show();
-                        
-                        return;
-                    } 
-                        
+                        $('#resultContainer_click').show();                    
+                    }                         
                 });*/
                 
                 //submit from through angularJS
@@ -267,6 +278,7 @@
                 });               
                 
             });           
+            
             
     
         </script>

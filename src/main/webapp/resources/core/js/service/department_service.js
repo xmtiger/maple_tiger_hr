@@ -46,23 +46,30 @@ angular.module("app").factory("departmentService", ["$http", "$q", function($htt
         return deferred.promise;        
     }
     
-    function saveOrUpdateDepartment($scope, $sce, $compile, $injector){
+    function saveOrUpdateDepartment($scope){
         console.log("begin departmentService on function saveOrUpdateDepartment()");
         
         var deferred = $q.defer();
         var request = this.uri_path + REST_SERVICE_URI + "new";
         request = request.replace("/#", "");
-                
+            
         $http.get(request, {format:'html'}).then(
             function(response){
                 //deferred.resolve(response.data);
                 //The following successfully converts the html data from response to the parent bind page.
-                var template = $sce.trustAsHtml(response.data);
+                console.log("received response");
+                
+                
+                $scope.$emit("updateBindPageView", response.data);
+                
+                
+                
+                //var template = $sce.trustAsHtml(response.data);
                 //var template2 = angular.element(template);
                 //$compile(template2)($scope);
                 //$scope.contentTest = template;
                 
-                $scope.bindPage = template;
+                //$scope.bindPage = template;
                 //$scope.bindtest = response.data;
                 //process compile
                 //$compile(template)($scope); 

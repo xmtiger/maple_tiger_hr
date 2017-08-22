@@ -9,7 +9,8 @@ var app_utils = angular.module("app_utils", []);
 var app_department = angular.module("app_department", ["app_utils"]);
 var app = angular.module("app",["ngRoute","ngSanitize","app_department"]);
 
-app.config(['$routeProvider', function($routeProvider){
+//For time being, the route setting is not required.
+/*app.config(['$routeProvider', function($routeProvider){
     $routeProvider.
             when("/department/new1",{
                 templateUrl : "department/new1",
@@ -18,21 +19,72 @@ app.config(['$routeProvider', function($routeProvider){
             otherwise({
                 redirectTo: "#"
             });
+}]);*/
+
+app.config(['$controllerProvider','$provide','$compileProvider', function($controllerProvider, $provide, $compileProvider){
+    
+    console.log("add controller after angularjs bootstrapped");
+    
+    // Let's keep the older references.
+    app._controller = app.controller;
+    app._service = app.service;
+    app._factory = app.factory;
+    app._value = app.value;
+    app._directive = app.directive;
+    // Provider-based controller.
+    app.controller = function( name, constructor ) {
+        console.log("controller register");
+        $controllerProvider.register( name, constructor );
+        return( this );
+    };
+    // Provider-based service.
+    app.service = function( name, constructor ) {
+        $provide.service( name, constructor );
+        return( this );
+    };
+    // Provider-based factory.
+    app.factory = function( name, factory ) {
+        $provide.factory( name, factory );
+        return( this );
+    };
+    // Provider-based value.
+    app.value = function( name, value ) {
+        $provide.value( name, value );
+        return( this );
+    };
+    // Provider-based directive.
+    app.directive = function( name, factory ) {
+        $compileProvider.directive( name, factory );
+        return( this );
+    };
+        
 }]);
 
-//dynamic div to dynamically add html pages
-app.directive('bindPage', function ($compile, $parse) {
-    return {
-        link: function(scope, element, attr){
-            var parsed = $parse(attr.ngBindHtml);
-            function getStringValue() { return (parsed(scope) || '').toString(); }
 
-            //Recompile if the template changes
-            scope.$watch(getStringValue, function() {
-                console.log("compile");
-                $compile(element, null, -9999)(scope);  //The -9999 makes it skip directives so that we do not recompile ourselves
+//dynamic div to dynamically add html pages
+app.directive('bindPage', ['$compile', '$parse', '$sce', function ($compile, $parse, $sce) {
+    return {
+        restrict: 'A',
+        link : function(scope, element, attrs){
+            console.log("in directive bindPage");
+            
+            var expression = $sce.parseAsHtml(attrs.bindPage);
+            
+            var getResult = function(){
+                return expression(scope);
+            };     
+            
+            //recompile if the template changes
+             
+            scope.$on("DirectiveToUpdateBindPageView", function(event, data){
+                console.log("proceed the message updateBindPageView in the directive");
+                
+                element.html(data);
+                $compile(element.contents())(scope);
+               
             });
-        }         
+        }    
+              
     };
     
     /*return {
@@ -56,7 +108,7 @@ app.directive('bindPage', function ($compile, $parse) {
             };
          }
      };  */
-});
+}]);
 
 // Two-way bound treeView
 //树形结构 

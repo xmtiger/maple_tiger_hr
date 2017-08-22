@@ -38,13 +38,23 @@ angular.module("app").controller("rootController", ["$scope", "$rootScope","depa
             //start departmentForm.jsp to let user input new department information
             //$location.path("/department/new");                         
             departmentService.setURI($location.path());
-            departmentService.saveOrUpdateDepartment($scope, $sce, $compile, $injector);             
+            departmentService.saveOrUpdateDepartment($scope);             
         }        
     });
     
-    $scope.departmentFormSubmit = function(){
+    $scope.$on("updateBindPageView", function (event, data){
+        
+        console.log("received message from service to update bindPage");
+        
+        // send messag to the directive, 
+        // Note can not send same message as the one received, otherwise it will be indefinte cycle of receiving and sending
+        $rootScope.$broadcast("DirectiveToUpdateBindPageView", data);
+        
+    });
+    
+    /*$scope.departmentFormSubmit = function(){
         
         console.log("root controller deparetmentFormSubmit()");
-    };
+    };*/
     
 }]);
