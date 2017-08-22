@@ -187,7 +187,7 @@
                     });*/
 
                     //The following load function shows how to request loading a page
-                    $("#bindPage").load("department/new");
+                    //$("#bindPage").load("department/new");
                    
                    
                 });
