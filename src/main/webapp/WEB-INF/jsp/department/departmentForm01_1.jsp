@@ -40,10 +40,31 @@
 
                     $scope.departmentFormSubmit = function(){
                         console.log("departmentFormController-departmentController-addDepartment()");
+                        
+                        //here jquery is used, but is not recommended.
+                        var bootstrapValidator = $("#dept_form").data('bootstrapValidator');
+                        bootstrapValidator.validate();
+                        if(bootstrapValidator.isValid()){
+                            $('#resultContainer').text("validation is passed in sumbit function");
+                            $('#resultContainer').show();  
+                            
+                            //perform the database actions here.
+                            
 
-                        //perform the database actions here.
+                        } else{ 
+                            //The validation is not passed
+                            $('#resultContainer').text("validation is not passed in submit function");
+                            $('#resultContainer').show();
+
+                            
+                        }           
 
                     };
+                    
+                    $scope.$on("$destroy", function(){
+                        console.log("destroy");
+                    });
+                    
                 }]);
             
         </script>
