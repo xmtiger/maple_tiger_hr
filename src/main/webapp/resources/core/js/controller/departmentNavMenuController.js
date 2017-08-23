@@ -6,7 +6,7 @@
 
 "use strict";
 
-angular.module("app_department").controller("departmentController", ["$scope", "departmentService", "$location", function($scope, departmentService, $location){
+angular.module("app_department").controller("departmentNavMenuController", ["$scope", "departmentService", "$location", function($scope, departmentService, $location){
         
     var self = this;
     self.departmentsFromServer = {};
@@ -39,7 +39,8 @@ angular.module("app_department").controller("departmentController", ["$scope", "
         
         //1. send a message to zTree via the root controller for requesting if one node is selected. 
         //If no selected node, send alert to use for requesting selecting node
-        $scope.$emit("IfOneNodeSelected");
+        $scope.$emit("addOneDepartment");
+        //$scope.$emit("IfOneNodeSelected");
     };
     
 }]);

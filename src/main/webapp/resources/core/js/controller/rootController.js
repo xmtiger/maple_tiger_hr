@@ -10,9 +10,15 @@
 angular.module("app").controller("rootController", ["$scope", "$rootScope","departmentService","$location","$sce","$compile", "$injector",
     function($scope, $rootScope, departmentService, $location, $sce, $compile, $injector){ 
         
-    var self = this;    
-    
-    $scope.bindPage = "Welcome to using maple_tiger_hr System"; //This is the inital welcome text.
+    $scope.alert = { type: 'success', msg: 'Welcome to using maple_tiger_hr System'};
+       
+    $scope.addAlert = function(type, msg) {
+        
+        $scope.alert.type = type || 'warning';
+        $scope.alert.msg = msg;
+    };
+   
+    $scope.bindPage = "Welcome"; //This is the inital welcome text.
             
     $scope.$on("DisplayAllDepartments", function(event, msg){
         console.log("received displayAllDepartments message", msg);
@@ -20,11 +26,16 @@ angular.module("app").controller("rootController", ["$scope", "$rootScope","depa
         $rootScope.$broadcast("zTree_displayAllDepartments", msg);
     });
     
-    $scope.$on("IfOneNodeSelected", function(event, msg){
+    $scope.$on("addOneDepartment", function(event, msg){
         
-        console.log("received IfOneNodeSelected request");
+        console.log("received addOneDepartment request");
         
-        $rootScope.$broadcast("zTree_ifOneNodeSelected", msg);
+        $rootScope.$broadcast("zTree_addOneDepartment");
+    });
+    
+    $scope.$on("zTree_noNodeSelected", function(event, msg){
+        //alert user that no tree node is selected.
+        $scope.addAlert("danger", "No node selected");
     });
     
     $scope.$on("zTreeNodeSelected", function(event, data){
@@ -38,7 +49,7 @@ angular.module("app").controller("rootController", ["$scope", "$rootScope","depa
             //start departmentForm.jsp to let user input new department information
             //$location.path("/department/new");                         
             departmentService.setURI($location.path());
-            departmentService.saveOrUpdateDepartment($scope);             
+            departmentService.getSaveOrUpdateDepartmentPage($scope);             
         }        
     });
     
@@ -52,9 +63,10 @@ angular.module("app").controller("rootController", ["$scope", "$rootScope","depa
         
     });
     
-    /*$scope.departmentFormSubmit = function(){
+    $scope.$on("createdOneDepartment", function(event, data){
         
-        console.log("root controller deparetmentFormSubmit()");
-    };*/
+        $rootScope.$broadcast("DepartmentServiceCreatedOneDepartment", data);
+        
+    });
     
 }]);

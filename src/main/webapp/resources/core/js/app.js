@@ -7,7 +7,7 @@
 
 var app_utils = angular.module("app_utils", []);
 var app_department = angular.module("app_department", ["app_utils"]);
-var app = angular.module("app",["ngRoute","ngSanitize","app_department"]);
+var app = angular.module("app",["ngRoute","ngSanitize","app_department", "ui.bootstrap"]);
 
 //For time being, the route setting is not required.
 /*app.config(['$routeProvider', function($routeProvider){
@@ -146,15 +146,17 @@ app.directive('ztree',function(){
                                 
             }); 
             
-            $scope.$on("zTree_ifOneNodeSelected",function(event,data){ 
-                console.log("zTree received message of zTree_ifOneNodeSelected", data);
+            $scope.$on("zTree_addOneDepartment",function(event,data){ 
+                console.log("zTree received message of zTree_addOneDepartment");
                 
                 //judge if one node is selected, 
                 //then send the selected node information to the root controller
                 var treeObj = $.fn.zTree.getZTreeObj(element[0].id);  
                 if(treeObj !== null){
                     var nodes = treeObj.getSelectedNodes();
-                    if(nodes !== null){
+                    if(nodes === null || nodes === undefined || nodes.length === 0){
+                         $scope.$emit("zTree_noNodeSelected");
+                    }else{
                         
                         //use the first selected node to be sent to the root controller.
                         var firstNode = nodes[0];
@@ -164,6 +166,13 @@ app.directive('ztree',function(){
                    
                 }
             }); 
+            
+            $scope.$on("DepartmentServiceCreatedOneDepartment", function(event, data){
+                
+                console.log("zTree received message of DepartmentServiceCreateOneDepartment");
+                //zTree will update the tree nodes
+                
+            });
             
             //The following section is for the testing and initialization of zTree
             function Department(id, name, address, begin_time) {

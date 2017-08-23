@@ -34,120 +34,6 @@
             }
         </style>    
         
-        <script>
-            // The dynamic registration of the controller must be done before the definition of the indicated ng-controller
-            angular.module("app").controller("DepartmentFormController", ["$scope","departmentService", "$location",function($scope, departmentService, $location){
-
-                    $scope.departmentFormSubmit = function(){
-                        console.log("departmentFormController-departmentController-addDepartment()");
-                        
-                        //here jquery is used, but is not recommended.
-                        var bootstrapValidator = $("#dept_form").data('bootstrapValidator');
-                        bootstrapValidator.validate();
-                        if(bootstrapValidator.isValid()){
-                            $('#resultContainer').text("validation is passed in sumbit function");
-                            $('#resultContainer').show();  
-                            
-                            //perform the database actions here.
-                            
-
-                        } else{ 
-                            //The validation is not passed
-                            $('#resultContainer').text("validation is not passed in submit function");
-                            $('#resultContainer').show();
-
-                            
-                        }           
-
-                    };
-                    
-                    $scope.$on("$destroy", function(){
-                        console.log("destroy");
-                    });
-                    
-                }]);
-            
-        </script>
-        
-    </head>
-
-    <body>
-        <!-- disable action and method properties of the following form action=" " method="post"
-        Only activate click event and start submit from click function-->
-        <form class="well form-horizontal"   id="dept_form" ng-submit="departmentFormSubmit()" ng-controller="DepartmentFormController">
-            <fieldset>
-
-                <!-- Form Name -->
-                <legend>DEPARTMENT FORM</legend>
-
-                <!-- Text input-->
-
-                <div class="form-group">
-                  <label class="col-md-4 control-label">Name</label>  
-                  <div class="col-md-4 inputGroupContainer">
-                  <div class="input-group">
-                  <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
-                  <input  name="name" placeholder="Name" class="form-control"  type="text" id="dept_name" ng-model="departmentName"/>
-                    </div>
-                  </div>
-                </div>
-
-                <!-- Text input-->
-
-                <div class="form-group">
-                  <label class="col-md-4 control-label" >Address</label> 
-                    <div class="col-md-4 inputGroupContainer">
-                    <div class="input-group" >
-                  <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
-                  <input name="address" placeholder="Address" class="form-control"  type="text" id="dept_address" ng-model="departmentAddress"/>
-                    </div>
-                  </div>
-                </div>
-                
-                <!-- time input -->
-                <div class="form-group">
-                  <label class="col-md-4 control-label" >Begin Date</label> 
-                    <!--div class="col-xs-5 date"-->
-                    <div class="col-md-4 date">
-                        <div class="input-group input-append date" id="datePicker">
-                            
-                            <input type="text" placeholder="YYYY-MM-DD" class="form-control"  name="begin_time" id="dept_begin_time" ng-model="departmentBeginTime"/>
-                            <span class="input-group-addon add-on"><span class="glyphicon glyphicon-calendar"></span></span>
-                        </div>
-                    </div>     
-                </div>
-                
-                <!-- Button -->
-                <div class="form-group">
-                  <label class="col-md-4 control-label"></label>
-                  <div class="col-md-4">
-                      <button id="sendButton" class="btn btn-warning" >Send <span class="glyphicon glyphicon-send"></span></button>
-                  </div>
-                </div>               
-                
-                
-            </fieldset>
-         </form>
-        <br>       
-        <!-- Result Container  -->
-        <br>
-        <div id="resultContainer_click" style="display: none;">
-         <hr/>
-         <h4 style="color: green;">Submit function Response and JSON Response From Server</h4>
-          <pre style="color: green;">
-            <code></code>
-           </pre>
-        </div>
-        <br>
-        <div id="resultContainer" style="display: none;">
-         <hr/>
-         <h4 style="color: green;">Click function result</h4>
-          <pre style="color: green;">
-            <code></code>
-           </pre>
-        </div>
-        
-        
         <!-- jQuery first, then Tether, then Bootstrap JS. -->
         <!-- jQuery library -->
         <script src="${context}/resources/vendors/jquery/js/jquery.min.js"></script>
@@ -163,7 +49,7 @@
                 
         <script type="text/javascript">
             $(document).ready(function() {
-                              
+                                                           
                 /*Note: the button id shall be unique, even when this jsp page is loaded from other pages
                  * otherwise the click function of this button does not work*/
                 /*  var ctx ="${pageContext.request.contextPath}";
@@ -299,10 +185,178 @@
                 });               
                 
             });           
+                    
+            // The dynamic registration of the controller must be done before the definition of the indicated ng-controller
+            angular.module("app").controller("DepartmentFormController", ["$scope","departmentService", "$location",function($scope, departmentService, $location){
+                    
+                    //create a blank object to hold the form information, and $scope will allow this to pass between controller and view
+                    $scope.formData = {};
+                    //here the function validateDepartmentForm is jquery function, which is not recommended.
+                    //but this page is end page, so it is flexible to use jquery--------------------------------------
+                    function validateDepartmentForm(){
+                        var bootstrapValidator = $("#dept_form").data('bootstrapValidator');
+                        bootstrapValidator.validate();
+                        if(bootstrapValidator.isValid()){
+                            $('#resultContainer_click').text("validation is passed in click function");
+                            $('#resultContainer_click').show();
+
+                            return true;                      
+                        } else{
+                            $('#resultContainer_click').text("validation is not passed in click function");
+                            $('#resultContainer_click').show();  
+
+                            return false;
+                        }  
+                    };
+                    
+                    function getJsonDataFromDeptForm(){
+                        var form = $('#dept_form');
+                    
+                        //The following conversion is necessary to send server the correct json data
+                        var jsonData = {};
+                        $.each($(form).serializeArray(), function() {
+                            jsonData[this.name] = this.value;
+                        });
+                                                
+                        return JSON.stringify(jsonData);
+                    };
+                    
+                    //-----------------------------------------------------------------------------------------
+                    $scope.departmentFormSubmit = function(){
+                        console.log("departmentFormController-departmentController-addDepartment()");                        
+                        
+                        if(validateDepartmentForm() === true){
+                            
+                            //perform the database actions here.
+                            console.log("client validation is passed, then perform database request");
+                                                 
+                            var jsonData = getJsonDataFromDeptForm();
+                            
+                            departmentService.createDepartment($scope, $location, jsonData);
+
+                        } else{ 
+                            //The validation is not passed
+                            console.log("client validation is not passed");                            
+                        }           
+
+                    };
+                    
+                    /*$scope.$on("$destroy", function(){
+                        console.log("destroy");
+                    });*/
+                    
+
+                }]);
             
-            
-    
         </script>
+        
+    </head>
+
+    <body>
+        <!-- disable action and method properties of the following form action=" " method="post"
+        Only activate click event and start submit from click function-->
+        <form class="well form-horizontal"   id="dept_form" ng-submit="departmentFormSubmit()" ng-controller="DepartmentFormController">
+            <fieldset>
+
+                <!-- Form Name -->
+                <legend>DEPARTMENT FORM</legend>
+
+                <!-- Text input-->
+
+                <div class="form-group">
+                  <label class="col-md-4 control-label">Name</label>  
+                  <div class="col-md-4 inputGroupContainer">
+                  <div class="input-group">
+                  <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
+                  <input  name="name" placeholder="Name" class="form-control"  type="text" id="dept_name" ng-model="formData.name"/>
+                    </div>
+                  </div>
+                </div>
+                
+               
+                <!-- Text input-->
+
+                <div class="form-group">
+                  <label class="col-md-4 control-label" >Address</label> 
+                    <div class="col-md-4 inputGroupContainer">
+                    <div class="input-group" >
+                  <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
+                  <input name="address" placeholder="Address" class="form-control"  type="text" id="dept_address" ng-model="formData.address"/>
+                    </div>
+                  </div>
+                </div>
+                
+                <!--div class="col-md-4">
+                    <label class="col-md-4 control-label" >Address</label> 
+                    <div class="input-group">
+                      <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
+                      <input name="address" type="text" class="form-control" placeholder="address" ng-model="formData.address"  close-text="Close" />
+                     
+                    </div>
+                  </div>
+                </div-->
+               
+                <!-- time input -->
+                <!--div class="form-group">
+                    <label class="col-md-4" control-label"> Begin Date </label>
+                         
+                        <div class="col-md-4 inputGroupContainer">
+                            <div class="input-group" >
+                                <input name="begin_time" type="date" class="form-control" placeholder="yyyy-MM-dd" uib-datepicker-popup ng-model="formData.beginTime" is-open="popup2.opened" datepicker-options="dateOptions" ng-required="true" close-text="Close" />
+                                
+                                <span class="input-group-btn">
+                                  <button type="button" class="btn btn-default" ng-click="open2()"><i class="glyphicon glyphicon-calendar"></i></button>
+                                </span>
+                            </div>
+                        </div>
+                      </div>
+                </div-->
+                
+                <div class="form-group">
+                  <label class="col-md-4 control-label" >Begin Date</label> 
+                    <!--div class="col-xs-5 date"-->
+                    <div class="col-md-4 date">
+                        <div class="input-group input-append date" id="datePicker">
+                            
+                            <input type="text" placeholder="yyyy-MM-dd" class="form-control"  name="begin_time" id="dept_begin_time" ng-model="formData.beginTime"/>
+                            <span class="input-group-addon add-on"><span class="glyphicon glyphicon-calendar"></span></span>
+                        </div>
+                    </div>     
+                </div>
+                                          
+                
+                <!-- Button -->
+                <div class="form-group">
+                  <label class="col-md-4 control-label"></label>
+                  <div class="col-md-4">
+                      <button id="sendButton" class="btn btn-warning" >Send <span class="glyphicon glyphicon-send"></span></button>
+                  </div>
+                </div>               
+                
+                
+            </fieldset>
+         </form>
+        <br>       
+        <!-- Result Container  -->
+        <br>
+        <div id="resultContainer_click" style="display: none;">
+         <hr/>
+         <h4 style="color: green;">Submit function Response and JSON Response From Server</h4>
+          <pre style="color: green;">
+            <code></code>
+           </pre>
+        </div>
+        <br>
+        <div id="resultContainer" style="display: none;">
+         <hr/>
+         <h4 style="color: green;">Click function result</h4>
+          <pre style="color: green;">
+            <code></code>
+           </pre>
+        </div>
+        
+        
+        
         
     </body>
   

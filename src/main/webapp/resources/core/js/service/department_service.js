@@ -19,7 +19,8 @@ angular.module("app").factory("departmentService", ["$http", "$q", function($htt
     var factory = {
         fetchAllDepartments : fetchAllDepartments,
         setURI : setURI,
-        saveOrUpdateDepartment : saveOrUpdateDepartment
+        getSaveOrUpdateDepartmentPage : getSaveOrUpdateDepartmentPage,
+        createDepartment : createDepartment
     };
     
     return factory;
@@ -46,7 +47,7 @@ angular.module("app").factory("departmentService", ["$http", "$q", function($htt
         return deferred.promise;        
     }
     
-    function saveOrUpdateDepartment($scope){
+    function getSaveOrUpdateDepartmentPage($scope){
         console.log("begin departmentService on function saveOrUpdateDepartment()");
         
         var deferred = $q.defer();
@@ -58,12 +59,9 @@ angular.module("app").factory("departmentService", ["$http", "$q", function($htt
                 //deferred.resolve(response.data);
                 //The following successfully converts the html data from response to the parent bind page.
                 console.log("received response");
-                
-                
+                                
                 $scope.$emit("updateBindPageView", response.data);
-                
-                
-                
+                                                
                 //var template = $sce.trustAsHtml(response.data);
                 //var template2 = angular.element(template);
                 //$compile(template2)($scope);
@@ -88,6 +86,28 @@ angular.module("app").factory("departmentService", ["$http", "$q", function($htt
         );
 
         return deferred.promise;
+    }
+    
+    function createDepartment($scope, $location, department){
+        
+        uri_path = $location.path();
+        
+        var deferred = $q.defer();
+        var request = this.uri_path + REST_SERVICE_URI + "create";
+        request = request.replace("/#", "");
+        
+        console.log(request);
+        $http.post(request, department).then(
+            function(response){
+                deferred.resolve(response.data);
+                
+                $scope.$emit("createdOneDepartment", deferred.promise);
+            },
+            function(errResponse){
+                console.error("Error while fetching all departments");
+                deferred.reject(errResponse);
+            }        
+        );
     }
         
 }]);

@@ -56,7 +56,7 @@
                 
                 <ul class="nav navbar-nav">
 
-                    <li class="dropdown" ng-controller="departmentController">
+                    <li class="dropdown" ng-controller="departmentNavMenuController">
                         <a id="department_menu" class="dropdown-toggle" data-toggle="dropdown" href="#" >DEPARTMENT<span class="caret"></span></a>
                         <ul class="dropdown-menu">
                             <li><a href="#" id="department_menu_display" ng-click="displayAll()">Dispaly All</a></li>
@@ -110,12 +110,11 @@
             </div>   
             
             <div id ="contentwrapper" >
-                <br>
-                <div bind-page ng-bind-html="bindPage" ></div>
                 
-                
-                <!--ul id="bindPage" ng-bind-html="bindPage"></ul-->
-                <!--ul id="bindView" ng-view="bindView"></ul-->
+                <div uib-alert ng-class="'alert-' + (alert.type || 'warning')" >{{alert.msg}}</div>
+                        
+                <div bind-page ng-bind-html="bindPage" ></div>         
+                               
             </div>
             
         </div>
@@ -128,13 +127,14 @@
         <script type="text/javascript" src="${context}/resources/vendors/zTree/js/jquery.ztree.all.min.js"></script>
         <!-- angular js -->
         <script type="text/javascript" src="${context}/resources/vendors/angularJS/js/angular.min.js"></script>
+        <script type="text/javascript" src="${context}/resources/vendors/angularJS/js/ui-bootstrap-tpls-2.5.0.min.js"></script>
         <script type="text/javascript" src="${context}/resources/vendors/angularJS/js/angular-route.min.js"></script>       
         <script type="text/javascript" src="${context}/resources/vendors/angularJS/js/angular-sanitize.min.js"></script>  
                 
         <script type="text/javascript" src="${context}/resources/core/js/app.js"></script>        
         <script type="text/javascript" src="${context}/resources/core/js/service/app_utils.js"></script>
         <script type="text/javascript" src="${context}/resources/core/js/service/department_service.js"></script>        
-        <script type="text/javascript" src="${context}/resources/core/js/controller/department_controller.js"></script>
+        <script type="text/javascript" src="${context}/resources/core/js/controller/departmentNavMenuController.js"></script>
         <script type="text/javascript" src="${context}/resources/core/js/controller/rootController.js"></script>
         
         <script>            
