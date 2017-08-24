@@ -8,7 +8,7 @@
         <c:set var="context" value="${pageContext.request.contextPath}"/>
         <!-- Latest compiled and minified CSS -->    
         <!-- Bootstrap CSS -->
-        <script type="text/javascript" src="${context}/resources/vendors/bootstrap3.3.7/js/bootstrap.min.js"></script>
+        <!--script type="text/javascript" src="${context}/resources/vendors/bootstrap3.3.7/js/bootstrap.min.js"></script-->
         <!--link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"/-->
        <!--link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css"/-->
         
@@ -36,10 +36,10 @@
         
         <!-- jQuery first, then Tether, then Bootstrap JS. -->
         <!-- jQuery library -->
-        <script src="${context}/resources/vendors/jquery/js/jquery.min.js"></script>
+        <!--script src="${context}/resources/vendors/jquery/js/jquery.min.js"></script-->
         
         <!-- Latest compiled JavaScript -->              
-        <script src="${context}/resources/vendors/bootstrap3.3.7/js/bootstrap.min.js"></script>
+        <!--script src="${context}/resources/vendors/bootstrap3.3.7/js/bootstrap.min.js"></script-->
 
         <script src="${context}/resources/vendors/bootstrapDatePicker/js/bootstrap-datepicker.min.js"></script>
    

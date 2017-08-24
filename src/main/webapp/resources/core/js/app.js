@@ -126,6 +126,9 @@ app.directive('ztree',function(){
                     } 
                 } 
             }; 
+            
+            //var zTreeId = "#xmTreeView";
+            //var zTreeObj = {};
             //向控制器发送消息，进行菜单数据的获取 
             //$scope.$emit("menu",attrs["value"]);//此处attrs["value"]为ul中的value值，此处作为标记使用 
             //接受控制器返回的菜单的消息 
@@ -141,7 +144,12 @@ app.directive('ztree',function(){
                 
                 var tree_nodes = util_service.TreeNodesGenerator(data, branchType, leafType, leafKey);
                 console.log(tree_nodes);
-                                       
+                
+                var zTreeObj =  $.fn.zTree.getZTreeObj(element);
+                if(zTreeObj !== null){
+                    zTreeObj.destroy();
+                }
+                                                
                 $.fn.zTree.init(element, setting, tree_nodes);//进行初始化树形菜单 
                                 
             }); 
@@ -167,9 +175,9 @@ app.directive('ztree',function(){
                 }
             }); 
             
-            $scope.$on("DepartmentServiceCreatedOneDepartment", function(event, data){
+            $scope.$on("oneDepartmentCreatedByDepartmentService", function(event, data){
                 
-                console.log("zTree received message of DepartmentServiceCreateOneDepartment");
+                console.log("zTree received message of oneDepartmentCreatedByDepartmentService");
                 //zTree will update the tree nodes
                 
             });

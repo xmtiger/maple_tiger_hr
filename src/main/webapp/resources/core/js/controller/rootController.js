@@ -63,9 +63,9 @@ angular.module("app").controller("rootController", ["$scope", "$rootScope","depa
         
     });
     
-    $scope.$on("createdOneDepartment", function(event, data){
+    $scope.$on("oneDepartmentCreated", function(event, data){
         
-        $rootScope.$broadcast("DepartmentServiceCreatedOneDepartment", data);
+        $rootScope.$broadcast("oneDepartmentCreatedByDepartmentService", data);
         
     });
     

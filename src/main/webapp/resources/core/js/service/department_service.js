@@ -101,7 +101,7 @@ angular.module("app").factory("departmentService", ["$http", "$q", function($htt
             function(response){
                 deferred.resolve(response.data);
                 
-                $scope.$emit("createdOneDepartment", deferred.promise);
+                $scope.$emit("oneDepartmentCreated", deferred.promise);
             },
             function(errResponse){
                 console.error("Error while fetching all departments");
