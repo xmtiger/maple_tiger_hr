@@ -19,7 +19,7 @@ angular.module("app").controller("rootController", ["$scope", "$rootScope","depa
     };
    
     $scope.bindPage = "Welcome"; //This is the inital welcome text.
-            
+                    
     $scope.$on("DisplayAllDepartments", function(event, msg){
         console.log("received displayAllDepartments message", msg);
         
@@ -38,13 +38,26 @@ angular.module("app").controller("rootController", ["$scope", "$rootScope","depa
         $scope.addAlert("danger", "No node selected");
     });
     
-    $scope.$on("zTreeNodeSelected", function(event, data){
+    //---------------------------------------------------------------------------------
+    //The message for the communication for update the tree node name
+    $scope.$on("nameChangedToBeSent", function(event, msg){
+        console.log("rootController received nameChangedToBeSent Message");
+        $rootScope.$broadcast("nameChangedToBeSentToTree", msg);
+    });
+    
+    $scope.$on("zTreeNodeNameUpdated", function(event, msg){
+        $rootScope.$broadcast("rootMsg_zTreeNodeNameUpdated", msg);
+    });
+    //---------------------------------------------------------------------------------
+    
+    $scope.$on("zTreeNewNodeCreated_addNewDepartment", function(event, data){
        
         console.log("received zTreeNodeSelected response", data);
         
         if(data === null || data === undefined || data.length === 0){
             console.log("no node selected");
         }else{
+            
             console.log("$location.path(/department/new)");
             //start departmentForm.jsp to let user input new department information
             //$location.path("/department/new");                         

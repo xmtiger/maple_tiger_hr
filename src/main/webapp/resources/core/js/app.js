@@ -128,7 +128,8 @@ app.directive('ztree',function(){
             }; 
             
             //var zTreeId = "#xmTreeView";
-            //var zTreeObj = {};
+            var zTreeObj = {};
+            var nodeToBeCreatedOrUpdated = {};
             //向控制器发送消息，进行菜单数据的获取 
             //$scope.$emit("menu",attrs["value"]);//此处attrs["value"]为ul中的value值，此处作为标记使用 
             //接受控制器返回的菜单的消息 
@@ -145,12 +146,15 @@ app.directive('ztree',function(){
                 var tree_nodes = util_service.TreeNodesGenerator(data, branchType, leafType, leafKey);
                 console.log(tree_nodes);
                 
-                var zTreeObj =  $.fn.zTree.getZTreeObj(element);
+                zTreeObj =  $.fn.zTree.getZTreeObj(element);
                 if(zTreeObj !== null){
                     zTreeObj.destroy();
                 }
                                                 
-                $.fn.zTree.init(element, setting, tree_nodes);//进行初始化树形菜单 
+                zTreeObj = $.fn.zTree.init(element, setting, tree_nodes);//进行初始化树形菜单 
+                if(zTreeObj !== null){
+                    console.log("successfully initiate the tree");
+                }
                                 
             }); 
             
@@ -159,21 +163,39 @@ app.directive('ztree',function(){
                 
                 //judge if one node is selected, 
                 //then send the selected node information to the root controller
-                var treeObj = $.fn.zTree.getZTreeObj(element[0].id);  
-                if(treeObj !== null){
-                    var nodes = treeObj.getSelectedNodes();
+                 
+                if(zTreeObj !== null){
+                    var nodes = zTreeObj.getSelectedNodes();
                     if(nodes === null || nodes === undefined || nodes.length === 0){
                          $scope.$emit("zTree_noNodeSelected");
                     }else{
-                        
-                        //use the first selected node to be sent to the root controller.
+                        //create a new node as child node of the selected node
                         var firstNode = nodes[0];
-                        console.log("zTree got the selected node, and send it to the root controller");
-                        $scope.$emit("zTreeNodeSelected",firstNode);
-                    }
-                   
+                        if(firstNode !== null){
+                            var nodeValue = {name : "childDepartment"};
+                            var nodes = zTreeObj.addNodes(firstNode,-1, nodeValue);
+                            nodeToBeCreatedOrUpdated = nodes[0];
+                            zTreeObj.selectNode(nodeToBeCreatedOrUpdated);
+                            console.log("zTree create a new node, and send it to the root controller");
+                            
+                            //$scope.$emit("zTreeNodeSelected",firstNode);
+                            $scope.$emit("zTreeNewNodeCreated_addNewDepartment", nodeToBeCreatedOrUpdated);
+                        }                      
+                    }                  
                 }
             }); 
+            
+            $scope.$on("nameChangedToBeSentToTree", function(event, newName){
+                console.log("zTree received message of nameChangedToBeSentToTree");
+                if(nodeToBeCreatedOrUpdated !== null){
+                    if(zTreeObj !== null){
+                        nodeToBeCreatedOrUpdated.name = newName;
+                        zTreeObj.refresh();
+                        //zTreeObj.editName(nodeToBeCreatedOrUpdated);
+                        $scope.$emit("zTreeNodeNameUpdated", newName);
+                    }
+                }
+            });
             
             $scope.$on("oneDepartmentCreatedByDepartmentService", function(event, data){
                 

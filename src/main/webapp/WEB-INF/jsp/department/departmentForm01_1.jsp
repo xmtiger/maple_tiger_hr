@@ -241,11 +241,18 @@
 
                     };
                     
-                    /*$scope.$on("$destroy", function(){
-                        console.log("destroy");
-                    });*/
+                    $scope.nameInput = function(){
+                        
+                        $scope.$emit("nameChangedToBeSent", $scope.formData.name);
+                    };
                     
-
+                    //this function is not requried.
+                    $scope.$on("rootMsg_zTreeNodeNameUpdated", function(event, data){
+                        
+                        console.log("received msg of rootMsg_zTreeNodeNameUpdated");
+                        //$scope.formData.name = data;
+                    });
+                            
                 }]);
             
         </script>
@@ -268,7 +275,7 @@
                   <div class="col-md-4 inputGroupContainer">
                   <div class="input-group">
                   <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
-                  <input  name="name" placeholder="Name" class="form-control"  type="text" id="dept_name" ng-model="formData.name"/>
+                  <input  name="name" placeholder="Name" class="form-control"  type="text" id="dept_name" ng-model="formData.name" ng-keyup="nameInput()"/>
                     </div>
                   </div>
                 </div>
