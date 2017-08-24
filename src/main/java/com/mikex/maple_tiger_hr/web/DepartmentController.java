@@ -75,11 +75,17 @@ public class DepartmentController {
         return VIEWS_DEPT_CREATE_OR_UPDATE_FORM;
     }   
         
-    @RequestMapping(value = "department/create", method=RequestMethod.POST, produces = { MediaType.APPLICATION_JSON_VALUE})    
-    public @ResponseBody DepartmentJsonResponse processCreationForm(@RequestBody @Valid Department dept, BindingResult bindingResult){
+    @RequestMapping(value = "department/create/deptFatherId/{id}", method=RequestMethod.POST, produces = { MediaType.APPLICATION_JSON_VALUE})    
+    public @ResponseBody DepartmentJsonResponse processCreationForm(@PathVariable("id") int fatherDeptId, @RequestBody @Valid Department dept, BindingResult bindingResult){
         
         DepartmentJsonResponse response = new DepartmentJsonResponse();
         
+        //firstly, search father department with given fatherDeptId
+        
+        
+        //if the dept.id is -1, do insertion action
+        
+        //else if the dept.id is positive do update action.
         if(bindingResult.hasErrors()){
             
             //Get error message
@@ -92,6 +98,8 @@ public class DepartmentController {
             response.setErrorMessages(errors);
         } else{
             // implementing business logic to save data into database
+            
+            
             this.hrService.saveDepartment(dept);
             int deptId = dept.getId();
             

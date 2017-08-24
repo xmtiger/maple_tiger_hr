@@ -123,7 +123,7 @@ angular.module('app_utils').factory('UtilService', [ function(){
                 return find;
             
             
-            if (typeof value !== "undefined" && value !== null) {
+            if (typeof value !== undefined && value !== null) {
                 if(key === keyToBeMatched ){
                     find = value;
                     return value;
@@ -150,12 +150,46 @@ angular.module('app_utils').factory('UtilService', [ function(){
         this.id = -1;
         this.name = "";     //name property is used by ZTree
         //the objFromServer shall have dataType field, since it is warpped with TreeNode Class
-        this.dataType = objFromServer.dataType;
+        this.dataType = {};
         //this children array includes both departments and employees
         this.children = [];
-        this.open = false;  //open property is used by ZTree   
         
+        this.open = false;  //open property is used by ZTree  
         
+        this.setName = function(name){
+            this.name = name;
+        };
+        
+        this.getName = function(){
+            return this.name;
+        };
+        
+        this.setId = function(id){
+            this.id = id;
+        };
+        
+        this.getId = function(){
+            return this.id;
+        };
+                
+        this.addChild = function(obj){
+            if(typeof obj !== TreeNodeConverter)
+                return;
+                     
+            this.children.push(obj);
+                        
+        };
+        
+        this.removeChild = function(obj){
+            if(typeof obj !== TreeNodeConverter)
+                return;
+            
+            for(var i = 0; i < this.children.length; i++){
+                if(this.children[i].id === obj.id && this.children[i].name === obj.name)
+                    this.children.splice(i,1);
+            }        
+            
+        };
 
         /*In this function, the TreeNodeConveter objects are made with matching properties from objFromServer
         * It is very important function for showing nodes in ZTree  */
@@ -174,7 +208,7 @@ angular.module('app_utils').factory('UtilService', [ function(){
                         this.open = true;
                         for(; i<objFromServer.children.length; i++){
 
-                            this.children[i] = new TreeNodeConverter(objFromServer.children[i]);
+                            this.children[i] = new TreeNodeConverter(objFromServer.children[i]);                            
                             this.children[i].childrenFunc(objFromServer.children[i], typeOfBranchOfTree, typeOfLeafOfTree, keyOfLeafOfBranchOfTree);
 
                         }
@@ -191,7 +225,7 @@ angular.module('app_utils').factory('UtilService', [ function(){
                             this.children[j+i].id = objFromServer.data.employees[j].id;
                             this.children[j+i].name = objFromServer.data.employees[j].firstName + " " + objFromServer.data.employees[j].lastName;
                             //note: employee does not have type due to field members of Department
-                            this.children[j+i].dataType = typeOfLeafOfTree;
+                            this.children[j+i].dataType = typeOfLeafOfTree;                            
                         }
                     }                                                          
 
@@ -205,6 +239,7 @@ angular.module('app_utils').factory('UtilService', [ function(){
                     for(var i=0; i<objFromServer.children.length; i++){
 
                         this.children[i] = new TreeNodeConverter(objFromServer.children[i]);
+                        this.children[i].parent = this;
                         this.children[i].childrenFunc(objFromServer.children[i], typeOfBranchOfTree, typeOfLeafOfTree, keyOfLeafOfBranchOfTree);
 
                     }

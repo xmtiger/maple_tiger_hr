@@ -47,11 +47,11 @@ angular.module("app").factory("departmentService", ["$http", "$q", function($htt
         return deferred.promise;        
     }
     
-    function getSaveOrUpdateDepartmentPage($scope){
+    function getSaveOrUpdateDepartmentPage($location){
         console.log("begin departmentService on function saveOrUpdateDepartment()");
         
         var deferred = $q.defer();
-        var request = this.uri_path + REST_SERVICE_URI + "new";
+        var request = $location.path() + REST_SERVICE_URI + "new";
         request = request.replace("/#", "");
             
         $http.get(request, {format:'html'}).then(
@@ -59,24 +59,11 @@ angular.module("app").factory("departmentService", ["$http", "$q", function($htt
                 //deferred.resolve(response.data);
                 //The following successfully converts the html data from response to the parent bind page.
                 console.log("received response");
-                                
-                $scope.$emit("updateBindPageView", response.data);
-                                                
-                //var template = $sce.trustAsHtml(response.data);
-                //var template2 = angular.element(template);
-                //$compile(template2)($scope);
-                //$scope.contentTest = template;
-                
-                //$scope.bindPage = template;
-                //$scope.bindtest = response.data;
-                //process compile
-                //$compile(template)($scope); 
-                
-                // Convert the html to an actual DOM node
-                
-                // Append it to the directive element
-                //$scope.bindPage = template2;
-                // And let Angular $compile it
+                //deferred.resolve function will send the data the upper level function whith .then(...)
+                deferred.resolve(response.data);                
+                //$scope.$emit("updateBindPageView", response.data);
+                //return data to controller, let controller send message rather than send message in service.                                
+                //return response.data;
                 
             },
             function(errResponse){
@@ -88,26 +75,31 @@ angular.module("app").factory("departmentService", ["$http", "$q", function($htt
         return deferred.promise;
     }
     
-    function createDepartment($scope, $location, department){
+    function createDepartment($scope, $location, department, parentId){
         
         uri_path = $location.path();
         
         var deferred = $q.defer();
-        var request = this.uri_path + REST_SERVICE_URI + "create";
+        var request = this.uri_path + REST_SERVICE_URI + "create" + "/deptFatherId/" + parentId;
         request = request.replace("/#", "");
         
         console.log(request);
+        return;
+        
         $http.post(request, department).then(
             function(response){
+                //deferred.resolve function will send the data the upper level function whith .then(...)
                 deferred.resolve(response.data);
-                
-                $scope.$emit("oneDepartmentCreated", deferred.promise);
+                //Do not send message in service 
+                //$scope.$emit("oneDepartmentCreated", deferred.promise);
             },
             function(errResponse){
                 console.error("Error while fetching all departments");
                 deferred.reject(errResponse);
             }        
         );
+        
+        return deferred.promise;
     }
         
 }]);

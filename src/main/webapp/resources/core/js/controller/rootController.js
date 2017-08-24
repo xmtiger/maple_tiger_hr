@@ -10,12 +10,12 @@
 angular.module("app").controller("rootController", ["$scope", "$rootScope","departmentService","$location","$sce","$compile", "$injector",
     function($scope, $rootScope, departmentService, $location, $sce, $compile, $injector){ 
         
-    $scope.alert = { type: 'success', msg: 'Welcome to using maple_tiger_hr System'};
+    $scope.alert = { type: 'success', msg: 'Welcome using maple_tiger system'};
        
     $scope.addAlert = function(type, msg) {
         
-        $scope.alert.type = type || 'warning';
-        $scope.alert.msg = msg;
+        $scope.alert.type = type || 'success';
+        $scope.alert.msg = msg || 'Wecome using maple_tiger system';
     };
    
     $scope.bindPage = "Welcome"; //This is the inital welcome text.
@@ -62,11 +62,19 @@ angular.module("app").controller("rootController", ["$scope", "$rootScope","depa
             //start departmentForm.jsp to let user input new department information
             //$location.path("/department/new");                         
             departmentService.setURI($location.path());
-            departmentService.getSaveOrUpdateDepartmentPage($scope);             
+            departmentService.getSaveOrUpdateDepartmentPage($location).then(
+                function(data){
+                    //$scope.$emit("updateBindPageView", response.data);
+                    $rootScope.$broadcast("DirectiveToUpdateBindPageView", data);
+                },
+                function(errResponse){
+                    console.error("Error while fetching all departments");
+                }   
+            );
         }        
     });
     
-    $scope.$on("updateBindPageView", function (event, data){
+    /*$scope.$on("updateBindPageView", function (event, data){
         
         console.log("received message from service to update bindPage");
         
@@ -74,7 +82,7 @@ angular.module("app").controller("rootController", ["$scope", "$rootScope","depa
         // Note can not send same message as the one received, otherwise it will be indefinte cycle of receiving and sending
         $rootScope.$broadcast("DirectiveToUpdateBindPageView", data);
         
-    });
+    });*/
     
     $scope.$on("oneDepartmentCreated", function(event, data){
         

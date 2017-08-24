@@ -191,6 +191,8 @@
                     
                     //create a blank object to hold the form information, and $scope will allow this to pass between controller and view
                     $scope.formData = {};
+                    
+                    $scope.parentId = -1;
                     //here the function validateDepartmentForm is jquery function, which is not recommended.
                     //but this page is end page, so it is flexible to use jquery--------------------------------------
                     function validateDepartmentForm(){
@@ -230,9 +232,15 @@
                             //perform the database actions here.
                             console.log("client validation is passed, then perform database request");
                                                  
-                            var jsonData = getJsonDataFromDeptForm();
-                            
-                            departmentService.createDepartment($scope, $location, jsonData);
+                            var jsonData = getJsonDataFromDeptForm();   
+                                                        
+                            departmentService.createDepartment($scope, $location, jsonData, $scope.parentId).then(
+                                    function(data){
+                                        $scope.$emit("oneDepartmentCreated", data);
+                                    },
+                                    function(errResponse){
+                                        console.error("Error while create one department");
+                                    }  );
 
                         } else{ 
                             //The validation is not passed
@@ -241,15 +249,16 @@
 
                     };
                     
-                    $scope.nameInput = function(){
+                    $scope.nameChange = function(){
                         
                         $scope.$emit("nameChangedToBeSent", $scope.formData.name);
                     };
                     
                     //this function is not requried.
-                    $scope.$on("rootMsg_zTreeNodeNameUpdated", function(event, data){
-                        
-                        console.log("received msg of rootMsg_zTreeNodeNameUpdated");
+                    $scope.$on("rootMsg_zTreeNodeNameUpdated", function(event, parentId){
+                        console.log("parentId" + parentId);                                        
+                        $scope.parentId = parentId;
+                        //console.log("received msg of rootMsg_zTreeNodeNameUpdated");
                         //$scope.formData.name = data;
                     });
                             
@@ -275,7 +284,7 @@
                   <div class="col-md-4 inputGroupContainer">
                   <div class="input-group">
                   <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
-                  <input  name="name" placeholder="Name" class="form-control"  type="text" id="dept_name" ng-model="formData.name" ng-keyup="nameInput()"/>
+                  <input  name="name" placeholder="Name" class="form-control"  type="text" id="dept_name" ng-model="formData.name" ng-change="nameChange()"/>
                     </div>
                   </div>
                 </div>

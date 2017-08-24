@@ -154,6 +154,7 @@ app.directive('ztree',function(){
                 zTreeObj = $.fn.zTree.init(element, setting, tree_nodes);//进行初始化树形菜单 
                 if(zTreeObj !== null){
                     console.log("successfully initiate the tree");
+                    //send request 
                 }
                                 
             }); 
@@ -172,14 +173,24 @@ app.directive('ztree',function(){
                         //create a new node as child node of the selected node
                         var firstNode = nodes[0];
                         if(firstNode !== null){
-                            var nodeValue = {name : "childDepartment"};
-                            var nodes = zTreeObj.addNodes(firstNode,-1, nodeValue);
-                            nodeToBeCreatedOrUpdated = nodes[0];
-                            zTreeObj.selectNode(nodeToBeCreatedOrUpdated);
-                            console.log("zTree create a new node, and send it to the root controller");
+                            var util_service = angular.element(document.body).injector().get('UtilService');
                             
-                            //$scope.$emit("zTreeNodeSelected",firstNode);
-                            $scope.$emit("zTreeNewNodeCreated_addNewDepartment", nodeToBeCreatedOrUpdated);
+                            if(util_service !== null){
+                                var nodeTmpValue = {name : "childDepartment"};    //new department id is -1
+                                var newNode = new util_service.TreeNodeConverter();
+                                newNode.setName(nodeTmpValue.name);
+                                                                                                
+                                var nodesAdded = zTreeObj.addNodes(firstNode,-1, newNode);
+                                if(nodes.length >0){
+                                    nodeToBeCreatedOrUpdated = nodesAdded[0];
+                                    
+                                    zTreeObj.selectNode(nodeToBeCreatedOrUpdated);
+                                    console.log("zTree create a new node, and send it to the root controller");                
+                               
+                                    $scope.$emit("zTreeNewNodeCreated_addNewDepartment", nodeToBeCreatedOrUpdated);
+                                }
+                                
+                            }                     
                         }                      
                     }                  
                 }
@@ -190,9 +201,14 @@ app.directive('ztree',function(){
                 if(nodeToBeCreatedOrUpdated !== null){
                     if(zTreeObj !== null){
                         nodeToBeCreatedOrUpdated.name = newName;
-                        zTreeObj.refresh();
-                        //zTreeObj.editName(nodeToBeCreatedOrUpdated);
-                        $scope.$emit("zTreeNodeNameUpdated", newName);
+                        zTreeObj.refresh();                        
+                        
+                        var parent = nodeToBeCreatedOrUpdated.getParentNode();
+                        if(parent !== null){
+                            var parentId = parent.getId();
+                            $scope.$emit("zTreeNodeNameUpdated", parentId);
+                        }
+                        
                     }
                 }
             });
