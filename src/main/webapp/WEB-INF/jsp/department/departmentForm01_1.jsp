@@ -192,7 +192,18 @@
                     //create a blank object to hold the form information, and $scope will allow this to pass between controller and view
                     $scope.formData = {};
                     
-                    $scope.parentId = -1;
+                    $scope.parentNodeId = -1;
+                    $scope.parentNodeType = "";
+                    $scope.curNodeId = -1;
+                    $scope.curNodeType = "";
+                    
+                    function clearContent(){
+                        $scope.formData.name = "";
+                        //$scope.parentNodeId = -1;
+                        //$scope.parentNodeType = "";
+                        $scope.curNodeId = -1;
+                        $scope.curNodeType = "";
+                    };
                     //here the function validateDepartmentForm is jquery function, which is not recommended.
                     //but this page is end page, so it is flexible to use jquery--------------------------------------
                     function validateDepartmentForm(){
@@ -228,20 +239,9 @@
                         console.log("departmentFormController-departmentController-addDepartment()");                        
                         
                         if(validateDepartmentForm() === true){
+                            //send request to tree for currrent node and the father node information
+                            $scope.$emit("RequestCurrentTreeNodeInfo");
                             
-                            //perform the database actions here.
-                            console.log("client validation is passed, then perform database request");
-                                                 
-                            var jsonData = getJsonDataFromDeptForm();   
-                                                        
-                            departmentService.createDepartment($scope, $location, jsonData, $scope.parentId).then(
-                                    function(data){
-                                        $scope.$emit("oneDepartmentCreated", data);
-                                    },
-                                    function(errResponse){
-                                        console.error("Error while create one department");
-                                    }  );
-
                         } else{ 
                             //The validation is not passed
                             console.log("client validation is not passed");                            
@@ -249,6 +249,26 @@
 
                     };
                     
+                    $scope.$on("RootCtrl_SendCurNodeInfo", function(event, nodeInfo){                        
+                        
+                        //perform the database actions here.
+                        console.log("client validation is passed, then perform database request");
+
+                        var jsonData = getJsonDataFromDeptForm();   
+
+                        departmentService.createDepartment($scope, $location, jsonData, nodeInfo).then(
+                            function(data){
+                                $scope.$emit("oneDepartmentCreated", data);
+                                clearContent();
+                            },
+                            function(errResponse){
+                                console.error("Error while create one department");
+                            }  );
+                        
+                    });
+                    
+                    //-----------------------------------------------------------------
+                    //functions handling name changes
                     $scope.nameChange = function(){
                         
                         $scope.$emit("nameChangedToBeSent", $scope.formData.name);
@@ -257,7 +277,7 @@
                     //this function is not requried.
                     $scope.$on("rootMsg_zTreeNodeNameUpdated", function(event, parentId){
                         console.log("parentId" + parentId);                                        
-                        $scope.parentId = parentId;
+                        $scope.parentNodeId = parentId;
                         //console.log("received msg of rootMsg_zTreeNodeNameUpdated");
                         //$scope.formData.name = data;
                     });

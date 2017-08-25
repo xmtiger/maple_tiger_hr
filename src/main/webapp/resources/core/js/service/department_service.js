@@ -34,7 +34,7 @@ angular.module("app").factory("departmentService", ["$http", "$q", function($htt
         var request = this.uri_path + REST_SERVICE_URI + "all";
         request = request.replace("/#", "");
         
-        $http.get(request).then(
+        $http.post(request).then(
             function(response){
                 deferred.resolve(response.data);
             },
@@ -75,17 +75,31 @@ angular.module("app").factory("departmentService", ["$http", "$q", function($htt
         return deferred.promise;
     }
     
-    function createDepartment($scope, $location, department, parentId){
+    function createDepartment($scope, $location, department, nodeInfo){
         
         uri_path = $location.path();
         
+        var curNodeId = nodeInfo.id;
+        var curNodeType = nodeInfo.type;       
+        var curFatherId = nodeInfo.fatherId;
+        var curFatherType = nodeInfo.fatherType;
+        if(curNodeType === null || curNodeType === ""){
+            curNodeType = curFatherType;
+        }
+        if(curFatherType === null || curFatherType === ""){
+            curNodeType = "Department";
+            curFatherType = "Department";
+        }
+        
         var deferred = $q.defer();
-        var request = this.uri_path + REST_SERVICE_URI + "create" + "/deptFatherId/" + parentId;
+        var request = this.uri_path + REST_SERVICE_URI + "create" ;
+        request = request + "/" + curNodeType + "/" + curNodeId;        
+        request = request + "/" + curFatherType + "/" + curFatherId;
+                
         request = request.replace("/#", "");
         
         console.log(request);
-        return;
-        
+                
         $http.post(request, department).then(
             function(response){
                 //deferred.resolve function will send the data the upper level function whith .then(...)

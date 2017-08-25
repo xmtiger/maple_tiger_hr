@@ -74,6 +74,14 @@ angular.module("app").controller("rootController", ["$scope", "$rootScope","depa
         }        
     });
     
+    $scope.$on("RequestCurrentTreeNodeInfo", function(event, data){
+        $rootScope.$broadcast("RootCtrl_RequestCurrentTreeNodeInfo", data);
+    });
+    
+    $scope.$on("zTree_SendCurNodeInfo", function(event, data){
+        $rootScope.$broadcast("RootCtrl_SendCurNodeInfo", data);
+    });
+    
     /*$scope.$on("updateBindPageView", function (event, data){
         
         console.log("received message from service to update bindPage");
@@ -86,8 +94,8 @@ angular.module("app").controller("rootController", ["$scope", "$rootScope","depa
     
     $scope.$on("oneDepartmentCreated", function(event, data){
         
-        $rootScope.$broadcast("oneDepartmentCreatedByDepartmentService", data);
-        
+        $rootScope.$broadcast("RootCtrlMsg_OneDepartmentCreated", data);
+        $scope.bindPage = "The Department was successfully Created";
     });
     
 }]);

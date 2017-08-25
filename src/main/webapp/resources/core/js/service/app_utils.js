@@ -150,11 +150,19 @@ angular.module('app_utils').factory('UtilService', [ function(){
         this.id = -1;
         this.name = "";     //name property is used by ZTree
         //the objFromServer shall have dataType field, since it is warpped with TreeNode Class
-        this.dataType = {};
+        this.dataType = "";
         //this children array includes both departments and employees
         this.children = [];
         
         this.open = false;  //open property is used by ZTree  
+        
+        this.setDataType = function(dataType){
+            this.dataType = dataType;
+        };
+        
+        this.getDataType = function(){
+            return this.dataType;
+        };
         
         this.setName = function(name){
             this.name = name;

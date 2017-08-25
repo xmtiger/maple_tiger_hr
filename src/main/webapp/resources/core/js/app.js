@@ -129,7 +129,8 @@ app.directive('ztree',function(){
             
             //var zTreeId = "#xmTreeView";
             var zTreeObj = {};
-            var nodeToBeCreatedOrUpdated = {};
+            //var nodeToBeCreatedOrUpdated = {};
+            var nodeId_toBeCreatedOrUpdated = "";   //tree internal id, read only.
             //向控制器发送消息，进行菜单数据的获取 
             //$scope.$emit("menu",attrs["value"]);//此处attrs["value"]为ul中的value值，此处作为标记使用 
             //接受控制器返回的菜单的消息 
@@ -182,7 +183,8 @@ app.directive('ztree',function(){
                                                                                                 
                                 var nodesAdded = zTreeObj.addNodes(firstNode,-1, newNode);
                                 if(nodes.length >0){
-                                    nodeToBeCreatedOrUpdated = nodesAdded[0];
+                                    var nodeToBeCreatedOrUpdated = nodesAdded[0];
+                                    nodeId_toBeCreatedOrUpdated = nodesAdded[0].tId;
                                     
                                     zTreeObj.selectNode(nodeToBeCreatedOrUpdated);
                                     console.log("zTree create a new node, and send it to the root controller");                
@@ -198,6 +200,13 @@ app.directive('ztree',function(){
             
             $scope.$on("nameChangedToBeSentToTree", function(event, newName){
                 console.log("zTree received message of nameChangedToBeSentToTree");
+                if(zTreeObj === null)
+                    return;
+                
+                if(nodeId_toBeCreatedOrUpdated === "")
+                    return;
+                
+                var nodeToBeCreatedOrUpdated = zTreeObj.getNodeByTId(nodeId_toBeCreatedOrUpdated);
                 if(nodeToBeCreatedOrUpdated !== null){
                     if(zTreeObj !== null){
                         nodeToBeCreatedOrUpdated.name = newName;
@@ -206,6 +215,7 @@ app.directive('ztree',function(){
                         var parent = nodeToBeCreatedOrUpdated.getParentNode();
                         if(parent !== null){
                             var parentId = parent.getId();
+                            
                             $scope.$emit("zTreeNodeNameUpdated", parentId);
                         }
                         
@@ -213,11 +223,59 @@ app.directive('ztree',function(){
                 }
             });
             
-            $scope.$on("oneDepartmentCreatedByDepartmentService", function(event, data){
+            $scope.$on("RootCtrl_RequestCurrentTreeNodeInfo", function(event, data){
+                if(zTreeObj === null)
+                    return;
+                
+                if(nodeId_toBeCreatedOrUpdated === "")
+                    return;
+                
+                var nodeToBeCreatedOrUpdated = zTreeObj.getNodeByTId(nodeId_toBeCreatedOrUpdated);
+                
+                if(nodeToBeCreatedOrUpdated !== null){
+                    if(zTreeObj !== null){
+                                           
+                        var parent = nodeToBeCreatedOrUpdated.getParentNode();
+                        if(parent !== null){
+                                                        
+                            var dataToBeSent = {};
+                            dataToBeSent.id = nodeToBeCreatedOrUpdated.getId();
+                            dataToBeSent.type = nodeToBeCreatedOrUpdated.getDataType();
+                            dataToBeSent.fatherId = parent.getId();
+                            dataToBeSent.fatherType = parent.getDataType();
+                            
+                            $scope.$emit("zTree_SendCurNodeInfo", dataToBeSent);
+                        }
+                        
+                    }
+                }
+            });
+            
+            $scope.$on("RootCtrlMsg_OneDepartmentCreated", function(event, data){
                 
                 console.log("zTree received message of oneDepartmentCreatedByDepartmentService");
                 //zTree will update the tree nodes
+                if(zTreeObj === null)
+                    return;
                 
+                if(nodeId_toBeCreatedOrUpdated === "")
+                    return;
+                
+                var nodeToBeCreatedOrUpdated = zTreeObj.getNodeByTId(nodeId_toBeCreatedOrUpdated);
+                
+                if(nodeToBeCreatedOrUpdated !== null){
+                    if(zTreeObj !== null){
+                                           
+                        nodeToBeCreatedOrUpdated.id = data.department.id;
+                        
+                        var parent = nodeToBeCreatedOrUpdated.getParentNode();
+                        if(parent !== null){
+                            zTreeObj.selectNode(parent);
+                            //after successfully creating a department, set tree id as empty
+                            nodeId_toBeCreatedOrUpdated = "";
+                        }
+                    }
+                }
             });
             
             //The following section is for the testing and initialization of zTree

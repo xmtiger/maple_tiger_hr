@@ -75,17 +75,12 @@ public class DepartmentController {
         return VIEWS_DEPT_CREATE_OR_UPDATE_FORM;
     }   
         
-    @RequestMapping(value = "department/create/deptFatherId/{id}", method=RequestMethod.POST, produces = { MediaType.APPLICATION_JSON_VALUE})    
-    public @ResponseBody DepartmentJsonResponse processCreationForm(@PathVariable("id") int fatherDeptId, @RequestBody @Valid Department dept, BindingResult bindingResult){
+    @RequestMapping(value = "department/create/Department/{curId}/Department/{fatherId}", method=RequestMethod.POST, produces = { MediaType.APPLICATION_JSON_VALUE})    
+    public @ResponseBody DepartmentJsonResponse processCreationForm(@PathVariable("curId") int curId,
+            @PathVariable("fatherId") int fatherId, @RequestBody @Valid Department dept, BindingResult bindingResult){
         
-        DepartmentJsonResponse response = new DepartmentJsonResponse();
-        
-        //firstly, search father department with given fatherDeptId
-        
-        
-        //if the dept.id is -1, do insertion action
-        
-        //else if the dept.id is positive do update action.
+        DepartmentJsonResponse response = new DepartmentJsonResponse();     
+                
         if(bindingResult.hasErrors()){
             
             //Get error message
@@ -96,38 +91,40 @@ public class DepartmentController {
          
             response.setValidated(false);
             response.setErrorMessages(errors);
-        } else{
-            // implementing business logic to save data into database
             
+            return response;
             
-            this.hrService.saveDepartment(dept);
+        } 
+        
+        //If vadaltion is passed, firstly, search father department with given fatherDeptId
+        //If the fatherDeptId > 0, then find fatherDept
+        if(fatherId > 0){
+            Department fatherDept = this.hrService.findDepartmentById(fatherId);
+            
+            dept.setFather(fatherDept);
+            
+            if(curId > 0){
+                //doing update action
+                dept.setId(curId);
+                
+                this.hrService.saveDepartment(dept);
+                
+            }else{
+                //doing insertion action
+                this.hrService.saveDepartment(dept);
+                
+            }
+            
             int deptId = dept.getId();
-            
+
             logger.debug("deptId = " + deptId + "===============================================");
-            
+
             response.setValidated(true);
             response.setDepartment(dept);
-        }     
+            
+        } 
         
-        return response;
-        //try {
-            /*JsonNode jNodes = mapper.readTree(deptStr);
-            Iterator<JsonNode> elements = jNodes.elements();
-            while(elements.hasNext()){
-                
-                JsonNode jNode = elements.next();
-                
-                JsonNode nameNode = jNode.get("name");
-                JsonNode valueNode = jNode.get("value");
-                
-                String nodeName = nameNode.textValue();
-                String nodeValue  = valueNode.textValue();
-                System.out.println(nameNode + "; " + nodeValue);
-            }              
-        } catch (IOException ex) {
-             java.util.logging.Logger.getLogger(DepartmentController.class.getName()).log(Level.SEVERE, null, ex);
-        }*/       
-        
+        return response;              
     }
     
     @RequestMapping(value = "department/id/{id}", method = RequestMethod.GET)
@@ -142,7 +139,7 @@ public class DepartmentController {
         return dept;
     }
     
-    @RequestMapping(value = "department/all", method = RequestMethod.GET)
+    @RequestMapping(value = "department/all", method = RequestMethod.POST)
     public @ResponseBody TreeNode<Department> showAllDepartments() throws ParseException{
         
         TreeNode<Department> departments = this.hrService.getTreeFromDepartments();
