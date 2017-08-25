@@ -111,6 +111,8 @@ public class DepartmentController {
                 
             }else{
                 //doing insertion action
+                //check if the name alreay exists
+                
                 this.hrService.saveDepartment(dept);
                 
             }

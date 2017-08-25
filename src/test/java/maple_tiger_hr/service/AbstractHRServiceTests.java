@@ -84,9 +84,13 @@ public class AbstractHRServiceTests {
     @Test
     @Transactional
     public void shouldInsertDepartment(){
+        
+        Department fatherDept = this.hrService.findDepartmentById(6);
+                
         Department dept = new Department();
         dept.setName("Civil Structural");
         dept.setAddress("123 Springland, Verdun, Q.C");
+        dept.setFather(fatherDept);
         
         DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
         try {
@@ -102,6 +106,40 @@ public class AbstractHRServiceTests {
         Collection<Department> departments = this.hrService.findDepartmentByName("Civil Structural");
         int found = departments.size();
         assertThat(departments.size()).isEqualTo(1);
+    } 
+    
+    @Test
+    @Transactional
+    public void shouldInsertMultipleDepartments(){
+        
+        for(int i=0; i < 10; i++){
+            Department fatherDept = this.hrService.findDepartmentById(6);
+                
+            Department dept = new Department();
+            dept.setName("Civil Structural" + i);
+            dept.setAddress("123 Springland, Verdun, Q.C");
+            dept.setFather(fatherDept);
+
+            DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+            try {
+                Date date = dateFormat.parse("1971-07-06");
+                dept.setBegin_time(date);
+            } catch (ParseException ex) {
+                Logger.getLogger(AbstractHRServiceTests.class.getName()).log(Level.SEVERE, null, ex);
+            }
+
+            this.hrService.saveDepartment(dept);
+            assertThat(dept.getId().intValue()).isNotEqualTo(0);
+
+           
+        }       
+        
+        for(int j=0; j < 10; j++){
+            Collection<Department> departments = this.hrService.findDepartmentByName("Civil Structural" + j);
+            int found = departments.size();
+            assertThat(departments.size()).isEqualTo(1);
+        }
+        
     } 
     
     @Test

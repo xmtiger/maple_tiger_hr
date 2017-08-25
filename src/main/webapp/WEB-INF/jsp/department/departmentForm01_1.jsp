@@ -197,6 +197,8 @@
                     $scope.curNodeId = -1;
                     $scope.curNodeType = "";
                     
+                    $scope.submit = 0;  //0 means un-submitted
+                    
                     function clearContent(){
                         $scope.formData.name = "";
                         //$scope.parentNodeId = -1;
@@ -236,8 +238,8 @@
                     
                     //-----------------------------------------------------------------------------------------
                     $scope.departmentFormSubmit = function(){
-                        console.log("departmentFormController-departmentController-addDepartment()");                        
-                        
+                        console.log("departmentFormController-departmentController-addDepartment()");     
+                                                
                         if(validateDepartmentForm() === true){
                             //send request to tree for currrent node and the father node information
                             $scope.$emit("RequestCurrentTreeNodeInfo");
@@ -254,6 +256,11 @@
                         //perform the database actions here.
                         console.log("client validation is passed, then perform database request");
 
+                        if($scope.submit !== 0) //submit is only allowed once.
+                            return;
+                        
+                        $scope.submit++;
+                        
                         var jsonData = getJsonDataFromDeptForm();   
 
                         departmentService.createDepartment($scope, $location, jsonData, nodeInfo).then(

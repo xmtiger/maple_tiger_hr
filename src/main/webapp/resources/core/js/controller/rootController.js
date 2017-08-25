@@ -7,8 +7,8 @@
 
 "use strict";
 
-angular.module("app").controller("rootController", ["$scope", "$rootScope","departmentService","$location","$sce","$compile", "$injector",
-    function($scope, $rootScope, departmentService, $location, $sce, $compile, $injector){ 
+angular.module("app").controller("rootController", ["$scope", "$rootScope","departmentService","$location","$sce","$compile",
+    function($scope, $rootScope, departmentService, $location, $sce, $compile){ 
         
     $scope.alert = { type: 'success', msg: 'Welcome using maple_tiger system'};
        
@@ -95,7 +95,8 @@ angular.module("app").controller("rootController", ["$scope", "$rootScope","depa
     $scope.$on("oneDepartmentCreated", function(event, data){
         
         $rootScope.$broadcast("RootCtrlMsg_OneDepartmentCreated", data);
-        $scope.bindPage = "The Department was successfully Created";
+        $scope.bindPage = $sce.trustAsHtml("The Department was successfully Created");
+        
     });
     
 }]);
