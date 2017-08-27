@@ -20,10 +20,10 @@ angular.module("app").controller("rootController", ["$scope", "$rootScope","depa
    
     $scope.bindPage = "Welcome"; //This is the inital welcome text.
                     
-    $scope.$on("DisplayAllDepartments", function(event, msg){
-        console.log("received displayAllDepartments message", msg);
-        
-        $rootScope.$broadcast("zTree_displayAllDepartments", msg);
+    $scope.$on("DisplayAllDepartments", function(event, data){
+        console.log("received displayAllDepartments message", data);
+                        
+        $rootScope.$broadcast("zTree_displayAllDepartments", data);
     });
     
     $scope.$on("addOneDepartment", function(event, msg){
@@ -50,28 +50,28 @@ angular.module("app").controller("rootController", ["$scope", "$rootScope","depa
     });
     //---------------------------------------------------------------------------------
     
-    $scope.$on("zTreeNewNodeCreated_addNewDepartment", function(event, data){
+    $scope.$on("zTreeNewNodeCreated_addNewDepartment", function(event, nodeId){
        
-        console.log("received zTreeNodeSelected response", data);
+        console.log("received zTreeNodeSelected response", nodeId);
         
-        if(data === null || data === undefined || data.length === 0){
+        if(nodeId === ""){
             console.log("no node selected");
-        }else{
+            return;
+        }
             
-            console.log("$location.path(/department/new)");
-            //start departmentForm.jsp to let user input new department information
-            //$location.path("/department/new");                         
-            departmentService.setURI($location.path());
-            departmentService.getSaveOrUpdateDepartmentPage($location).then(
-                function(data){
-                    //$scope.$emit("updateBindPageView", response.data);
-                    $rootScope.$broadcast("DirectiveToUpdateBindPageView", data);
-                },
-                function(errResponse){
-                    console.error("Error while fetching all departments");
-                }   
-            );
-        }        
+        console.log("$location.path(/department/new)");
+        //start departmentForm.jsp to let user input new department information                                
+        departmentService.setURI($location.path());
+        departmentService.getSaveOrUpdateDepartmentPage($location).then(
+            function(data){
+                //$scope.$emit("updateBindPageView", response.data);
+                $rootScope.$broadcast("DirectiveToUpdateBindPageView", data);
+            },
+            function(errResponse){
+                console.error("Error while fetching all departments");
+            }   
+        );
+               
     });
     
     $scope.$on("RequestCurrentTreeNodeInfo", function(event, data){
@@ -95,7 +95,11 @@ angular.module("app").controller("rootController", ["$scope", "$rootScope","depa
     $scope.$on("oneDepartmentCreated", function(event, data){
         
         $rootScope.$broadcast("RootCtrlMsg_OneDepartmentCreated", data);
-        $scope.bindPage = $sce.trustAsHtml("The Department was successfully Created");
+        
+        //update the bindPgae by sending the message to the registered directive
+        var str = "The Department was successfully Created";
+        $rootScope.$broadcast("DirectiveToUpdateBindPageView", str);
+        //$scope.bindPage = $sce.trustAsHtml("The Department was successfully Created");
         
     });
     

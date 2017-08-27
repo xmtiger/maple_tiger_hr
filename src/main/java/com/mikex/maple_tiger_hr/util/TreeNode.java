@@ -38,6 +38,8 @@ public class TreeNode<T extends Comparable<T> & Familyable<T>> {
     private Integer id;     //To have an id, the T must be child class of BaseEntity 
     
     private String name;    //To have an name, the T must be child class of NamedEntity or Person.
+    
+    private boolean ifNodeAdded = false;
 
     public int getId() {
         return id;
@@ -97,6 +99,7 @@ public class TreeNode<T extends Comparable<T> & Familyable<T>> {
             //compare the current node
             if(this.data.isTheFather(nodeToBeAdded.data)){
                 nodeToBeAdded.parent = this;
+                nodeToBeAdded.ifNodeAdded = true;
                 return this.children.add(nodeToBeAdded);
                 
             }
@@ -106,6 +109,7 @@ public class TreeNode<T extends Comparable<T> & Familyable<T>> {
                 this.parent.children.remove(this);
                 
                 this.parent = nodeToBeAdded;
+                nodeToBeAdded.ifNodeAdded = true;
                 return nodeToBeAdded.children.add(this);
                               
             }
@@ -115,15 +119,18 @@ public class TreeNode<T extends Comparable<T> & Familyable<T>> {
             for(TreeNode<T> curNode : this.children){
                 if(curNode.data.isTheFather(nodeToBeAdded.data)){
                     nodeToBeAdded.parent = curNode;
+                    nodeToBeAdded.ifNodeAdded = true;
                     return curNode.children.add(nodeToBeAdded);
                 }
                 
                 if(nodeToBeAdded.data.isTheFather(curNode.data)){
                     //list_children.add(curNode);
                     curNode.parent = nodeToBeAdded;
-                    nodeToBeAdded.children.add(curNode);
+                    ifAdded = nodeToBeAdded.children.add(curNode);
                     list_children.add(curNode);
+                    nodeToBeAdded.ifNodeAdded = true;
                     continue;
+                    //return ifAdded;
                 }
                 
                 //recursive 
@@ -134,6 +141,7 @@ public class TreeNode<T extends Comparable<T> & Familyable<T>> {
             
             if(!list_children.isEmpty()){
                 this.children.removeAll(list_children);
+                nodeToBeAdded.ifNodeAdded = true;
                 return this.children.add(nodeToBeAdded);
             }
             
@@ -145,13 +153,16 @@ public class TreeNode<T extends Comparable<T> & Familyable<T>> {
             for(TreeNode<T> curNode : this.children){
                 if(curNode.data.isTheFather(nodeToBeAdded.data)){
                     nodeToBeAdded.parent = curNode;
+                    nodeToBeAdded.ifNodeAdded = true;
                     return curNode.children.add(nodeToBeAdded);
                 }
                 
                 if(nodeToBeAdded.data.isTheFather(curNode.data)){
                     curNode.parent = nodeToBeAdded;
-                    nodeToBeAdded.children.add(curNode);
+                    ifAdded = nodeToBeAdded.children.add(curNode);
                     list_children.add(curNode);
+                    nodeToBeAdded.ifNodeAdded = true;
+                    //return ifAdded;
                     continue;
                 }
                 
@@ -165,15 +176,17 @@ public class TreeNode<T extends Comparable<T> & Familyable<T>> {
                 this.children.removeAll(list_children);
                 return this.children.add(nodeToBeAdded);
             }else{
-                return this.children.add(nodeToBeAdded);
+                if(!nodeToBeAdded.ifNodeAdded)
+                    return this.children.add(nodeToBeAdded);
             }
         }
         
-        return false;
+        //return false;
+        return ifAdded;
     }
     
     //add the node into the tree, the tree shall have automatically funciton to adjust the branch, leaf, etc..
-    public boolean addNode(TreeNode<T> nodeToBeAdded){
+    /*public boolean addNode(TreeNode<T> nodeToBeAdded){
         
         boolean ifAdded = false;
                 
@@ -233,7 +246,7 @@ public class TreeNode<T extends Comparable<T> & Familyable<T>> {
         child.parent = this;
         return this.children.add(child);    
         
-    }
+    }*/
     
     //remove children nodes; if the node has children nodes, the children nodes will be removed also.
     public boolean removeBranch(TreeNode<T> t){

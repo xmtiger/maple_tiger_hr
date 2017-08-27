@@ -8,12 +8,15 @@ package maple_tiger_hr.service;
 import com.mikex.maple_tiger_hr.model.Department;
 import com.mikex.maple_tiger_hr.model.Employee;
 import com.mikex.maple_tiger_hr.service.HRService;
+import com.mikex.maple_tiger_hr.util.TreeNode;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 
 import java.util.Collection;
 import java.util.Date;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -50,6 +53,77 @@ public class AbstractHRServiceTests {
         assertThat(departments.size()).isGreaterThan(2);
     }
     
+    
+    @Test
+    @Transactional
+    public void shouldInsertMultipleDepartments2(){
+        
+        List<Integer> newIdList = new ArrayList<>();
+        
+        for(int i=0; i < 2; i++){
+            Department fatherDept = this.hrService.findDepartmentById(6);
+                
+            Department dept = new Department();
+            dept.setName("Civil" + i);
+            dept.setAddress("123 Springland, Verdun, Q.C");
+            dept.setFather(fatherDept);
+
+            DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+            try {
+                Date date = dateFormat.parse("1971-07-06");
+                dept.setBegin_time(date);
+            } catch (ParseException ex) {
+                Logger.getLogger(AbstractHRServiceTests.class.getName()).log(Level.SEVERE, null, ex);
+            }
+
+            this.hrService.saveDepartment(dept);
+            assertThat(dept.getId().intValue()).isNotEqualTo(0);   
+            newIdList.add(dept.getId());
+        } 
+         
+        Department fatherDept = this.hrService.findDepartmentById(newIdList.get(0));
+                
+        Department dept = new Department();
+        dept.setName("Civil_11");
+        dept.setAddress("123 Springland, Verdun, Q.C");
+        dept.setFather(fatherDept);
+
+        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        try {
+            Date date = dateFormat.parse("1971-07-06");
+            dept.setBegin_time(date);
+        } catch (ParseException ex) {
+            Logger.getLogger(AbstractHRServiceTests.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        this.hrService.saveDepartment(dept);
+        assertThat(dept.getId().intValue()).isNotEqualTo(0); 
+        
+        Department fatherDept11 = this.hrService.findDepartmentById(dept.getId());
+                
+        Department dept11 = new Department();
+        dept11.setName("Civil_11_1");
+        dept11.setAddress("123 Springland, Verdun, Q.C");
+        dept11.setFather(fatherDept11);
+
+        DateFormat dateFormat11 = new SimpleDateFormat("yyyy-MM-dd");
+        try {
+            Date date = dateFormat11.parse("1971-07-06");
+            dept11.setBegin_time(date);
+        } catch (ParseException ex) {
+            Logger.getLogger(AbstractHRServiceTests.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        this.hrService.saveDepartment(dept11);
+        assertThat(dept11.getId().intValue()).isNotEqualTo(0);
+        
+        TreeNode<Department> tree = this.hrService.getTreeFromDepartments();
+        System.out.println("tree: --------------------------------------------");
+        System.out.println(tree);
+        System.out.println("tree: --------------------------------------------");
+    }
+    
+    /*
     @Test
     @Transactional
     public void shouldInsertEmployee(){
@@ -169,5 +243,5 @@ public class AbstractHRServiceTests {
         
         department = this.hrService.findDepartmentById(1);
         assertThat(department.getName()).isEqualTo(newName);
-    }
+    }*/
 }

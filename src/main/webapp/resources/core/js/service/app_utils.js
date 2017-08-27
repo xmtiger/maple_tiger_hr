@@ -147,7 +147,7 @@ angular.module('app_utils').factory('UtilService', [ function(){
     
     function TreeNodeConverter(objFromServer){
                         
-        this.id = -1;
+        this.id = -1;       //matching the id in the database table
         this.name = "";     //name property is used by ZTree
         //the objFromServer shall have dataType field, since it is warpped with TreeNode Class
         this.dataType = "";
@@ -155,6 +155,17 @@ angular.module('app_utils').factory('UtilService', [ function(){
         this.children = [];
         
         this.open = false;  //open property is used by ZTree  
+        
+        this.UID = "";  //unique id for get node in the tree, and the formate is "dataType/id"
+        
+        this.setUID = function(type, name, id){
+            this.UID = type + "/" + name + "/" + id;
+        };
+        
+        this.getUID = function(){
+            //get unique id, the format is dataType/id
+            return this.dataType + "/" + this.name + "/" +  this.id;
+        };
         
         this.setDataType = function(dataType){
             this.dataType = dataType;
@@ -208,7 +219,9 @@ angular.module('app_utils').factory('UtilService', [ function(){
                 if(objFromServer.dataType === typeOfBranchOfTree){
                     this.name = objFromServer.data.name;
                     this.dataType = objFromServer.dataType;                            
-
+                    
+                    this.setUID(this.datType, this.name, this.id);
+                    
                     var i = 0;
 
                     if(objFromServer.children.length !== 0){                   
@@ -233,7 +246,8 @@ angular.module('app_utils').factory('UtilService', [ function(){
                             this.children[j+i].id = objFromServer.data.employees[j].id;
                             this.children[j+i].name = objFromServer.data.employees[j].firstName + " " + objFromServer.data.employees[j].lastName;
                             //note: employee does not have type due to field members of Department
-                            this.children[j+i].dataType = typeOfLeafOfTree;                            
+                            this.children[j+i].dataType = typeOfLeafOfTree;   
+                            this.children[j+i].setUID(this.children[j+i].dataType, this.children[j+i].name, this.children[j+i].id);
                         }
                     }                                                          
 

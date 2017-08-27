@@ -192,6 +192,9 @@
                     //create a blank object to hold the form information, and $scope will allow this to pass between controller and view
                     $scope.formData = {};
                     
+                    $scope.parentNodeUID = "";  //unique id for getNodeByParam(key, value, parent) method of the zTree
+                    $scope.curNodeUID = "";
+                    
                     $scope.parentNodeId = -1;
                     $scope.parentNodeType = "";
                     $scope.curNodeId = -1;
@@ -201,8 +204,8 @@
                     
                     function clearContent(){
                         $scope.formData.name = "";
-                        //$scope.parentNodeId = -1;
-                        //$scope.parentNodeType = "";
+                        $scope.parentNodeId = -1;
+                        $scope.parentNodeType = "";
                         $scope.curNodeId = -1;
                         $scope.curNodeType = "";
                     };
@@ -282,9 +285,10 @@
                     };
                     
                     //this function is not requried.
-                    $scope.$on("rootMsg_zTreeNodeNameUpdated", function(event, parentId){
-                        console.log("parentId" + parentId);                                        
-                        $scope.parentNodeId = parentId;
+                    $scope.$on("rootMsg_zTreeNodeNameUpdated", function(event, msg){
+                        //console.log("parentUId" + parentUId);  
+                        //if(parentUId !== "")
+                        //  $scope.parentNodeUID = parentUId;
                         //console.log("received msg of rootMsg_zTreeNodeNameUpdated");
                         //$scope.formData.name = data;
                     });

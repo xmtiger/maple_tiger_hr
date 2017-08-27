@@ -118,7 +118,7 @@ public class TreeNodeTests {
         System.out.println("---------------------------------------------------");
     }
     
-    @Test
+    /*@Test
     public void testDeparmentsWithoutRoot() throws ParseException{
         
         TreeNode<Department> tree = new TreeNode<>();
@@ -277,5 +277,5 @@ public class TreeNodeTests {
         
         System.out.println("\nend of testDepartmentWithRoot()");
         System.out.println("---------------------------------------------------");
-    }
+    }*/
 }
