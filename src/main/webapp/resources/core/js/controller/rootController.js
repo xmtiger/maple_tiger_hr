@@ -7,8 +7,8 @@
 
 "use strict";
 
-angular.module("app").controller("rootController", ["$scope", "$rootScope","departmentService","$location","$sce","$compile",
-    function($scope, $rootScope, departmentService, $location, $sce, $compile){ 
+angular.module("app").controller("rootController", ["$scope", "$rootScope","departmentService","$location",
+    function($scope, $rootScope, departmentService, $location){ 
         
     $scope.alert = { type: 'success', msg: 'Welcome using maple_tiger system'};
        
@@ -20,12 +20,24 @@ angular.module("app").controller("rootController", ["$scope", "$rootScope","depa
    
     $scope.bindPage = "Welcome"; //This is the inital welcome text.
                     
-    $scope.$on("DisplayAllDepartments", function(event, data){
-        console.log("received displayAllDepartments message", data);
-                        
-        $rootScope.$broadcast("zTree_displayAllDepartments", data);
+    $scope.$on("DisplayAllDepartments", function(event, msg){
+        console.log("received displayAllDepartments message", msg);
+        //use department service to deal with database transactions
+        departmentService.fetchAllDepartments($location).then(
+            function(data){
+                
+                $rootScope.$broadcast("zTree_displayAllDepartments", data);
+                $rootScope.$broadcast("MainGrid_DisplayInfo", data);
+            },
+            function(errResponse){
+                console.error("Error while fetching all departments");
+            }
+        );                          
+        
     });
     
+    //--------------------------------------------------------
+    // The following functios are for adding one department
     $scope.$on("addOneDepartment", function(event, msg){
         
         console.log("received addOneDepartment request");
@@ -37,8 +49,8 @@ angular.module("app").controller("rootController", ["$scope", "$rootScope","depa
         //alert user that no tree node is selected.
         $scope.addAlert("danger", "No node selected");
     });
-    
-    //---------------------------------------------------------------------------------
+            
+    //-----------------------------------------------------------------
     //The message for the communication for update the tree node name
     $scope.$on("nameChangedToBeSent", function(event, msg){
         console.log("rootController received nameChangedToBeSent Message");
@@ -48,14 +60,15 @@ angular.module("app").controller("rootController", ["$scope", "$rootScope","depa
     $scope.$on("zTreeNodeNameUpdated", function(event, msg){
         $rootScope.$broadcast("rootMsg_zTreeNodeNameUpdated", msg);
     });
-    //---------------------------------------------------------------------------------
+    //-----------------------------------------------------------------    
     
     $scope.$on("zTreeNewNodeCreated_addNewDepartment", function(event, nodeId){
        
-        console.log("received zTreeNodeSelected response", nodeId);
+        $scope.addAlert("success", "one new department node was created in the tree view");
         
         if(nodeId === ""){
-            console.log("no node selected");
+            //console.log("no node selected");            
+            $scope.addAlert("danger", "No node selected");
             return;
         }
             
@@ -103,4 +116,71 @@ angular.module("app").controller("rootController", ["$scope", "$rootScope","depa
         
     });
     
+}]);
+
+//********************************************************************************************************
+// This is for ui.grid to display data in the ui.grid table
+angular.module("app").controller('MainGridController', ['$scope', function ($scope) {
+        
+    $scope.$on("MainGrid_DisplayInfo", function(event, obj){
+        
+        /*$scope.mainGridOne = {
+        enableSorting: true,
+        columnDefs: [
+          { name:'firstName', field: 'first-name' },
+          { name:'1stFriend', field: 'friends[0]' },
+          { name:'city', field: 'address.city'},
+          { name:'getZip', field: 'getZip()'}
+        ],
+        data : [      {
+                           "first-name": "Cox",
+                           "friends": ["friend0"],
+                           "address": {street:"301 Dove Ave", city:"Laurel", zip:"39565"},
+                           "getZip" : function() {return this.address.zip;}
+                       }
+                   ]
+        };*/
+        //it does not work to direct use data from server
+        var fieldColumnNames = Object.keys(obj);
+        var values = [];
+        for(var key in obj) {
+            var value = obj[key];
+            values.push(value);
+        }
+                
+        $scope.mainGridOne.enableSorting = true;
+        $scope.mainGridOne.columnDefs = [];
+        for(var i=0; i < fieldColumnNames.length; i++){
+            //$scope.gridOption.columnDefs
+            var tmpColumnDef = { field : fieldColumnNames[i] };
+            $scope.mainGridOne.columnDefs.push(tmpColumnDef);
+        }
+        
+        $scope.mainGridOne.data = values;
+        
+    });
+ 
+    $scope.mainGridOne = {};    
+    
+        
+    /*$scope.mainGridOne.data = [
+        {
+            "firstName": "Cox",
+            "lastName": "Carney",
+            "company": "Enormo",
+            "employed": true
+        },
+        {
+            "firstName": "Lorraine",
+            "lastName": "Wise",
+            "company": "Comveyer",
+            "employed": false
+        },
+        {
+            "firstName": "Nancy",
+            "lastName": "Waters",
+            "company": "Fuelton",
+            "employed": false
+        }
+    ];*/
 }]);

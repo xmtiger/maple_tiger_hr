@@ -8,9 +8,9 @@
 
 angular.module("app").factory("departmentService", ["$http", "$q", function($http, $q){
         
-    var self = this;
+    //var self = this;
     
-    var departmentsFromServer = {};
+    //var departmentsFromServer = {};
     
     var REST_SERVICE_URI = "department/";
     
@@ -29,9 +29,9 @@ angular.module("app").factory("departmentService", ["$http", "$q", function($htt
         this.uri_path = location;
     }
     
-    function fetchAllDepartments(){
+    function fetchAllDepartments($location){
         var deferred = $q.defer();
-        var request = this.uri_path + REST_SERVICE_URI + "all";
+        var request = $location.path() + REST_SERVICE_URI + "all";
         request = request.replace("/#", "");
         
         $http.post(request).then(

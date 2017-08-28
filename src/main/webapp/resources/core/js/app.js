@@ -213,6 +213,7 @@ app.directive('ztree',function(){
                 }
             }); 
             
+            // this is the deep first search, and is only for small set of data
             function findNodeByUID(nodes, key, value){
                 var find = null;
                 
@@ -374,27 +375,3 @@ app.directive('ztree',function(){
     } ;
 }); 
 
-// This is for testing ui.grid
-app.controller('MainGridController', ['$scope', function ($scope) {
- 
-  $scope.myData = [
-    {
-        "firstName": "Cox",
-        "lastName": "Carney",
-        "company": "Enormo",
-        "employed": true
-    },
-    {
-        "firstName": "Lorraine",
-        "lastName": "Wise",
-        "company": "Comveyer",
-        "employed": false
-    },
-    {
-        "firstName": "Nancy",
-        "lastName": "Waters",
-        "company": "Fuelton",
-        "employed": false
-    }
-];
-}]);

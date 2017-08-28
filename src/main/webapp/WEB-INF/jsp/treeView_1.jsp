@@ -99,15 +99,13 @@
             <div id = "leftcolumn">
                 
                 
-                    <div style="height:300px; min-height:0px; max-height: 75%; border: 1px solid black">
-                        <ul ztree id="xmTreeView" class="ztree" ng-model ="selectNode"></ul>  
-                    </div>
-                
-                
-                
+                <div style="height:300px; min-height:0px; max-height: 75%; border: 1px solid black; overflow: auto;">
+                    <ul ztree id="xmTreeView" class="ztree" ng-model ="selectNode"></ul>  
+                </div>  
+                                
                 <br>
                 <div class="btn-group">
-                    <button id="addButton" type="button" class="btn btn-primary">Add</button>
+                    <button id="addButton" type="button" class="btn btn-primary" >Add</button>
                     <button id="editButton" type="button" class="btn btn-primary">Edit</button>
                     <button id="removeButton" type="button" class="btn btn-primary">Remove</button>
                 </div>
@@ -125,7 +123,7 @@
                 <div bind-page ng-bind-html="bindPage" ></div>         
                 
                 <div ng-controller="MainGridController">
-                    <div ui-grid="{ data: myData }" class="mainGrid"></div>
+                    <div ui-grid="mainGridOne" class="mainGrid"></div>
                 </div>
                 
             </div>
