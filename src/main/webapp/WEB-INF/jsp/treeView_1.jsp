@@ -10,8 +10,12 @@
         <c:set var="context" value="${pageContext.request.contextPath}"/>
         <title>mapletiger_HR_System</title>
         
+        <!--jsp:include page="./fragments/header.jsp"/--> 
+         <!-- angularjs ui.grid css -->
+        <link rel="stylesheet" href="${context}/resources/vendors/ui-grid/css/ui-grid.min.css"/> 
+        
         <link rel="stylesheet" href="${context}/resources/vendors/bootstrap3.3.7/css/bootstrap.min.css" type="text/css"/>
-        <!--jsp:include page="./fragments/header.jsp"/-->        
+                     
         
         <link rel="stylesheet" href="${context}/resources/vendors/zTree/css/zTreeStyle/zTreeStyle.css" type="text/css"/>
         
@@ -40,6 +44,11 @@
               }
              
              div.clear{clear:both;}
+             
+             .mainGrid{
+                width: 500px;
+                height: 250px;
+              }
              
         </style>        
     </head>
@@ -114,7 +123,11 @@
                 <div uib-alert ng-class="'alert-' + (alert.type || 'warning')" >{{alert.msg}}</div>
                         
                 <div bind-page ng-bind-html="bindPage" ></div>         
-                               
+                
+                <div ng-controller="MainGridController">
+                    <div ui-grid="{ data: myData }" class="mainGrid"></div>
+                </div>
+                
             </div>
             
         </div>
@@ -126,11 +139,18 @@
         <script type="text/javascript" src="${context}/resources/vendors/bootstrap3.3.7/js/bootstrap.min.js"></script>
         <script type="text/javascript" src="${context}/resources/vendors/zTree/js/jquery.ztree.all.min.js"></script>
         <!-- angular js -->
-        <script type="text/javascript" src="${context}/resources/vendors/angularJS/js/angular.min.js"></script>
-        <script type="text/javascript" src="${context}/resources/vendors/angularJS/js/ui-bootstrap-tpls-2.5.0.min.js"></script>
+        <script type="text/javascript" src="${context}/resources/vendors/angularJS/js/angular.min.js"></script>        
         <script type="text/javascript" src="${context}/resources/vendors/angularJS/js/angular-route.min.js"></script>       
         <script type="text/javascript" src="${context}/resources/vendors/angularJS/js/angular-sanitize.min.js"></script>  
-                
+        <script type="text/javascript" src="${context}/resources/vendors/angularJS/js/angular-animate.min.js"></script>
+        <!-- angular ui bootstrap -->
+        <script type="text/javascript" src="${context}/resources/vendors/angularJS/js/ui-bootstrap-tpls-2.5.0.min.js"></script>
+        <!-- angularjs ui.grid -->
+        <script type="text/javascript" src="${context}/resources/vendors/cvs/js/csv.js"></script>
+        <script type="text/javascript" src="${context}/resources/vendors/pdfmake/js/pdfmake.min.js"></script>
+        <script type="text/javascript" src="${context}/resources/vendors/pdfmake/js/vfs_fonts.js"></script>
+        <script type="text/javascript" src="${context}/resources/vendors/ui-grid/js/ui-grid.min.js"></script>
+        <!-- application js by using angularjs framework -->        
         <script type="text/javascript" src="${context}/resources/core/js/app.js"></script>        
         <script type="text/javascript" src="${context}/resources/core/js/service/app_utils.js"></script>
         <script type="text/javascript" src="${context}/resources/core/js/service/department_service.js"></script>        

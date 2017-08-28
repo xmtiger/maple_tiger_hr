@@ -7,7 +7,7 @@
 
 var app_utils = angular.module("app_utils", []);
 var app_department = angular.module("app_department", ["app_utils"]);
-var app = angular.module("app",["ngRoute","ngSanitize","app_department", "ui.bootstrap"]);
+var app = angular.module("app",["ngRoute","ngSanitize","app_department", "ui.bootstrap", "ui.grid"]);
 
 //For time being, the route setting is not required.
 /*app.config(['$routeProvider', function($routeProvider){
@@ -373,3 +373,28 @@ app.directive('ztree',function(){
         } 
     } ;
 }); 
+
+// This is for testing ui.grid
+app.controller('MainGridController', ['$scope', function ($scope) {
+ 
+  $scope.myData = [
+    {
+        "firstName": "Cox",
+        "lastName": "Carney",
+        "company": "Enormo",
+        "employed": true
+    },
+    {
+        "firstName": "Lorraine",
+        "lastName": "Wise",
+        "company": "Comveyer",
+        "employed": false
+    },
+    {
+        "firstName": "Nancy",
+        "lastName": "Waters",
+        "company": "Fuelton",
+        "employed": false
+    }
+];
+}]);
