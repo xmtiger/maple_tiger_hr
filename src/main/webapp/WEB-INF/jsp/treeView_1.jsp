@@ -46,8 +46,8 @@
              div.clear{clear:both;}
              
              .mainGrid{
-                width: 500px;
-                height: 250px;
+                width: 700px;
+                height: 350px;
               }
              
         </style>        
@@ -123,7 +123,7 @@
                 <div bind-page ng-bind-html="bindPage" ></div>         
                 
                 <div ng-controller="MainGridController">
-                    <div ui-grid="mainGridOne" class="mainGrid"></div>
+                    <div ui-grid="mainGridOne" class="mainGrid" ng-show="showMainGrid"></div>
                 </div>
                 
             </div>

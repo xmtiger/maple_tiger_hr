@@ -122,6 +122,9 @@ angular.module("app").controller("rootController", ["$scope", "$rootScope","depa
 // This is for ui.grid to display data in the ui.grid table
 angular.module("app").controller('MainGridController', ['$scope', function ($scope) {
         
+    $scope.showMainGrid = false;    
+    $scope.mainGridOne = {};  
+        
     $scope.$on("MainGrid_DisplayInfo", function(event, obj){
         
         /*$scope.mainGridOne = {
@@ -140,27 +143,46 @@ angular.module("app").controller('MainGridController', ['$scope', function ($sco
                        }
                    ]
         };*/
+        
+        if(!obj.hasOwnProperty('data')){
+                
+            return;
+        }
         //it does not work to direct use data from server
-        var fieldColumnNames = Object.keys(obj);
+        var keysFilter = ['name', 'begin_time', 'address'];
+        //var fieldColumnNames = Object.keys(obj);
         var values = [];
-        for(var key in obj) {
-            var value = obj[key];
-            values.push(value);
+         
+        for(var key in obj.data) {        
+            
+            var tmpVar = {};
+            var find = false;
+            for(var i =0; i < keysFilter.length; i++){
+                if(key === keysFilter[i]){               
+                    //dynamically add both property and value to the object, tmpVar.
+                    tmpVar[key] = obj[key];                     
+                    find = true;
+                }
+            }   
+            if(find)
+                values.push(tmpVar);
         }
                 
         $scope.mainGridOne.enableSorting = true;
         $scope.mainGridOne.columnDefs = [];
-        for(var i=0; i < fieldColumnNames.length; i++){
+        for(var i=0; i < keysFilter.length; i++){
             //$scope.gridOption.columnDefs
-            var tmpColumnDef = { field : fieldColumnNames[i] };
+            var tmpColumnDef = { field : keysFilter[i] };
             $scope.mainGridOne.columnDefs.push(tmpColumnDef);
         }
         
         $scope.mainGridOne.data = values;
         
+        $scope.showMainGrid = true;
+        
     });
  
-    $scope.mainGridOne = {};    
+      
     
         
     /*$scope.mainGridOne.data = [
