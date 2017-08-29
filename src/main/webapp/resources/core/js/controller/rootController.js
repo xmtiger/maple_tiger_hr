@@ -27,7 +27,8 @@ angular.module("app").controller("rootController", ["$scope", "$rootScope","depa
             function(data){
                 
                 $rootScope.$broadcast("zTree_displayAllDepartments", data);
-                $rootScope.$broadcast("MainGrid_DisplayInfo", data);
+                $rootScope.$broadcast("MainGridOne_DisplayInfo", {type: 'Department', msg: data});
+                $rootScope.$broadcast("MainGridTwo_DisplayInfo", {type: 'Employee', msg: data});
             },
             function(errResponse){
                 console.error("Error while fetching all departments");
@@ -122,10 +123,13 @@ angular.module("app").controller("rootController", ["$scope", "$rootScope","depa
 // This is for ui.grid to display data in the ui.grid table
 angular.module("app").controller('MainGridController', ['$scope', function ($scope) {
         
-    $scope.showMainGrid = false;    
+    $scope.showMainGridOne = false;   
+    $scope.showMainGridTwo = false;  
+    
     $scope.mainGridOne = {};  
+    $scope.mainGridTwo = {}; 
         
-    $scope.$on("MainGrid_DisplayInfo", function(event, obj){
+    $scope.$on("MainGridOne_DisplayInfo", function(event, obj_in){
         
         /*$scope.mainGridOne = {
         enableSorting: true,
@@ -143,48 +147,172 @@ angular.module("app").controller('MainGridController', ['$scope', function ($sco
                        }
                    ]
         };*/
+        var type = obj_in.type;
+        var obj = obj_in.msg;
         
-        if(!obj.hasOwnProperty('data')){
-                
+        if(type === 'Department'){
+            displayDepartments(obj);
+        }
+        
+    });
+    
+    $scope.$on("MainGridTwo_DisplayInfo", function(event, obj_in){
+        var type = obj_in.type;
+        var obj = obj_in.msg;
+        
+        if(type === 'Employee'){
+            displayEmployees(obj);
+        }
+    });
+    
+    function displayDepartments(obj){
+        if(!obj.hasOwnProperty('data')){                
             return;
         }
         //it does not work to direct use data from server
         var keysFilter = ['name', 'begin_time', 'address'];
         //var fieldColumnNames = Object.keys(obj);
         var values = [];
-         
-        for(var key in obj.data) {        
-            
-            var tmpVar = {};
-            var find = false;
-            for(var i =0; i < keysFilter.length; i++){
-                if(key === keysFilter[i]){               
-                    //dynamically add both property and value to the object, tmpVar.
-                    tmpVar[key] = obj[key];                     
-                    find = true;
-                }
-            }   
-            if(find)
-                values.push(tmpVar);
+        
+        defineGridColumns(keysFilter, $scope.mainGridOne);
+        
+        gridDataFilter(keysFilter, obj, values); 
+                        
+        $scope.mainGridOne.data = values;
+        
+        $scope.showMainGridOne = true;        
+    }
+    
+    function displayEmployees(obj){
+        if(!obj.hasOwnProperty('data')){                
+            return;
         }
-                
-        $scope.mainGridOne.enableSorting = true;
-        $scope.mainGridOne.columnDefs = [];
+        
+        var keysFilter = ['firstName', 'lastName', 'home_address', 'birth_date', 'department'];
+        
+        var values = [];
+        defineGridColumns(keysFilter, $scope.mainGridTwo);
+        
+        gridDataFilter_ForEmployee(keysFilter, obj, values); 
+        
+        $scope.mainGridTwo.data = values;
+        
+        $scope.showMainGridTwo = true;       
+    }
+    
+    function defineGridColumns(keysFilter, grid){
+        if(typeof grid !== 'object')
+            return;
+        
+        if(Array.isArray(keysFilter) !== true)
+            return;
+        
+        grid.enableSorting = true;
+        grid.columnDefs = [];
         for(var i=0; i < keysFilter.length; i++){
             //$scope.gridOption.columnDefs
             var tmpColumnDef = { field : keysFilter[i] };
-            $scope.mainGridOne.columnDefs.push(tmpColumnDef);
-        }
-        
-        $scope.mainGridOne.data = values;
-        
-        $scope.showMainGrid = true;
-        
-    });
- 
-      
+            grid.columnDefs.push(tmpColumnDef);
+        }      
+    }
     
+    // this function is to get information from "data" property of the object   
+    function gridDataFilter(keysFilter, obj, values){
         
+        if(typeof obj !== 'object')
+            return;
+                
+        //only search infomation in the object.data
+        if(obj.hasOwnProperty('data') && typeof obj.data === 'object'){
+            if(!Array.isArray(keysFilter))
+                return;
+                        
+            if(typeof values !== 'object' && Array.isArray(values) !== true)
+                return;
+
+            var tmpVar = {};
+            var find = false;
+
+            for(var key in obj.data) {      
+
+                for(var i =0; i < keysFilter.length; i++){
+                    if(key === keysFilter[i]){               
+                        //dynamically add both property and value to the object, tmpVar.
+                        tmpVar[key] = obj.data[key];                     
+                        find = true;
+                        //break;
+                    }
+                }              
+            }
+
+            if(find){
+                values.push(tmpVar);
+            }
+        }        
+                        
+        if(obj.hasOwnProperty('children')){
+            for(var j=0; j < obj.children.length; j++){
+                gridDataFilter(keysFilter, obj.children[j], values);
+            }
+        }
+    };
+        
+    // this function is to get information from "data" property of the object   
+    function gridDataFilter_ForEmployee(keysFilter, obj, values){
+        
+        if(typeof obj !== 'object')
+            return;
+                
+        //only search infomation in the object.data
+        if(obj.hasOwnProperty('data') && typeof obj.data === 'object'){
+            if(!Array.isArray(keysFilter))
+                return;
+                        
+            if(typeof values !== 'object' && Array.isArray(values) !== true)
+                return;
+
+            var tmpVar = {};
+            var find = false;
+            
+            var department = obj.data;
+            if(department.hasOwnProperty('employees')){
+                for(var i = 0; i < department.employees.length; i++){
+                    var employee = department.employees[i];
+                                
+                    for(var key in employee){
+                        
+                        for(var j=0; j < keysFilter.length; j++){
+                            if(key === keysFilter[j]){
+                                
+                                if(key === 'birth_date'){
+                                    var date = new Date(parseInt(employee[key]));
+                                    var date_str = date.getUTCFullYear() + "-" + date.getUTCMonth() + "-" + date.getUTCDate();
+                                    
+                                    tmpVar[key] = date_str;
+                                }else{
+                                    tmpVar[key] = employee[key]; 
+                                }                                                                                
+                                
+                            }
+                        }
+                    }
+                    
+                    tmpVar['department'] = department.name;
+                    find = true;
+                }
+            }
+
+            if(find){
+                values.push(tmpVar);
+            }
+        }        
+                        
+        if(obj.hasOwnProperty('children')){
+            for(var j=0; j < obj.children.length; j++){
+                gridDataFilter_ForEmployee(keysFilter, obj.children[j], values);
+            }
+        }
+    };
     /*$scope.mainGridOne.data = [
         {
             "firstName": "Cox",

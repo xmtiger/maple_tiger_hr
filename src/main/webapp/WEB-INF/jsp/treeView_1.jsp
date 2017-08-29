@@ -14,6 +14,8 @@
          <!-- angularjs ui.grid css -->
         <link rel="stylesheet" href="${context}/resources/vendors/ui-grid/css/ui-grid.min.css"/> 
         
+        <link rel="stylesheet" href="${context}/resources/vendors/angularJS/css/angular-material.min.css"/> 
+        
         <link rel="stylesheet" href="${context}/resources/vendors/bootstrap3.3.7/css/bootstrap.min.css" type="text/css"/>
                      
         
@@ -46,8 +48,9 @@
              div.clear{clear:both;}
              
              .mainGrid{
-                width: 700px;
-                height: 350px;
+                width: 900px;
+                height: 300px;
+                overflow: auto;
               }
              
         </style>        
@@ -123,7 +126,8 @@
                 <div bind-page ng-bind-html="bindPage" ></div>         
                 
                 <div ng-controller="MainGridController">
-                    <div ui-grid="mainGridOne" class="mainGrid" ng-show="showMainGrid"></div>
+                    <div ui-grid="mainGridOne" class="mainGrid" ng-show="showMainGridOne"></div>
+                    <div ui-grid="mainGridTwo" class="mainGrid" ng-show="showMainGridTwo"></div>
                 </div>
                 
             </div>
@@ -141,6 +145,7 @@
         <script type="text/javascript" src="${context}/resources/vendors/angularJS/js/angular-route.min.js"></script>       
         <script type="text/javascript" src="${context}/resources/vendors/angularJS/js/angular-sanitize.min.js"></script>  
         <script type="text/javascript" src="${context}/resources/vendors/angularJS/js/angular-animate.min.js"></script>
+        <script type="text/javascript" src="${context}/resources/vendors/angularJS/js/angular-material.min.js"></script>
         <!-- angular ui bootstrap -->
         <script type="text/javascript" src="${context}/resources/vendors/angularJS/js/ui-bootstrap-tpls-2.5.0.min.js"></script>
         <!-- angularjs ui.grid -->
