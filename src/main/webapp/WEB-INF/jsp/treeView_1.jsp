@@ -112,16 +112,20 @@
                     <button id="editButton" type="button" class="btn btn-primary">Edit</button>
                     <button id="removeButton" type="button" class="btn btn-primary">Remove</button>
                 </div>
+                
                 <form>
-                <br>
-                Search <input id="search_tree" type="text" /> 
+                    <br>
+                    Search <input id="search_tree" type="text" /> 
                 </form>
+                
+                <br>
+                <div uib-alert ng-class="'alert-' + (alert.type || 'warning')" >{{alert.msg}}</div>
                 
             </div>   
             
             <div id ="contentwrapper" >
                 
-                <div uib-alert ng-class="'alert-' + (alert.type || 'warning')" >{{alert.msg}}</div>
+                <!--div uib-alert ng-class="'alert-' + (alert.type || 'warning')" >{{alert.msg}}</div-->
                         
                 <div bind-page ng-bind-html="bindPage" ></div>         
                 
@@ -136,7 +140,7 @@
         <div class="clear"></div>       
         
         <br>       
-        
+        <!-- jQuery and related plug-in components-->
         <script type="text/javascript" src="${context}/resources/vendors/jquery/js/jquery.min.js"></script>
         <script type="text/javascript" src="${context}/resources/vendors/bootstrap3.3.7/js/bootstrap.min.js"></script>
         <script type="text/javascript" src="${context}/resources/vendors/zTree/js/jquery.ztree.all.min.js"></script>
@@ -159,66 +163,7 @@
         <script type="text/javascript" src="${context}/resources/core/js/service/department_service.js"></script>        
         <script type="text/javascript" src="${context}/resources/core/js/controller/departmentNavMenuController.js"></script>
         <script type="text/javascript" src="${context}/resources/core/js/controller/rootController.js"></script>
-        
-        <script>            
-            
-            /*The following function successfully shows how the tree can be created by using recursive method.
-             * The generated data can be used for zTree data.
-            };*/
-            
-            
-            
-            //the upper portion is for testing purpose.
-            
-            //var zTreeObj;
-            // zTree configuration information, refer to API documentation (setting details)
-            //var setting = {};   
-           
-            //jQuery function
-            $(document).ready(function(){
                 
-                //$("#departmentDiv").html("Welcome to using Maple_Tiger_HR System");
-                //The required data can be customerized object which includes name, children.
-                               
-                //
-                               
-                $("#addButton").click(function(){
-                   
-                    //$(this).prop("disabled", true);  // this also works well for the current button 
-                   
-                    //The following works fine for buttons in group with same class type
-                    //$(".btn-primary").prop('disabled', true);
-
-                    $("#bindPage").html("the page is loading, please wait...");
-
-                    var id = 2;
-                    var request = "department/" + "id/" + id;
-
-                    //The following load function successfully shows how the load function works
-                    /*$("#departmentDiv").load(request, function(res, status, xhr){
-                        if(status === "success"){
-                            $("#departmentDiv").html(res);
-                        }
-                    });*/
-
-                    /*The following get function successfully shows similar effects as the upper load function.
-                     * but the get function requires JSON.stringify function to convert object to string*/
-                    /*$.get(request, function(res, status){
-                        if(status === "success"){
-                            $("#departmentDiv").html(JSON.stringify(res));
-                        }
-                    });*/
-
-                    //The following load function shows how to request loading a page
-                    //$("#bindPage").load("department/new");
-                   
-                   
-                });
-               
-            });          
-            
-        </script>
-        
         <jsp:include page="./fragments/footer.jsp"/> 
         
     </body>
