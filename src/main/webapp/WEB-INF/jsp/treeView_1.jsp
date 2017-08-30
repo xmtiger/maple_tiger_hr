@@ -97,10 +97,11 @@
     
     
          
-        <div id="maincontainer">
+        <div id="maincontainer" >
+        
             <!-- 3 setup a container element -->
-            <div id = "leftcolumn">
-                
+            <div id = "leftcolumn" >
+             
                 
                 <div style="height:300px; min-height:0px; max-height: 75%; border: 1px solid black; overflow: auto;">
                     <ul ztree id="xmTreeView" class="ztree" ng-model ="selectNode"></ul>  
@@ -113,31 +114,32 @@
                     <button id="removeButton" type="button" class="btn btn-primary">Remove</button>
                 </div>
                 
-                <form>
+                <form >
                     <br>
                     Search <input id="search_tree" type="text" /> 
                 </form>
                 
                 <br>
-                <div uib-alert ng-class="'alert-' + (alert.type || 'warning')" >{{alert.msg}}</div>
+                <div flex uib-alert ng-class="'alert-' + (alert.type || 'warning')" >{{alert.msg}}</div>
                 
+                <jsp:include page="./fragments/footer.jsp"/> 
             </div>   
             
-            <div id ="contentwrapper" >
-                
+            <div id ="contentwrapper">
+              
                 <!--div uib-alert ng-class="'alert-' + (alert.type || 'warning')" >{{alert.msg}}</div-->
                         
-                <div bind-page ng-bind-html="bindPage" ></div>         
+                <div bind-page ng-bind-html="bindPage" style="width:75%;"></div>         
                 
-                <div ng-controller="MainGridController">
-                    <div ui-grid="mainGridOne" class="mainGrid" ng-show="showMainGridOne"></div>
-                    <div ui-grid="mainGridTwo" class="mainGrid" ng-show="showMainGridTwo"></div>
+                <div ng-controller="MainGridController" >
+                    <div ui-grid="mainGridOne" class="mainGrid" ng-show="showMainGridOne" ></div>
+                    <div ui-grid="mainGridTwo" class="mainGrid" ng-show="showMainGridTwo" ></div>
                 </div>
                 
             </div>
             
         </div>
-        <div class="clear"></div>       
+        <!--div class="clear"></div-->       
         
         <br>       
         <!-- jQuery and related plug-in components-->
@@ -164,7 +166,7 @@
         <script type="text/javascript" src="${context}/resources/core/js/controller/departmentNavMenuController.js"></script>
         <script type="text/javascript" src="${context}/resources/core/js/controller/rootController.js"></script>
                 
-        <jsp:include page="./fragments/footer.jsp"/> 
+        
         
     </body>
 </html>

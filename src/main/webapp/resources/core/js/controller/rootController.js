@@ -18,7 +18,7 @@ angular.module("app").controller("rootController", ["$scope", "$rootScope","depa
         $scope.alert.msg = msg || 'Wecome using maple_tiger system';
     };
    
-    $scope.bindPage = "Welcome"; //This is the inital welcome text.
+    $scope.bindPage = ""; //This is the inital welcome text.
                     
     $scope.$on("DisplayAllDepartments", function(event, msg){
         console.log("received displayAllDepartments message", msg);
@@ -285,6 +285,7 @@ angular.module("app").controller('MainGridController', ['$scope', function ($sco
                             if(key === keysFilter[j]){
                                 
                                 if(key === 'birth_date'){
+                                    // The conversion of the date
                                     var date = new Date(parseInt(employee[key]));
                                     var date_str = date.getUTCFullYear() + "-" + date.getUTCMonth() + "-" + date.getUTCDate();
                                     
