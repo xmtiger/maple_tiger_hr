@@ -21,6 +21,8 @@
         
         <link rel="stylesheet" href="${context}/resources/vendors/zTree/css/zTreeStyle/zTreeStyle.css" type="text/css"/>
         
+        <link rel="stylesheet" href="${context}/resources/vendors/D3/css/nv.d3.min.css"/>
+        
         <style type="text/css">
             #maincontainer {
                 width:100%;
@@ -136,6 +138,10 @@
                     <div ui-grid="mainGridTwo" class="mainGrid" ng-show="showMainGridTwo" ></div>
                 </div>
                 
+                <!-- D3 graph -->
+                <div ng-controller="D3PieChartController" style="width:50%;">
+                    <nvd3 options="options" data="data" ></nvd3>
+                </div>
             </div>
             
         </div>
@@ -159,6 +165,10 @@
         <script type="text/javascript" src="${context}/resources/vendors/pdfmake/js/pdfmake.min.js"></script>
         <script type="text/javascript" src="${context}/resources/vendors/pdfmake/js/vfs_fonts.js"></script>
         <script type="text/javascript" src="${context}/resources/vendors/ui-grid/js/ui-grid.min.js"></script>
+        <!-- D3 series -->
+        <script type="text/javascript" src="${context}/resources/vendors/D3/js/d3.min.js" charset="utf-8"></script>
+        <script type="text/javascript" src="${context}/resources/vendors/D3/js/nv.d3.min.js"></script>
+        <script type="text/javascript" src="${context}/resources/vendors/D3/js/angular-nvd3.min.js"></script>
         <!-- application js by using angularjs framework -->        
         <script type="text/javascript" src="${context}/resources/core/js/app.js"></script>        
         <script type="text/javascript" src="${context}/resources/core/js/service/app_utils.js"></script>
