@@ -326,28 +326,36 @@ angular.module("app").controller('MainGridController', ['$scope', function ($sco
     
 }]);
 
+//*******************************************************************************************************************************
+//C3.js based on D3.js
+
+angular.module("app").controller('C3PiePlotChartController', ['$scope','UtilService', function ($scope, UtilService) {
+
+    $scope.piePoints = [{"data1": 70, "data2": 30, "data3": "100"}];
+    $scope.pieColumns = [{"id": "data1", "type": "pie"}, {"id": "data2", "type": "pie"}, {"id": "data3", "type": "pie"}];
+    //$scope.size = { height: 200, width: 200 };    
+        
+    $scope.legendIsShown = true;
+    $scope.toggleLegend = function() {
+        if ($scope.legendIsShown) {
+            $scope.theChart.legend.hide();
+        } else {
+            $scope.theChart.legend.show();
+        }
+        $scope.legendIsShown= !$scope.legendIsShown;
+        $scope.theChart.flush();
+    };    
+      
+    $scope.$on("C3PiePlotChart_DisplayInfo", function(event, obj_in){
+        
+    });
+}]);
 //************************************************************************************
 //D3 controller - angular-nvd3 with nvd3
 angular.module("app").controller('D3PieChartController', ['$scope','UtilService', function ($scope, UtilService) {
 
-    $scope.$on("D3PieChart_DisplayInfo", function(event, obj_in){
+    $scope.$on("D3PieChart_DisplayInfo", function(event, obj_in){        
         
-        /*$scope.mainGridOne = {
-        enableSorting: true,
-        columnDefs: [
-          { name:'firstName', field: 'first-name' },
-          { name:'1stFriend', field: 'friends[0]' },
-          { name:'city', field: 'address.city'},
-          { name:'getZip', field: 'getZip()'}
-        ],
-        data : [      {
-                           "first-name": "Cox",
-                           "friends": ["friend0"],
-                           "address": {street:"301 Dove Ave", city:"Laurel", zip:"39565"},
-                           "getZip" : function() {return this.address.zip;}
-                       }
-                   ]
-        };*/
         var type = obj_in.type;
         var obj = obj_in.msg;
         
@@ -368,11 +376,12 @@ angular.module("app").controller('D3PieChartController', ['$scope','UtilService'
             labelThreshold: 0.01,
             labelSunbeamLayout: true,
             legend: {
+                rightAlign: false,
                 margin: {
                     top: 5,
-                    right: 25,
+                    right: 5,
                     bottom: 5,
-                    left: 0
+                    left: 5
                 }
             }
         }

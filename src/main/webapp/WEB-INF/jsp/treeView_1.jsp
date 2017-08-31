@@ -20,8 +20,11 @@
                      
         
         <link rel="stylesheet" href="${context}/resources/vendors/zTree/css/zTreeStyle/zTreeStyle.css" type="text/css"/>
-        
+            
+        <!-- css for d3, nv.d3 and c3 shall be chosen one of them -->
         <link rel="stylesheet" href="${context}/resources/vendors/D3/css/nv.d3.min.css"/>
+        
+        <link rel="stylesheet" href="${context}/resources/vendors/D3/css/c3.min.css"/>
         
         <style type="text/css">
             #maincontainer {
@@ -139,9 +142,16 @@
                 </div>
                 
                 <!-- D3 graph -->
-                <div ng-controller="D3PieChartController" style="width:50%;">
+                
+                <div ng-controller="D3PieChartController">
                     <nvd3 options="options" data="data" ></nvd3>
                 </div>
+
+                <div ng-controller="C3PiePlotChartController">
+                    <c3chart bindto-id="pie-plot1-chart" chart-data="piePoints" chart-columns="pieColumns" ></c3chart>
+                </div>
+                
+                
             </div>
             
         </div>
@@ -167,8 +177,12 @@
         <script type="text/javascript" src="${context}/resources/vendors/ui-grid/js/ui-grid.min.js"></script>
         <!-- D3 series -->
         <script type="text/javascript" src="${context}/resources/vendors/D3/js/d3.min.js" charset="utf-8"></script>
+        <!-- nv.d3-->
         <script type="text/javascript" src="${context}/resources/vendors/D3/js/nv.d3.min.js"></script>
         <script type="text/javascript" src="${context}/resources/vendors/D3/js/angular-nvd3.min.js"></script>
+        <!-- c3 -->
+        <script type="text/javascript" src="${context}/resources/vendors/D3/js/c3.min.js"></script>
+        <script type="text/javascript" src="${context}/resources/vendors/D3/js/c3-angular.min.js"></script>
         <!-- application js by using angularjs framework -->        
         <script type="text/javascript" src="${context}/resources/core/js/app.js"></script>        
         <script type="text/javascript" src="${context}/resources/core/js/service/app_utils.js"></script>
