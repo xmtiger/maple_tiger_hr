@@ -238,6 +238,8 @@ angular.module("app").controller('MainGridController', ['$scope', function ($sco
                 for(var i =0; i < keysFilter.length; i++){
                     if(key === keysFilter[i]){               
                         //dynamically add both property and value to the object, tmpVar.
+                        
+                        //note: the department date type is @Temporal(TemporalType.DATE), and no need for conversion
                         tmpVar[key] = obj.data[key];                     
                         find = true;
                         //break;
@@ -283,11 +285,18 @@ angular.module("app").controller('MainGridController', ['$scope', function ($sco
                         
                         for(var j=0; j < keysFilter.length; j++){
                             if(key === keysFilter[j]){
-                                
+                                //note: the employee birthday is @Temporal(TemporalType.TIMESTAMP)
                                 if(key === 'birth_date'){
                                     // The conversion of the date
                                     var date = new Date(parseInt(employee[key]));
-                                    var date_str = date.getUTCFullYear() + "-" + date.getUTCMonth() + "-" + date.getUTCDate();
+                                    var month = date.getUTCMonth();
+                                    var day = date.getUTCDate();
+                                    if(month < 10)
+                                        month = '0' + month;
+                                    if(day < 10)
+                                        day = '0' + day;
+                                    
+                                    var date_str = date.getUTCFullYear() + "-" + month + "-" + day;
                                     
                                     tmpVar[key] = date_str;
                                 }else{
@@ -313,82 +322,90 @@ angular.module("app").controller('MainGridController', ['$scope', function ($sco
                 gridDataFilter_ForEmployee(keysFilter, obj.children[j], values);
             }
         }
-    };
-    /*$scope.mainGridOne.data = [
-        {
-            "firstName": "Cox",
-            "lastName": "Carney",
-            "company": "Enormo",
-            "employed": true
-        },
-        {
-            "firstName": "Lorraine",
-            "lastName": "Wise",
-            "company": "Comveyer",
-            "employed": false
-        },
-        {
-            "firstName": "Nancy",
-            "lastName": "Waters",
-            "company": "Fuelton",
-            "employed": false
-        }
-    ];*/
+    };        
+    
 }]);
 
 //************************************************************************************
-//D3 controller
-angular.module("app").controller('D3PieChartController', ['$scope', function ($scope) {
+//D3 controller - angular-nvd3 with nvd3
+angular.module("app").controller('D3PieChartController', ['$scope','UtilService', function ($scope, UtilService) {
 
-        $scope.options = {
-            chart: {
-                type: 'pieChart',
-                height: 500,
-                x: function(d){return d.key;},
-                y: function(d){return d.y;},
-                showLabels: true,
-                duration: 500,
-                labelThreshold: 0.01,
-                labelSunbeamLayout: true,
-                legend: {
-                    margin: {
-                        top: 5,
-                        right: 35,
-                        bottom: 5,
-                        left: 0
-                    }
+    $scope.$on("D3PieChart_DisplayInfo", function(event, obj_in){
+        
+        /*$scope.mainGridOne = {
+        enableSorting: true,
+        columnDefs: [
+          { name:'firstName', field: 'first-name' },
+          { name:'1stFriend', field: 'friends[0]' },
+          { name:'city', field: 'address.city'},
+          { name:'getZip', field: 'getZip()'}
+        ],
+        data : [      {
+                           "first-name": "Cox",
+                           "friends": ["friend0"],
+                           "address": {street:"301 Dove Ave", city:"Laurel", zip:"39565"},
+                           "getZip" : function() {return this.address.zip;}
+                       }
+                   ]
+        };*/
+        var type = obj_in.type;
+        var obj = obj_in.msg;
+        
+        if(type === 'Department'){
+            
+        }
+        
+    });
+    
+    $scope.options = {
+        chart: {
+            type: 'pieChart',
+            height: 350,
+            x: function(d){return d.key;},
+            y: function(d){return d.y;},
+            showLabels: true,
+            duration: 500,
+            labelThreshold: 0.01,
+            labelSunbeamLayout: true,
+            legend: {
+                margin: {
+                    top: 5,
+                    right: 25,
+                    bottom: 5,
+                    left: 0
                 }
             }
-        };
+        }
+    };
 
-        $scope.data = [
-            {
-                key: "One",
-                y: 5
-            },
-            {
-                key: "Two",
-                y: 2
-            },
-            {
-                key: "Three",
-                y: 9
-            },
-            {
-                key: "Four",
-                y: 7
-            },
-            {
-                key: "Five",
-                y: 4
-            },
-            {
-                key: "Six",
-                y: 3
-            },
-            {
-                key: "Seven",
-                y: .5
-            }
-        ];
-    }]);
+    $scope.data = [
+        {
+            key: "One",
+            y: 5
+        },
+        {
+            key: "Two",
+            y: 2
+        },
+        {
+            key: "Three",
+            y: 9
+        },
+        {
+            key: "Four",
+            y: 7
+        },
+        {
+            key: "Five",
+            y: 4
+        },
+        {
+            key: "Six",
+            y: 3
+        },
+        {
+            key: "Seven",
+            y: .5
+        }
+    ];
+}]);

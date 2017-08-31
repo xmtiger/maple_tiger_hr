@@ -22,6 +22,10 @@ angular.module('app_utils').factory('UtilService', [ function(){
     };
 
     return factory;
+    
+    //data filter 
+    
+    
 
     /*Search if the key exists in the indicated object. 
              * Use maxSerchLeves to define how deep the search shall go. 1 means search current level*/
