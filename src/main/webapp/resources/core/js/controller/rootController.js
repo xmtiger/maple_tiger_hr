@@ -29,6 +29,8 @@ angular.module("app").controller("rootController", ["$scope", "$rootScope","depa
                 $rootScope.$broadcast("zTree_displayAllDepartments", data);
                 $rootScope.$broadcast("MainGridOne_DisplayInfo", {type: 'Department', msg: data});
                 $rootScope.$broadcast("MainGridTwo_DisplayInfo", {type: 'Employee', msg: data});
+                $rootScope.$broadcast("C3PiePlotChart_DisplayInfo", {type: 'Employee', msg: data});
+                $rootScope.$broadcast("C3BarPlotChart_DisplayInfo", {type: 'Employee', msg: data});
             },
             function(errResponse){
                 console.error("Error while fetching all departments");
@@ -121,7 +123,7 @@ angular.module("app").controller("rootController", ["$scope", "$rootScope","depa
 
 //********************************************************************************************************
 // This is for ui.grid to display data in the ui.grid table
-angular.module("app").controller('MainGridController', ['$scope', function ($scope) {
+angular.module("app").controller('MainGridController', ['$scope', 'UtilService', function ($scope, UtilService) {
         
     $scope.showMainGridOne = false;   
     $scope.showMainGridTwo = false;  
@@ -147,21 +149,41 @@ angular.module("app").controller('MainGridController', ['$scope', function ($sco
                        }
                    ]
         };*/
+        if(typeof obj_in !== 'object')
+            return;
+        
+        if(!obj_in.hasOwnProperty('type'))
+            return;
+        
+        if(!obj_in.hasOwnProperty('msg'))
+            return;
+        
         var type = obj_in.type;
         var obj = obj_in.msg;
         
         if(type === 'Department'){
             displayDepartments(obj);
+            $scope.showMainGridOne = true;
         }
         
     });
     
     $scope.$on("MainGridTwo_DisplayInfo", function(event, obj_in){
+        if(typeof obj_in !== 'object')
+            return;
+        
+        if(!obj_in.hasOwnProperty('type'))
+            return;
+        
+        if(!obj_in.hasOwnProperty('msg'))
+            return;
+        
         var type = obj_in.type;
         var obj = obj_in.msg;
         
         if(type === 'Employee'){
             displayEmployees(obj);
+            $scope.showMainGridTwo = true;     
         }
     });
     
@@ -169,18 +191,22 @@ angular.module("app").controller('MainGridController', ['$scope', function ($sco
         if(!obj.hasOwnProperty('data')){                
             return;
         }
+        
+        if(UtilService === null)
+            return;
+        
         //it does not work to direct use data from server
         var keysFilter = ['name', 'begin_time', 'address'];
         //var fieldColumnNames = Object.keys(obj);
         var values = [];
         
-        defineGridColumns(keysFilter, $scope.mainGridOne);
+        UtilService.defineGridColumns(keysFilter, $scope.mainGridOne);
         
-        gridDataFilter(keysFilter, obj, values); 
+        UtilService.gridDataFilter(keysFilter, obj, values); 
                         
         $scope.mainGridOne.data = values;
         
-        $scope.showMainGridOne = true;        
+                
     }
     
     function displayEmployees(obj){
@@ -188,19 +214,22 @@ angular.module("app").controller('MainGridController', ['$scope', function ($sco
             return;
         }
         
+        if(UtilService === null)
+            return;
+        
         var keysFilter = ['firstName', 'lastName', 'home_address', 'birth_date', 'department'];
         
         var values = [];
-        defineGridColumns(keysFilter, $scope.mainGridTwo);
+        UtilService.defineGridColumns(keysFilter, $scope.mainGridTwo);
         
-        gridDataFilter_ForEmployee(keysFilter, obj, values); 
+        UtilService.gridDataFilter_ForEmployee(keysFilter, obj, values); 
         
         $scope.mainGridTwo.data = values;
         
-        $scope.showMainGridTwo = true;       
+          
     }
     
-    function defineGridColumns(keysFilter, grid){
+    /*function defineGridColumns(keysFilter, grid){
         if(typeof grid !== 'object')
             return;
         
@@ -322,7 +351,7 @@ angular.module("app").controller('MainGridController', ['$scope', function ($sco
                 gridDataFilter_ForEmployee(keysFilter, obj.children[j], values);
             }
         }
-    };        
+    };    */    
     
 }]);
 
@@ -339,9 +368,9 @@ angular.module("app").controller('C3PieChartController', ['$scope','UtilService'
      
     $scope.showGraph = function() {
         $scope.chart = c3.generate({
-            bindto: '#C3Piechart',
+            bindto: '#C3PieChart',
             
-            size: { height : 300},
+            size: { width:300, height : 300},
             
             data: {
               columns: $scope.data  ,
@@ -351,7 +380,7 @@ angular.module("app").controller('C3PieChartController', ['$scope','UtilService'
             pie: {
                     label: {
                         format: function (value, ratio, id) {
-                            return d3.format('$')(value);
+                            return d3.format('')(value);
                     }
                 }
             }        
@@ -359,15 +388,157 @@ angular.module("app").controller('C3PieChartController', ['$scope','UtilService'
         });
             
     };
-      
+    
+    // This is to show how many employees the each department has. 
     $scope.$on("C3PiePlotChart_DisplayInfo", function(event, obj_in){
+       if(typeof obj_in !== 'object')
+            return;
         
+        if(!obj_in.hasOwnProperty('type'))
+            return;
+        
+        if(!obj_in.hasOwnProperty('msg'))
+            return;
+        
+        var type = obj_in.type;
+        var obj = obj_in.msg;
+        
+        var keysFilter = ['firstName', 'lastName', 'department'];
+        
+        var values = [];
+                
+        UtilService.gridDataFilter_ForEmployee(keysFilter, obj, values); 
+        
+        var data = [];
+        for(var i=0; i < values.length; i++){
+            var employee = values[i];
+            
+            var dept = employee[keysFilter[2]];
+            var find = false;
+            //search in the data array to find the total employee numbers of each 'department'
+            for(var j=0; j < data.length; j++){
+                //another array 
+                var tmpArray = data[j];
+                if(!Array.isArray(tmpArray))
+                    continue;
+                
+                if(tmpArray.length === 1){
+                    var tmpDept = tmpArray[0];
+                    
+                    if(tmpDept === dept){ 
+                        find = true;
+                        tmpArray[1]++;
+                    }
+                }              
+            }
+            // if the department is not found in the data[], add new department array
+            if(find === false){
+                var deptArray = [dept, 1];
+                data[data.length] = deptArray;
+            }            
+        }
+        //console.log(data);
+        $scope.data = data;
+        $scope.showPieChat = true;
+        $scope.showGraph();
+    });
+}]);
+
+angular.module("app").controller('C3BarChartController', ['$scope','UtilService', function ($scope, UtilService) {
+
+    $scope.data = [["data1", 70], ["data2", 30], ["data3", 100]];
+        
+    $scope.showBarChat= true;
+    
+    $scope.chart = null;
+     
+    $scope.showGraph = function() {
+        $scope.chart = c3.generate({
+            bindto: '#C3BarChart',
+            
+            size: { width: 300, height : 300},
+            
+            data: {
+              columns: $scope.data  ,
+              type : 'bar'
+            },
+            
+            axis: {
+                
+                y: {
+                    show: true,
+                    min : 1                      
+                    //padding: 0              
+                }
+            },
+            
+            bar: {
+                zerobased: true
+            }
+            
+
+        });
+            
+    };
+    
+    // This is to show how many employees the each department has. 
+    $scope.$on("C3BarPlotChart_DisplayInfo", function(event, obj_in){
+       if(typeof obj_in !== 'object')
+            return;
+        
+        if(!obj_in.hasOwnProperty('type'))
+            return;
+        
+        if(!obj_in.hasOwnProperty('msg'))
+            return;
+        
+        var type = obj_in.type;
+        var obj = obj_in.msg;
+        
+        var keysFilter = ['firstName', 'lastName', 'department'];
+        
+        var values = [];
+                
+        UtilService.gridDataFilter_ForEmployee(keysFilter, obj, values); 
+        
+        var data = [];
+        for(var i=0; i < values.length; i++){
+            var employee = values[i];
+            
+            var dept = employee[keysFilter[2]];
+            var find = false;
+            //search in the data array to find the total employee numbers of each 'department'
+            for(var j=0; j < data.length; j++){
+                //another array 
+                var tmpArray = data[j];
+                if(!Array.isArray(tmpArray))
+                    continue;
+                
+                if(tmpArray.length === 1){
+                    var tmpDept = tmpArray[0];
+                    
+                    if(tmpDept === dept){ 
+                        find = true;
+                        tmpArray[1]++;
+                    }
+                }              
+            }
+            // if the department is not found in the data[], add new department array
+            if(find === false){
+                var deptArray = [dept, 1];
+                data[data.length] = deptArray;
+            }            
+        }
+        //console.log(data);
+        $scope.data = data;
+        $scope.showBarChat = true;
+        $scope.showGraph();
     });
 }]);
 
 //************************************************************************************
 //D3 controller - angular-nvd3 with nvd3
-angular.module("app").controller('D3PieChartController', ['$scope','UtilService', function ($scope, UtilService) {
+/*angular.module("app").controller('D3PieChartController', ['$scope','UtilService', function ($scope, UtilService) {
 
     $scope.$on("D3PieChart_DisplayInfo", function(event, obj_in){        
         
@@ -432,4 +603,4 @@ angular.module("app").controller('D3PieChartController', ['$scope','UtilService'
             y: .5
         }
     ];
-}]);
+}]);*/

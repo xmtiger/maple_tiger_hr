@@ -18,7 +18,7 @@ public class IndexPageController {
     
     @RequestMapping(value="index.htm")
     public String indexPage(){
-        return "treeView_1";
+        return "treeView_2";
     }
     
     @RequestMapping(value="index")

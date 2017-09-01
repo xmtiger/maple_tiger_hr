@@ -10,16 +10,16 @@
         <c:set var="context" value="${pageContext.request.contextPath}"/>
         <title>mapletiger_HR_System</title>
         
-        <!--jsp:include page="./fragments/header.jsp"/--> 
-         <!-- angularjs ui.grid css -->
-        <link rel="stylesheet" href="${context}/resources/vendors/ui-grid/css/ui-grid.min.css"/> 
+        <!--jsp:include page="./fragments/header.jsp"/-->        
         
-        <!--link rel="stylesheet" href="${context}/resources/vendors/angularJS/css/angular-material.min.css"/--> 
+        <!--link rel="stylesheet" href="/resources/vendors/angularJS/css/angular-material.min.css"/--> 
         
         <link rel="stylesheet" href="${context}/resources/vendors/bootstrap3.3.7/css/bootstrap.min.css" type="text/css"/>
-                     
-        
+          
         <link rel="stylesheet" href="${context}/resources/vendors/zTree/css/zTreeStyle/zTreeStyle.css" type="text/css"/>
+        
+        <!-- angularjs ui.grid css -->             
+        <link rel="stylesheet" href="${context}/resources/vendors/ui-grid/css/ui-grid.min.css"/> 
             
         <!-- css for d3, nv.d3 and c3 shall be chosen one of them -->
         <link rel="stylesheet" href="${context}/resources/vendors/D3/css/nv.d3.min.css"/>
@@ -27,57 +27,13 @@
         <link rel="stylesheet" href="${context}/resources/vendors/D3/css/c3.min.css"/>
         
         <style type="text/css">
-            #maincontainer {
-                width:100%;
-                height: 100%;
-              }
-
-              #leftcolumn {
-                float:left;
-                display:inline-block;
-                width: 220px;
-                height: 100%;
-                background: white;
-              }
-
-              #contentwrapper {
-                float:left;
-                display:inline-block;
-                width: -moz-calc(100% - 220px);
-                width: -webkit-calc(100% - 220px);
-                width: calc(100% - 220px);
-                height: 100%;
-                background-color: white;
-              }
-             
-              
-
-              .xmFloatingBbox {
-                float: left;
-                width: 400px;
+            .xm-grid {
+                width: 500px;
                 height: 300px;
-                margin: 1px;
-                border: 1px solid #73AD21;  
-            }
-            
-            
-             
-            .xmUIGrid{
-                float: left;
-                width: 750px;
-                height: 350px;
-                margin: 1px;
-                border: 1px solid #73AD21;
                 overflow: auto;
             }
-            
-            .clearfix::after {
-                content: "";
-                clear: both;
-                display: table;
-            }
-             
-        </style>        
+        </style>
+               
     </head>
     
     <body ng-app="app" ng-controller="rootController">
@@ -121,60 +77,77 @@
     
     
          
-        <div id="maincontainer" >
-        
-            <!-- 3 setup a container element -->
-            <div id = "leftcolumn" >
-             
-                
-                <div style="height:300px; min-height:0px; max-height: 75%; border: 1px solid black; overflow: auto;">
-                    <ul ztree id="xmTreeView" class="ztree" ng-model ="selectNode"></ul>  
-                </div>  
-                                
-                <br>
-                <div class="btn-group">
-                    <button id="addButton" type="button" class="btn btn-primary" >Add</button>
-                    <button id="editButton" type="button" class="btn btn-primary">Edit</button>
-                    <button id="removeButton" type="button" class="btn btn-primary">Remove</button>
-                </div>
-                
-                <form >
+        <div id="maincontainer" class="container-fluid" >
+            <div class="row">
+                <!-- 3 setup a container element -->
+                <div id = "leftcolumn" class="col-md-2 col-lg2" >
+
+
+                    <div style="height:300px; min-height:0px; max-height: 75%; border: 1px solid black; overflow: auto;">
+                        <ul ztree id="xmTreeView" class="ztree" ng-model ="selectNode"></ul>  
+                    </div>  
+
                     <br>
-                    Search <input id="search_tree" type="text" /> 
-                </form>
-                
-                <br>
-                <div flex uib-alert ng-class="'alert-' + (alert.type || 'warning')" >{{alert.msg}}</div>
-                
-                <jsp:include page="./fragments/footer.jsp"/> 
-            </div>   
-            
-            <div id ="contentwrapper">
-              
-                <!--div uib-alert ng-class="'alert-' + (alert.type || 'warning')" >{{alert.msg}}</div-->
-                        
-                <div bind-page ng-bind-html="bindPage" ></div>         
-                
-                <div ng-controller="MainGridController" >
-                    <div ui-grid="mainGridOne" class="xmUIGrid" ng-show="showMainGridOne" ></div>
-                    <div ui-grid="mainGridTwo" class="xmUIGrid" ng-show="showMainGridTwo" ></div>
-                </div>
-                
-                
-                <!-- D3 graph -->                
-                <div class="container">                    
-                                            
-                    <div class="xmFloatingBbox">
-                        <div id="C3PieChart" ng-controller="C3PieChartController" ng-init="showGraph()" ng-show="showPieChat" ></div>
+                    <div class="btn-group">
+                        <button id="addButton" type="button" class="btn btn-primary" >Add</button>
+                        <button id="editButton" type="button" class="btn btn-primary">Edit</button>
+                        <button id="removeButton" type="button" class="btn btn-primary">Remove</button>
                     </div>
 
-                    <div class="xmFloatingBbox">
-                        <div id="C3BarChart" ng-controller="C3BarChartController" ng-init="showGraph()" ng-show="showBarChat" ></div>
-                    </div>
-                    
-                </div>
-            </div>
+                    <form >
+                        <br>
+                        Search <input id="search_tree" type="text" /> 
+                    </form>
+
+                    <br>
+                    <div flex uib-alert ng-class="'alert-' + (alert.type || 'warning')" >{{alert.msg}}</div>
+
+                    <jsp:include page="./fragments/footer.jsp"/> 
+                </div>   
             
+                <div id ="contentwrapper" class="col-md-10 col-lg-10">
+
+                    <div class="row">     
+                        
+                        <div bind-page ng-bind-html="bindPage" class="col-md-6 col-lg-6" ></div>         
+                    
+
+                        <div  ng-controller="MainGridController" class="col-md-10 col-lg-10">
+                            <div class="row">
+                                <div class="col-md-5 col-lg-5">
+                                    <div ui-grid="mainGridOne" class="xm-grid" ng-show="showMainGridOne" ></div>
+                                </div>
+                                <div class="col-md-6 col-lg-6">
+                                    <div ui-grid="mainGridTwo" class="xm-grid" ng-show="showMainGridTwo" ></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- D3 graph --> 
+                        <div>
+                        <br><br>
+                        </div>
+                        
+                        <div class="col-md-9 col-lg-9">
+
+                                <!--div class="col" ng-controller="D3PieChartController" ng-show="false">
+                                    <nvd3 options="options" data="data" ></nvd3>
+                                </div--> 
+
+                                <div class="row">
+                                    <div id="C3PieChart" class="col-md-4 col-lg-4" ng-controller="C3PieChartController" ng-init="showGraph()" ng-show="showPieChat" ></div>
+
+
+                                    <div id="C3BarChart" class="col-md-4 col-lg-4" ng-controller="C3BarChartController" ng-init="showGraph()" ng-show="showBarChat" ></div>
+                                </div>
+
+
+                        </div>
+                        
+                    </div>
+                </div>
+                
+            </div>
         </div>
         <!--div class="clear"></div-->       
         

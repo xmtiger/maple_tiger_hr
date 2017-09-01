@@ -18,15 +18,142 @@ angular.module('app_utils').factory('UtilService', [ function(){
         ContainsKeyValue : ContainsKeyValue,
         FindKeyValue : FindKeyValue,
         TreeNodeConverter : TreeNodeConverter,
-        TreeNodesGenerator : TreeNodesGenerator
+        TreeNodesGenerator : TreeNodesGenerator,
+        //data filter
+        defineGridColumns : defineGridColumns,
+        gridDataFilter : gridDataFilter,
+        gridDataFilter_ForEmployee: gridDataFilter_ForEmployee
     };
 
     return factory;
     
     //data filter 
+     function defineGridColumns(keysFilter, grid){
+        if(typeof grid !== 'object')
+            return;
+        
+        if(Array.isArray(keysFilter) !== true)
+            return;
+        
+        grid.enableSorting = true;
+        grid.columnDefs = [];
+        for(var i=0; i < keysFilter.length; i++){
+            //$scope.gridOption.columnDefs
+            var tmpColumnDef = { field : keysFilter[i] };
+            grid.columnDefs.push(tmpColumnDef);
+        }      
+    }
     
-    
+    // The input object must have the object "data" which contains the information 
+    // this function is to get information from "data" property of the object   
+    function gridDataFilter(keysFilter, obj, values){
+        
+        if(typeof obj !== 'object')
+            return;
+                
+        //only search infomation in the object.data
+        if(obj.hasOwnProperty('data') && typeof obj.data === 'object'){
+            if(!Array.isArray(keysFilter))
+                return;
+                        
+            if(typeof values !== 'object' && Array.isArray(values) !== true)
+                return;
 
+            var tmpVar = {};
+            var find = false;
+
+            for(var key in obj.data) {      
+
+                for(var i =0; i < keysFilter.length; i++){
+                    if(key === keysFilter[i]){               
+                        //dynamically add both property and value to the object, tmpVar.
+                        
+                        //note: the department date type is @Temporal(TemporalType.DATE), and no need for conversion
+                        tmpVar[key] = obj.data[key];                     
+                        find = true;
+                        //break;
+                    }
+                }              
+            }
+
+            if(find){
+                values.push(tmpVar);
+            }
+        }        
+                        
+        if(obj.hasOwnProperty('children')){
+            for(var j=0; j < obj.children.length; j++){
+                gridDataFilter(keysFilter, obj.children[j], values);
+            }
+        }
+    };
+    
+    // The input object must have the object "data" which contains the information 
+    // this function is to get information from "data" property of the object   
+    function gridDataFilter_ForEmployee(keysFilter, obj, values){
+        
+        if(typeof obj !== 'object')
+            return;
+                
+        //only search infomation in the object.data
+        if(obj.hasOwnProperty('data') && typeof obj.data === 'object'){
+            if(!Array.isArray(keysFilter))
+                return;
+                        
+            if(typeof values !== 'object' && Array.isArray(values) !== true)
+                return;
+
+            var tmpVar = {};
+            var find = false;
+            
+            var department = obj.data;
+            if(department.hasOwnProperty('employees')){
+                for(var i = 0; i < department.employees.length; i++){
+                    var employee = department.employees[i];
+                                
+                    for(var key in employee){
+                        
+                        for(var j=0; j < keysFilter.length; j++){
+                            if(key === keysFilter[j]){
+                                //note: the employee birthday is @Temporal(TemporalType.TIMESTAMP)
+                                if(key === 'birth_date'){
+                                    // The conversion of the date
+                                    var date = new Date(parseInt(employee[key]));
+                                    var month = date.getUTCMonth();
+                                    var day = date.getUTCDate();
+                                    if(month < 10)
+                                        month = '0' + month;
+                                    if(day < 10)
+                                        day = '0' + day;
+                                    
+                                    var date_str = date.getUTCFullYear() + "-" + month + "-" + day;
+                                    
+                                    tmpVar[key] = date_str;
+                                }else{
+                                    tmpVar[key] = employee[key]; 
+                                }                                                                                
+                                
+                            }
+                        }
+                    }
+                    
+                    tmpVar['department'] = department.name;
+                    find = true;
+                }
+            }
+
+            if(find){
+                values.push(tmpVar);
+            }
+        }        
+                        
+        if(obj.hasOwnProperty('children')){
+            for(var j=0; j < obj.children.length; j++){
+                gridDataFilter_ForEmployee(keysFilter, obj.children[j], values);
+            }
+        }
+    }; 
+    
     /*Search if the key exists in the indicated object. 
              * Use maxSerchLeves to define how deep the search shall go. 1 means search current level*/
     
