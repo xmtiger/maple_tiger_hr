@@ -14,7 +14,7 @@
          <!-- angularjs ui.grid css -->
         <link rel="stylesheet" href="${context}/resources/vendors/ui-grid/css/ui-grid.min.css"/> 
         
-        <link rel="stylesheet" href="${context}/resources/vendors/angularJS/css/angular-material.min.css"/> 
+        <!--link rel="stylesheet" href="${context}/resources/vendors/angularJS/css/angular-material.min.css"/--> 
         
         <link rel="stylesheet" href="${context}/resources/vendors/bootstrap3.3.7/css/bootstrap.min.css" type="text/css"/>
                      
@@ -130,7 +130,7 @@
                 <jsp:include page="./fragments/footer.jsp"/> 
             </div>   
             
-            <div id ="contentwrapper">
+            <div id ="contentwrapper" class="container">
               
                 <!--div uib-alert ng-class="'alert-' + (alert.type || 'warning')" >{{alert.msg}}</div-->
                         
@@ -141,16 +141,17 @@
                     <div ui-grid="mainGridTwo" class="mainGrid" ng-show="showMainGridTwo" ></div>
                 </div>
                 
-                <!-- D3 graph -->
-                
-                <div ng-controller="D3PieChartController">
-                    <nvd3 options="options" data="data" ></nvd3>
+                <!-- D3 graph -->                
+                <div class="row justify-content-start">
+                    <div class="col">
+                        <div ng-controller="D3PieChartController" >
+                            <nvd3 options="options" data="data" ></nvd3>
+                        </div> 
+                    </div>
+                    <div class="col">
+                        <div id="C3Piechart" ng-controller="C3PieChartController" ng-init="showGraph()" ng-show="showPieChat" ></div>
+                    </div>
                 </div>
-
-                <div ng-controller="C3PiePlotChartController">
-                    <c3chart bindto-id="pie-plot1-chart" chart-data="piePoints" chart-columns="pieColumns" ></c3chart>
-                </div>
-                
                 
             </div>
             
@@ -167,7 +168,7 @@
         <script type="text/javascript" src="${context}/resources/vendors/angularJS/js/angular-route.min.js"></script>       
         <script type="text/javascript" src="${context}/resources/vendors/angularJS/js/angular-sanitize.min.js"></script>  
         <script type="text/javascript" src="${context}/resources/vendors/angularJS/js/angular-animate.min.js"></script>
-        <script type="text/javascript" src="${context}/resources/vendors/angularJS/js/angular-material.min.js"></script>
+        <!--script type="text/javascript" src="/resources/vendors/angularJS/js/angular-material.min.js"></script-->
         <!-- angular ui bootstrap -->
         <script type="text/javascript" src="${context}/resources/vendors/angularJS/js/ui-bootstrap-tpls-2.5.0.min.js"></script>
         <!-- angularjs ui.grid -->
@@ -182,14 +183,12 @@
         <script type="text/javascript" src="${context}/resources/vendors/D3/js/angular-nvd3.min.js"></script>
         <!-- c3 -->
         <script type="text/javascript" src="${context}/resources/vendors/D3/js/c3.min.js"></script>
-        <script type="text/javascript" src="${context}/resources/vendors/D3/js/c3-angular.min.js"></script>
         <!-- application js by using angularjs framework -->        
         <script type="text/javascript" src="${context}/resources/core/js/app.js"></script>        
         <script type="text/javascript" src="${context}/resources/core/js/service/app_utils.js"></script>
         <script type="text/javascript" src="${context}/resources/core/js/service/department_service.js"></script>        
         <script type="text/javascript" src="${context}/resources/core/js/controller/departmentNavMenuController.js"></script>
-        <script type="text/javascript" src="${context}/resources/core/js/controller/rootController.js"></script>
-                
+        <script type="text/javascript" src="${context}/resources/core/js/controller/rootController.js"></script>                
         
         
     </body>

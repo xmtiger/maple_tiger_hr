@@ -7,7 +7,7 @@
 
 var app_utils = angular.module("app_utils", []);
 var app_department = angular.module("app_department", ["app_utils"]);
-var app = angular.module("app",["ngRoute","ngSanitize","app_department", "ui.bootstrap", "ui.grid", "nvd3", "gridshore.c3js.chart"]);
+var app = angular.module("app",["ngRoute","ngSanitize","app_department", "ui.bootstrap", "ui.grid", "nvd3"]);
 
 //For time being, the route setting is not required.
 /*app.config(['$routeProvider', function($routeProvider){
@@ -108,6 +108,37 @@ app.directive('bindPage', ['$compile', '$parse', '$sce', function ($compile, $pa
          }
      };  */
 }]);
+/*
+app.directive('c3PieChart1', function(){
+    
+    return {
+        require: '^c3chart',
+        restrict: 'E',        
+        replace: true,
+        link: pieLinker
+    };
+    
+    var pieLinker = function (scope, element, attrs, chartCtrl) {
+        var pie = {};
+        if (attrs.showLabel) {
+            pie.label = {"show": (attrs.showLabel === 'true')};
+        }
+        if (attrs.thresholdLabel) {
+            if (!pie.label) {
+                pie.label = {};
+            }
+            pie.label.threshold = parseFloat(attrs.thresholdLabel);
+        }
+        if (attrs.expand) {
+            pie.expand = (attrs.expand === 'true');
+        }
+        chartCtrl.addPie(pie);
+        if (attrs.labelFormatFunction) {
+            chartCtrl.addPieLabelFormatFunction(scope.labelFormatFunction());
+        }
+    };
+    
+});*/
 
 // Two-way bound treeView
 //树形结构 

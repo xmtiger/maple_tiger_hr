@@ -329,27 +329,42 @@ angular.module("app").controller('MainGridController', ['$scope', function ($sco
 //*******************************************************************************************************************************
 //C3.js based on D3.js
 
-angular.module("app").controller('C3PiePlotChartController', ['$scope','UtilService', function ($scope, UtilService) {
+angular.module("app").controller('C3PieChartController', ['$scope','UtilService', function ($scope, UtilService) {
 
-    $scope.piePoints = [{"data1": 70, "data2": 30, "data3": "100"}];
-    $scope.pieColumns = [{"id": "data1", "type": "pie"}, {"id": "data2", "type": "pie"}, {"id": "data3", "type": "pie"}];
-    //$scope.size = { height: 200, width: 200 };    
+    $scope.data = [["data1", 70], ["data2", 30], ["data3", 100]];
         
-    $scope.legendIsShown = true;
-    $scope.toggleLegend = function() {
-        if ($scope.legendIsShown) {
-            $scope.theChart.legend.hide();
-        } else {
-            $scope.theChart.legend.show();
-        }
-        $scope.legendIsShown= !$scope.legendIsShown;
-        $scope.theChart.flush();
-    };    
+    $scope.showPieChat= true;
+    
+    $scope.chart = null;
+     
+    $scope.showGraph = function() {
+        $scope.chart = c3.generate({
+            bindto: '#C3Piechart',
+            
+            size: { height : 300},
+            
+            data: {
+              columns: $scope.data  ,
+              type : 'pie'
+            },
+
+            pie: {
+                    label: {
+                        format: function (value, ratio, id) {
+                            return d3.format('$')(value);
+                    }
+                }
+            }        
+            
+        });
+            
+    };
       
     $scope.$on("C3PiePlotChart_DisplayInfo", function(event, obj_in){
         
     });
 }]);
+
 //************************************************************************************
 //D3 controller - angular-nvd3 with nvd3
 angular.module("app").controller('D3PieChartController', ['$scope','UtilService', function ($scope, UtilService) {
@@ -368,7 +383,7 @@ angular.module("app").controller('D3PieChartController', ['$scope','UtilService'
     $scope.options = {
         chart: {
             type: 'pieChart',
-            height: 350,
+            height: 300,
             x: function(d){return d.key;},
             y: function(d){return d.y;},
             showLabels: true,
