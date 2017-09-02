@@ -22,17 +22,16 @@
         <link rel="stylesheet" href="${context}/resources/vendors/ui-grid/css/ui-grid.min.css"/> 
             
         <!-- css for d3, nv.d3 and c3 shall be chosen one of them -->
-        <link rel="stylesheet" href="${context}/resources/vendors/D3/css/nv.d3.min.css"/>
-        
+               
         <link rel="stylesheet" href="${context}/resources/vendors/D3/css/c3.min.css"/>
         
-        <style type="text/css">
+        <!--style type="text/css">
             .xm-grid {
                 width: 500px;
                 height: 300px;
                 overflow: auto;
             }
-        </style>
+        </style-->
                
     </head>
     
@@ -83,7 +82,7 @@
                 <div id = "leftcolumn" class="col-md-2 col-lg2" >
 
 
-                    <div style="height:300px; min-height:0px; max-height: 75%; border: 1px solid black; overflow: auto;">
+                    <div style="height:350px; min-height:50%; max-height: 75%; border: 1px solid black; overflow: auto;">
                         <ul ztree id="xmTreeView" class="ztree" ng-model ="selectNode"></ul>  
                     </div>  
 
@@ -99,9 +98,12 @@
                         Search <input id="search_tree" type="text" /> 
                     </form>
 
-                    <br>
-                    <div flex uib-alert ng-class="'alert-' + (alert.type || 'warning')" >{{alert.msg}}</div>
-
+                    <hr>
+                    
+                    <div uib-alert ng-class="'alert-' + (alert.type || 'warning')" >{{alert.msg}}</div>
+                    
+                    <!--div class="clearfix"></div-->
+                    <hr>                    
                     <jsp:include page="./fragments/footer.jsp"/> 
                 </div>   
             
@@ -109,42 +111,47 @@
 
                     <div class="row">     
                         
-                        <div bind-page ng-bind-html="bindPage" class="col-md-6 col-lg-6" ></div>         
+                        <div bind-page ng-bind-html="bindPage" class="col-md-8 col-lg-8" ></div>         
                     
 
-                        <div  ng-controller="MainGridController" class="col-md-10 col-lg-10">
+                        <div  ng-controller="MainGridController" class="col-md-12 col-lg-12">
                             <div class="row">
-                                <div class="col-md-5 col-lg-5">
-                                    <div ui-grid="mainGridOne" class="xm-grid" ng-show="showMainGridOne" ></div>
+                                <div class="col-md-4 col-lg-4">
+                                    <!--Note: the following grid width shall be maximum 40% of the column width, 
+                                    this shall be improved-->
+                                    <div ui-grid="mainGridOne" style="width:400px; height:auto; overflow: auto;" ng-show="showMainGridOne" ></div>
                                 </div>
-                                <div class="col-md-6 col-lg-6">
-                                    <div ui-grid="mainGridTwo" class="xm-grid" ng-show="showMainGridTwo" ></div>
+                                <div class="col-md-8 col-lg-8">
+                                    <!--Note: the following grid width shall be maximum 40% of the column width, 
+                                    this shall be improved-->
+                                    <div ui-grid="mainGridTwo" style="width:600px; height:auto; overflow: auto;" ng-show="showMainGridTwo" ></div>
                                 </div>
                             </div>
                         </div>
 
                         <!-- D3 graph --> 
-                        <div>
+                        <div class="clearfix"></div>
+                        <hr>
+                        <!--div class="col-md-12 col-lg-12">
                         <br><br>
-                        </div>
+                        </div-->
                         
-                        <div class="col-md-9 col-lg-9">
+                        <div class="col-md-12 col-lg-12">
 
                                 <!--div class="col" ng-controller="D3PieChartController" ng-show="false">
                                     <nvd3 options="options" data="data" ></nvd3>
                                 </div--> 
 
                                 <div class="row">
-                                    <div id="C3PieChart" class="col-md-4 col-lg-4" ng-controller="C3PieChartController" ng-init="showGraph()" ng-show="showPieChat" ></div>
+                                    <div id="C3PieChart" class="col-md-6 col-lg-6" ng-controller="C3PieChartController" ng-init="showGraph()" ng-show="showPieChat" ></div>
 
 
-                                    <div id="C3BarChart" class="col-md-4 col-lg-4" ng-controller="C3BarChartController" ng-init="showGraph()" ng-show="showBarChat" ></div>
+                                    <div id="C3BarChart" class="col-md-6 col-lg-6" ng-controller="C3BarChartController" ng-init="showGraph()" ng-show="showBarChat" ></div>
                                 </div>
-
-
                         </div>
                         
                     </div>
+                    
                 </div>
                 
             </div>
@@ -171,9 +178,7 @@
         <script type="text/javascript" src="${context}/resources/vendors/ui-grid/js/ui-grid.min.js"></script>
         <!-- D3 series -->
         <script type="text/javascript" src="${context}/resources/vendors/D3/js/d3.min.js" charset="utf-8"></script>
-        <!-- nv.d3-->
-        <script type="text/javascript" src="${context}/resources/vendors/D3/js/nv.d3.min.js"></script>
-        <script type="text/javascript" src="${context}/resources/vendors/D3/js/angular-nvd3.min.js"></script>
+        
         <!-- c3 -->
         <script type="text/javascript" src="${context}/resources/vendors/D3/js/c3.min.js"></script>
         <!-- application js by using angularjs framework -->        

@@ -22,10 +22,42 @@ angular.module('app_utils').factory('UtilService', [ function(){
         //data filter
         defineGridColumns : defineGridColumns,
         gridDataFilter : gridDataFilter,
-        gridDataFilter_ForEmployee: gridDataFilter_ForEmployee
+        gridDataFilter_ForEmployee: gridDataFilter_ForEmployee,
+        getC3Data_Department2Emplyee: getC3Data_Department2Emplyee
     };
 
     return factory;
+    
+    //for C3 data 
+    function getC3Data_Department2Emplyee(keysFilter, values, data){
+        for(var i=0; i < values.length; i++){
+            var employee = values[i];
+            
+            var dept = employee[keysFilter[2]];
+            var find = false;
+            //search in the data array to find the total employee numbers of each 'department'
+            for(var j=0; j < data.length; j++){
+                //another array 
+                var tmpArray = data[j];
+                if(!Array.isArray(tmpArray))
+                    continue;
+                
+                if(tmpArray.length > 1){
+                    var tmpDept = tmpArray[0];
+                    
+                    if(tmpDept === dept){ 
+                        find = true;
+                        tmpArray[1]++;
+                    }
+                }              
+            }
+            // if the department is not found in the data[], add new department array
+            if(find === false){
+                var deptArray = [dept, 1];
+                data[data.length] = deptArray;
+            }            
+        }
+    }
     
     //data filter 
      function defineGridColumns(keysFilter, grid){
@@ -102,16 +134,17 @@ angular.module('app_utils').factory('UtilService', [ function(){
                         
             if(typeof values !== 'object' && Array.isArray(values) !== true)
                 return;
-
-            var tmpVar = {};
+            
             var find = false;
             
             var department = obj.data;
             if(department.hasOwnProperty('employees')){
                 for(var i = 0; i < department.employees.length; i++){
                     var employee = department.employees[i];
-                                
-                    for(var key in employee){
+                    
+                    var tmpVar = {};      
+                    
+                    for(var key in employee){              
                         
                         for(var j=0; j < keysFilter.length; j++){
                             if(key === keysFilter[j]){
@@ -131,20 +164,15 @@ angular.module('app_utils').factory('UtilService', [ function(){
                                     tmpVar[key] = date_str;
                                 }else{
                                     tmpVar[key] = employee[key]; 
-                                }                                                                                
-                                
-                            }
-                        }
-                    }
-                    
+                                }                        
+                            }                            
+                        }             
+                    }             
+                     
                     tmpVar['department'] = department.name;
-                    find = true;
+                    values.push(tmpVar);
                 }
-            }
-
-            if(find){
-                values.push(tmpVar);
-            }
+            }            
         }        
                         
         if(obj.hasOwnProperty('children')){

@@ -362,7 +362,7 @@ angular.module("app").controller('C3PieChartController', ['$scope','UtilService'
 
     $scope.data = [["data1", 70], ["data2", 30], ["data3", 100]];
         
-    $scope.showPieChat= true;
+    $scope.showPieChat= false;
     
     $scope.chart = null;
      
@@ -404,39 +404,11 @@ angular.module("app").controller('C3PieChartController', ['$scope','UtilService'
         var obj = obj_in.msg;
         
         var keysFilter = ['firstName', 'lastName', 'department'];
-        
-        var values = [];
-                
-        UtilService.gridDataFilter_ForEmployee(keysFilter, obj, values); 
+        var values = [];                
+        UtilService.gridDataFilter_ForEmployee(keysFilter, obj, values);
         
         var data = [];
-        for(var i=0; i < values.length; i++){
-            var employee = values[i];
-            
-            var dept = employee[keysFilter[2]];
-            var find = false;
-            //search in the data array to find the total employee numbers of each 'department'
-            for(var j=0; j < data.length; j++){
-                //another array 
-                var tmpArray = data[j];
-                if(!Array.isArray(tmpArray))
-                    continue;
-                
-                if(tmpArray.length === 1){
-                    var tmpDept = tmpArray[0];
-                    
-                    if(tmpDept === dept){ 
-                        find = true;
-                        tmpArray[1]++;
-                    }
-                }              
-            }
-            // if the department is not found in the data[], add new department array
-            if(find === false){
-                var deptArray = [dept, 1];
-                data[data.length] = deptArray;
-            }            
-        }
+        UtilService.getC3Data_Department2Emplyee(keysFilter,values,data);
         //console.log(data);
         $scope.data = data;
         $scope.showPieChat = true;
@@ -448,7 +420,7 @@ angular.module("app").controller('C3BarChartController', ['$scope','UtilService'
 
     $scope.data = [["data1", 70], ["data2", 30], ["data3", 100]];
         
-    $scope.showBarChat= true;
+    $scope.showBarChat= false;
     
     $scope.chart = null;
      
@@ -463,14 +435,15 @@ angular.module("app").controller('C3BarChartController', ['$scope','UtilService'
               type : 'bar'
             },
             
-            axis: {
+            /*axis: {
                 
                 y: {
                     show: true,
-                    min : 1                      
+                    min : 1
+                    
                     //padding: 0              
                 }
-            },
+            },*/
             
             bar: {
                 zerobased: true
@@ -502,38 +475,15 @@ angular.module("app").controller('C3BarChartController', ['$scope','UtilService'
         UtilService.gridDataFilter_ForEmployee(keysFilter, obj, values); 
         
         var data = [];
-        for(var i=0; i < values.length; i++){
-            var employee = values[i];
-            
-            var dept = employee[keysFilter[2]];
-            var find = false;
-            //search in the data array to find the total employee numbers of each 'department'
-            for(var j=0; j < data.length; j++){
-                //another array 
-                var tmpArray = data[j];
-                if(!Array.isArray(tmpArray))
-                    continue;
-                
-                if(tmpArray.length === 1){
-                    var tmpDept = tmpArray[0];
-                    
-                    if(tmpDept === dept){ 
-                        find = true;
-                        tmpArray[1]++;
-                    }
-                }              
-            }
-            // if the department is not found in the data[], add new department array
-            if(find === false){
-                var deptArray = [dept, 1];
-                data[data.length] = deptArray;
-            }            
-        }
+        UtilService.getC3Data_Department2Emplyee(keysFilter,values,data);
         //console.log(data);
         $scope.data = data;
-        $scope.showBarChat = true;
+        
         $scope.showGraph();
-    });
+        
+        $scope.showBarChat = true;
+    });    
+    
 }]);
 
 //************************************************************************************
