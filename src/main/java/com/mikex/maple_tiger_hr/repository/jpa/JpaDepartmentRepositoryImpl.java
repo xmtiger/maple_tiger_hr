@@ -8,6 +8,7 @@ package com.mikex.maple_tiger_hr.repository.jpa;
 import com.mikex.maple_tiger_hr.model.Department;
 import com.mikex.maple_tiger_hr.repository.DepartmentRepository;
 import java.util.Collection;
+import java.util.Date;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -39,6 +40,39 @@ public class JpaDepartmentRepositoryImpl implements DepartmentRepository{
     public Collection<Department> findDepartmentByName(String name) throws DataAccessException{
         Query query = this.em.createQuery("SELECT dept FROM Department dept left join fetch dept.employees WHERE dept.name = :name");
         query.setParameter("name", name);
+        return query.getResultList();
+    }
+    
+    @Override
+    public Collection<Department> findDepartmentByName_Address_BeginTime(String name, String address, Date beginTime) throws DataAccessException{
+        //Note: the following sql sentene does not inlcude 'left join fetch dept.employees', but the employee still was extracted
+        String str_query = "SELECT dept FROM Department dept WHERE dept.name = :name";
+        
+        //Query query = this.em.createQuery("SELECT dept FROM Department dept WHERE dept.name = :name "
+          //      + "AND dept.address = :address AND dept.begin_time = :beginTime");
+        
+        //query.setParameter("name", name).setParameter("address", address).setParameter("beginTime", beginTime);
+        
+        if(!address.isEmpty()){
+            str_query = str_query + " AND dept.address = :address";
+        }
+        
+        if(beginTime != null){
+            str_query = str_query + " AND dept.begin_time = :beginTime";
+        }
+        
+        Query query = this.em.createQuery(str_query);
+        
+        if(!name.isEmpty()){            
+            query.setParameter("name", name);
+        }
+        if(!address.isEmpty()){
+            query.setParameter("address", address);
+        }
+        if(beginTime != null){
+            query.setParameter("beginTime", beginTime);
+        }        
+        
         return query.getResultList();
     }
 

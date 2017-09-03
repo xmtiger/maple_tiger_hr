@@ -240,6 +240,7 @@
                     };
                     
                     //-----------------------------------------------------------------------------------------
+                    // This is to get node information from the zTree
                     $scope.departmentFormSubmit = function(){
                         console.log("departmentFormController-departmentController-addDepartment()");     
                                                 
@@ -253,7 +254,7 @@
                         }           
 
                     };
-                    
+                    // This function is to send form data to the server for update or save a new department
                     $scope.$on("RootCtrl_SendCurNodeInfo", function(event, nodeInfo){                        
                         
                         //perform the database actions here.
@@ -264,8 +265,8 @@
                         
                         $scope.submit++;
                         
-                        var jsonData = getJsonDataFromDeptForm();   
-
+                        var jsonData = getJsonDataFromDeptForm();                           
+                        console.log(jsonData);
                         departmentService.createDepartment($scope, $location, jsonData, nodeInfo).then(
                             function(data){
                                 $scope.$emit("oneDepartmentCreated", data);
@@ -273,7 +274,8 @@
                             },
                             function(errResponse){
                                 console.error("Error while create one department");
-                            }  );
+                            }  
+                        );
                         
                     });
                     

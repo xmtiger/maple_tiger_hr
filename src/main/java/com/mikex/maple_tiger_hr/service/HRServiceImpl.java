@@ -12,6 +12,7 @@ import com.mikex.maple_tiger_hr.repository.EmployeeRepository;
 import com.mikex.maple_tiger_hr.util.TreeNode;
 import java.text.SimpleDateFormat;
 import java.util.Collection;
+import java.util.Date;
 import java.util.Iterator;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -89,6 +90,12 @@ public class HRServiceImpl implements HRService {
     }
     
     @Override
+    @Transactional(readOnly = true)
+    public Collection<Department> findDepartmentByName_Address_BeginTime(String name, String address, Date beginTime) throws DataAccessException{
+        return departmentRepository.findDepartmentByName_Address_BeginTime(name, address, beginTime);
+    }           
+    
+    @Override
     @Transactional
     public void saveDepartment(Department department) throws DataAccessException{
         departmentRepository.save(department);
@@ -115,13 +122,13 @@ public class HRServiceImpl implements HRService {
             tree.addNode1(curTreeNode);
         }       
         
-        if(tree.getChildren().size() == 1)
+        if(tree.getChildren().size() == 1 && tree.getData() == null)    // if the root node is null, use the first child node
             return tree.getChildren().get(0);
         else
             return tree;
     }
     
-    public TreeNode getTreeFromDepartmentsWithEmployees(){
+    /*public TreeNode getTreeFromDepartmentsWithEmployees(){
         TreeNode<Department> tree = new TreeNode<>();
         
         Collection<Department> departments = this.departmentRepository.findAllDepartments();
@@ -140,5 +147,5 @@ public class HRServiceImpl implements HRService {
         } 
         
         return tree;
-    }
+    }*/
 }

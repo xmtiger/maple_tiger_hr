@@ -147,12 +147,14 @@ angular.module('app_utils').factory('UtilService', [ function(){
                     for(var key in employee){              
                         
                         for(var j=0; j < keysFilter.length; j++){
-                            if(key === keysFilter[j]){
+                            if(key === keysFilter[j]){                  
+                                
                                 //note: the employee birthday is @Temporal(TemporalType.TIMESTAMP)
                                 if(key === 'birth_date'){
-                                    // The conversion of the date
+                                    // The conversion of the date                                    
                                     var date = new Date(parseInt(employee[key]));
-                                    var month = date.getUTCMonth();
+                                    //UTC counts january as 0, november as 11, so the UTCMonth shall be added with 1
+                                    var month = date.getUTCMonth() + 1;                                
                                     var day = date.getUTCDate();
                                     if(month < 10)
                                         month = '0' + month;
@@ -164,7 +166,7 @@ angular.module('app_utils').factory('UtilService', [ function(){
                                     tmpVar[key] = date_str;
                                 }else{
                                     tmpVar[key] = employee[key]; 
-                                }                        
+                                }                       
                             }                            
                         }             
                     }             

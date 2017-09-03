@@ -48,11 +48,30 @@ public class AbstractHRServiceTests {
     }
     
     @Test
+    public void shouldFindDepartmentByName_Address_BeginTime(){
+        String name = "engineering";
+        //String address = "233 willibrord St.";
+        String address = "";
+        Date beginTime = null;
+        
+        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        try {
+            beginTime = dateFormat.parse("1990-03-01");
+            Date tmpTime = null;
+            Collection<Department> departments = this.hrService.findDepartmentByName_Address_BeginTime(name, address, tmpTime);
+                 
+            assertThat(departments.size()).isEqualTo(1);
+            
+        } catch (ParseException ex) {
+            Logger.getLogger(AbstractHRServiceTests.class.getName()).log(Level.SEVERE, null, ex);
+        }       
+    }
+    
+    @Test
     public void shouldFindAllDepartments(){
         Collection<Department> departments = this.hrService.findAllDepartments();
         assertThat(departments.size()).isGreaterThan(2);
-    }
-    
+    }    
     
     @Test
     @Transactional

@@ -5,6 +5,7 @@
  */
 package com.mikex.maple_tiger_hr.model;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -43,11 +44,13 @@ public class Department extends NamedEntity implements Comparable<Department>, F
     @Column(name = "begin_time")
     @Temporal(TemporalType.DATE)
     @DateTimeFormat(pattern = "yyyy-MM-dd")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     private Date begin_time;
     
     @Column(name = "end_time")
     @Temporal(TemporalType.DATE)
     @DateTimeFormat(pattern = "yyyy-MM-dd")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     @JsonIgnore         //to avoid json version error from ajax to controller, when coversion with json data type.
     private Date end_time;
     

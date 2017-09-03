@@ -11,6 +11,7 @@ import com.mikex.maple_tiger_hr.util.TreeNode;
 import org.springframework.dao.DataAccessException;
 
 import java.util.Collection;
+import java.util.Date;
 
 /**
  *
@@ -28,6 +29,8 @@ public interface HRService {
     
     Collection<Department> findDepartmentByName(String name) throws DataAccessException;
     
+    Collection<Department> findDepartmentByName_Address_BeginTime(String name, String address, Date beginTime) throws DataAccessException;
+        
     void saveDepartment(Department department) throws DataAccessException;
     
     Collection<Department> findAllDepartments() throws DataAccessException;

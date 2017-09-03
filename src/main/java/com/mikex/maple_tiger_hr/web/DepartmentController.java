@@ -10,6 +10,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mikex.maple_tiger_hr.model.Department;
 import com.mikex.maple_tiger_hr.model.DepartmentJsonResponse;
 import com.mikex.maple_tiger_hr.service.HRService;
+import com.mikex.maple_tiger_hr.util.GeneralUtils;
 import com.mikex.maple_tiger_hr.util.TreeNode;
 import com.mikex.maple_tiger_hr.validator.DepartmentFormValidator;
 
@@ -17,10 +18,16 @@ import java.io.IOException;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.stream.Collectors;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.TimeZone;
+
 import javax.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -66,7 +73,7 @@ public class DepartmentController {
     }*/
     
     @RequestMapping(value = "department/new", method = RequestMethod.GET)
-    public String initCreationForm(Map<String, Object> model){
+    public String getDepartmentCreationForm(Map<String, Object> model){
         
         logger.debug("initCreationForm");
         
@@ -76,7 +83,7 @@ public class DepartmentController {
     }   
         
     @RequestMapping(value = "department/create/Department/{curId}/Department/{fatherId}", method=RequestMethod.POST, produces = { MediaType.APPLICATION_JSON_VALUE})    
-    public @ResponseBody DepartmentJsonResponse processCreationForm(@PathVariable("curId") int curId,
+    public @ResponseBody DepartmentJsonResponse createOrUpdate_Department(@PathVariable("curId") int curId,
             @PathVariable("fatherId") int fatherId, @RequestBody @Valid Department dept, BindingResult bindingResult){
         
         DepartmentJsonResponse response = new DepartmentJsonResponse();     
@@ -96,41 +103,59 @@ public class DepartmentController {
             
         } 
         
+        //Conversion for the time to UTC time
+        Date beginTime_in = dept.getBegin_time();
+        Date beginTime = GeneralUtils.getTime_UTC(beginTime_in);
+        dept.setBegin_time(beginTime);
+        
+        //For insert new department (curId < 0), check if any clash happens with the existing departments
+        //validate if a same department already exists by using the condition of "name + address + begin_time"
+        if(curId < 0){  
+            String name = dept.getName();
+            String address = dept.getAddress();            
+            
+            Collection<Department> departments = this.hrService.findDepartmentByName_Address_BeginTime(name, address, beginTime);
+            if(departments.size() > 0){
+                Map<String, String> errors = new HashMap<>();
+                errors.put(name, "The Department already exists");
+                
+                response.setValidated(false);
+                response.setErrorMessages(errors);
+            
+                return response;
+            }
+        }
+        
         //If vadaltion is passed, firstly, search father department with given fatherDeptId
         //If the fatherDeptId > 0, then find fatherDept
         if(fatherId > 0){
             Department fatherDept = this.hrService.findDepartmentById(fatherId);
             
             dept.setFather(fatherDept);
+        }  
+        
+        if(curId > 0){
+            //doing update action
+            dept.setId(curId);
+            this.hrService.saveDepartment(dept);
             
-            if(curId > 0){
-                //doing update action
-                dept.setId(curId);
-                
-                this.hrService.saveDepartment(dept);
-                
-            }else{
-                //doing insertion action
-                //check if the name alreay exists
-                
-                this.hrService.saveDepartment(dept);
-                
-            }
-            
-            int deptId = dept.getId();
+        }else{
+            //doing insertion action            
+            this.hrService.saveDepartment(dept);
+        }
 
-            logger.debug("deptId = " + deptId + "===============================================");
+        int deptId = dept.getId();
 
-            response.setValidated(true);
-            response.setDepartment(dept);
-            
-        } 
+        logger.debug("deptId = " + deptId + "===============================================");
+
+        response.setValidated(true);
+        response.setDepartment(dept);
         
         return response;              
     }
     
     @RequestMapping(value = "department/id/{id}", method = RequestMethod.GET)
-    public @ResponseBody Department departmentCreateOrUpdate(@PathVariable String id){
+    public @ResponseBody Department findDepartmentById(@PathVariable String id){
         
         Department dept = new Department();
         int dep_id = Integer.parseInt(id);
@@ -142,7 +167,7 @@ public class DepartmentController {
     }
     
     @RequestMapping(value = "department/all", method = RequestMethod.POST)
-    public @ResponseBody TreeNode<Department> showAllDepartments() throws ParseException{
+    public @ResponseBody TreeNode<Department> getAllDepartments() throws ParseException{
         
         TreeNode<Department> departments = this.hrService.getTreeFromDepartments();
         return departments;

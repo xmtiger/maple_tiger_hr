@@ -8,6 +8,7 @@ package com.mikex.maple_tiger_hr.repository.jdbc;
 import com.mikex.maple_tiger_hr.model.Department;
 import com.mikex.maple_tiger_hr.repository.DepartmentRepository;
 import java.util.Collection;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -100,4 +101,8 @@ public class JdbcDepartmentRepositoryImpl implements DepartmentRepository{
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
     
+    @Override
+    public Collection<Department> findDepartmentByName_Address_BeginTime(String name, String address, Date beginTime) throws DataAccessException{
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
 }
