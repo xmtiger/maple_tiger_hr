@@ -9,22 +9,49 @@
 
 angular.module("app").controller("rootController", ["$scope", "$rootScope","departmentService","$location",
     function($scope, $rootScope, departmentService, $location){ 
-        
+     
+    //The following $scope.items is for the dropdown button, which gives dynamically selection choice.
+    $scope.items = [
+        {id: '', name:'The first choice!'}        
+    ];
+    
     $scope.alert = { type: 'success', msg: 'Welcome using maple_tiger system'};
        
-    $scope.addAlert = function(type, msg) {
-        
+    $scope.addAlert = function(type, msg) {        
         $scope.alert.type = type || 'success';
         $scope.alert.msg = msg || 'Wecome using maple_tiger system';
     };
+    
+    $scope.closeAlert = function(){
+        $scope.alert = {};
+    };
    
     $scope.bindPage = ""; //This is the inital welcome text.
+    //$scope.addDepartmentInProcess = false;  //to avoid multiple click add button  
+    //------------------------------------------------------------------------
+    //This function is to add either 'Department' or 'Employee' or others
+    $scope.setChoiceIndex_AddButton = function($index){        
+        //console.log($scope.items[$index].id);
+        var choice = $scope.items[$index].id;
+        if(choice === 'Department'){
+            $scope.$emit("addOneDepartment");
+        }else if(choice === 'Employee'){
+            
+        }
+    };
+    
+    $scope.$on("RefuseAddingDepartment", function(event, msg){
+        $scope.addAlert("warning", "Only Allow One Creation Prcess at One Time!");
+    });
                     
     $scope.$on("DisplayAllDepartments", function(event, msg){
         console.log("received displayAllDepartments message", msg);
         //use department service to deal with database transactions
         departmentService.fetchAllDepartments($location).then(
             function(data){
+                //dynamically add dropdown menu for the add button at the left column underneath of the tree view.
+                $scope.items[0] = { id: 'Department', name:'Add Department'};
+                $scope.items[1] = { id: 'Employee', name:'Add Employee'};
                 
                 $rootScope.$broadcast("zTree_displayAllDepartments", data);
                 $rootScope.$broadcast("MainGridOne_DisplayInfo", {type: 'Department', msg: data});
@@ -40,12 +67,19 @@ angular.module("app").controller("rootController", ["$scope", "$rootScope","depa
     });
     
     //--------------------------------------------------------
-    // The following functios are for adding one department
+    // The following functions are for adding one department
     $scope.$on("addOneDepartment", function(event, msg){
         
         console.log("received addOneDepartment request");
-        
         $rootScope.$broadcast("zTree_addOneDepartment");
+        /*if($scope.addDepartmentInProcess === false){
+            // this is the first time to access in
+            $scope.addDepartmentInProcess = true;
+            
+        }else{
+            $scope.addAlert("warning", "Only Adding One Department at One Time");
+        }*/
+        
     });
     
     $scope.$on("zTree_noNodeSelected", function(event, msg){
@@ -82,6 +116,7 @@ angular.module("app").controller("rootController", ["$scope", "$rootScope","depa
             function(data){
                 //$scope.$emit("updateBindPageView", response.data);
                 $rootScope.$broadcast("DirectiveToUpdateBindPageView", data);
+                
             },
             function(errResponse){
                 console.error("Error while fetching all departments");
@@ -113,7 +148,7 @@ angular.module("app").controller("rootController", ["$scope", "$rootScope","depa
         $rootScope.$broadcast("RootCtrlMsg_OneDepartmentCreated", data);
         
         //update the bindPgae by sending the message to the registered directive
-        var str = "The Department was successfully Created";
+        var str = "<h4 style='color:green'>The Department was successfully Created</h4> <hr>";
         $rootScope.$broadcast("DirectiveToUpdateBindPageView", str);
         //$scope.bindPage = $sce.trustAsHtml("The Department was successfully Created");
         

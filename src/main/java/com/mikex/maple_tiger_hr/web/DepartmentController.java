@@ -117,7 +117,7 @@ public class DepartmentController {
             Collection<Department> departments = this.hrService.findDepartmentByName_Address_BeginTime(name, address, beginTime);
             if(departments.size() > 0){
                 Map<String, String> errors = new HashMap<>();
-                errors.put(name, "The Department already exists");
+                errors.put("name", "The Department already exists");
                 
                 response.setValidated(false);
                 response.setErrorMessages(errors);

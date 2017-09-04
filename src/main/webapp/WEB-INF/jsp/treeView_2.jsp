@@ -72,23 +72,30 @@
 
             </div>
                 
-        </nav>
-    
-    
+        </nav>   
          
         <div id="maincontainer" class="container-fluid" >
             <div class="row">
                 <!-- 3 setup a container element -->
                 <div id = "leftcolumn" class="col-md-2 col-lg2" >
 
-
                     <div style="height:350px; min-height:50%; max-height: 75%; border: 1px solid black; overflow: auto;">
                         <ul ztree id="xmTreeView" class="ztree" ng-model ="selectNode"></ul>  
                     </div>  
 
                     <br>
-                    <div class="btn-group">
-                        <button id="addButton" type="button" class="btn btn-primary" >Add</button>
+                    <div class="btn-group" uib-dropdown>
+                        <!--button id="addButton" type="button" class="btn btn-primary" ng-click="">Add</button-->
+                        <!-- The add button shall have multiple dropdown choice to let client choose -->
+                        <button id="single-button" type="button" class="btn btn-primary" uib-dropdown-toggle>
+                          Add <span class="caret"></span>
+                        </button>
+                        <ul class="dropdown-menu" uib-dropdown-menu aria-labelledby="simple-dropdown">
+                            <li ng-repeat="choice in items" ng-click="setChoiceIndex_AddButton($index);$parent.open =!$parent.open">
+                                <a href="#">{{choice.name}}</a>
+                            </li>
+                        </ul>
+                          
                         <button id="editButton" type="button" class="btn btn-primary">Edit</button>
                         <button id="removeButton" type="button" class="btn btn-primary">Remove</button>
                     </div>
@@ -100,7 +107,7 @@
 
                     <hr>
                     
-                    <div uib-alert ng-class="'alert-' + (alert.type || 'warning')" >{{alert.msg}}</div>
+                    <div uib-alert ng-class="'alert-' + (alert.type || 'warning')" close="closeAlert()">{{alert.msg}}</div>
                     
                     <!--div class="clearfix"></div-->
                     <hr>                    
@@ -111,7 +118,7 @@
 
                     <div class="row">     
                         
-                        <div bind-page ng-bind-html="bindPage" class="col-md-8 col-lg-8" ></div>         
+                        <div bind-page ng-bind-html="bindPage" class="col-md-8 col-lg-8" ></div>        
                     
 
                         <div  ng-controller="MainGridController" class="col-md-12 col-lg-12">

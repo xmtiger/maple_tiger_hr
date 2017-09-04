@@ -209,6 +209,18 @@
                         $scope.curNodeId = -1;
                         $scope.curNodeType = "";
                     };
+                    
+                    /*$scope.alert = { type: 'success', msg: 'Welcome using maple_tiger system'};
+       
+                    $scope.addAlert = function(type, msg) {        
+                        $scope.alert.type = type || 'success';
+                        $scope.alert.msg = msg || 'Wecome using maple_tiger system';
+                    };
+
+                    $scope.closeAlert = function(){
+                        $scope.alert = {};
+                    };*/
+    
                     //here the function validateDepartmentForm is jquery function, which is not recommended.
                     //but this page is end page, so it is flexible to use jquery--------------------------------------
                     function validateDepartmentForm(){
@@ -269,8 +281,22 @@
                         console.log(jsonData);
                         departmentService.createDepartment($scope, $location, jsonData, nodeInfo).then(
                             function(data){
-                                $scope.$emit("oneDepartmentCreated", data);
-                                clearContent();
+                                if(data.hasOwnProperty('validated')){
+                                    if(data.validated === true){
+                                        $scope.$emit("oneDepartmentCreated", data);
+                                        clearContent();
+                                    }else{
+                                        console.log("Get Error Messages from the server");
+                                        console.log(data);
+                                        //Set error messages
+                                        $.each(data.errorMessages,function(key,value){
+                                            $('input[name='+key+']').after('<span class="error">'+value+'</span>');
+                                        });
+                                        
+                                        //$scope.formData.name = "";
+                                        //$scope.addAlert("danger", "The Department already exists");
+                                    }
+                                }                          
                             },
                             function(errResponse){
                                 console.error("Error while create one department");
@@ -284,6 +310,14 @@
                     $scope.nameChange = function(){
                         
                         $scope.$emit("nameChangedToBeSent", $scope.formData.name);
+                        
+                        //reset submit as zero
+                        if($scope.submit > 0){
+                            $scope.submit = 0;
+                            //reset the error messages                            
+                            $("#dept_name").nextAll().remove();
+                        };
+                        
                     };
                     
                     //this function is not requried.
@@ -387,7 +421,9 @@
          </form>
         <br>       
         <!-- Result Container  -->
-        <br>
+        <!--div uib-alert ng-class="'alert-' + (alert.type || 'warning')" close="closeAlert()">{{alert.msg}}</div-->
+
+        <!--br>
         <div id="resultContainer_click" style="display: none;">
          <hr/>
          <h4 style="color: green;">Submit function Response and JSON Response From Server</h4>
@@ -402,7 +438,7 @@
           <pre style="color: green;">
             <code></code>
            </pre>
-        </div>
+        </div-->
         
         
         

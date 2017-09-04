@@ -5,8 +5,6 @@
  */
 package com.mikex.maple_tiger_hr.util;
 
-import com.mikex.maple_tiger_hr.model.Department;
-import com.mikex.maple_tiger_hr.web.DepartmentController;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -19,8 +17,7 @@ import java.util.logging.Level;
  */
 public class GeneralUtils {
     
-    public static Date getTime_UTC(Date date_in){
-                
+    public static Date getTime_UTC(Date date_in){                
         //convert the date to UTC date  
         SimpleDateFormat dateFormatUTC = new SimpleDateFormat("yyyy-MMM-dd");
         dateFormatUTC.setTimeZone(TimeZone.getTimeZone("UTC"));

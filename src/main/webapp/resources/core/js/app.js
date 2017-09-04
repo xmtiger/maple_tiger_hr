@@ -80,6 +80,8 @@ app.directive('bindPage', ['$compile', '$parse', '$sce', function ($compile, $pa
                 
                 element.html(data);
                 $compile(element.contents())(scope);
+                
+                //scope.$emit("DirectveFinishedTheUpdate");
                
             });
         }    
@@ -203,7 +205,11 @@ app.directive('ztree',function(){
             
             $scope.$on("zTree_addOneDepartment",function(event,data){ 
                 console.log("zTree received message of zTree_addOneDepartment");
-                
+                //just if one node was already created. if yes, then give up add department process
+                if(nodeUId_toBeCreatedOrUpdated !== ""){
+                    $scope.$emit("RefuseAddingDepartment");
+                    return;
+                }
                 //judge if one node is selected, 
                 //then send the selected node information to the root controller
                  
