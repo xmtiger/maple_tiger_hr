@@ -15,6 +15,7 @@ angular.module("app").controller("rootController", ["$scope", "$rootScope","depa
         {id: '', name:'The first choice!'}        
     ];
     
+    //The following 'alert' is to show all the messages including warnings or success messages.
     $scope.alert = { type: 'success', msg: 'Welcome using maple_tiger system'};
        
     $scope.addAlert = function(type, msg) {        
@@ -27,6 +28,14 @@ angular.module("app").controller("rootController", ["$scope", "$rootScope","depa
     };
    
     $scope.bindPage = ""; //This is the inital welcome text.
+    //---------------------------------------------------------------------------------
+    //alert to receive message
+    $scope.$on("Alert_Msg", function(event, message){
+        if(typeof message === 'object' && message.hasOwnProperty('type') && message.hasOwnProperty('msg')){
+            $scope.addAlert(message.type, message.msg);
+        }
+    });
+    
     //$scope.addDepartmentInProcess = false;  //to avoid multiple click add button  
     //------------------------------------------------------------------------
     //This function is to add either 'Department' or 'Employee' or others
@@ -40,9 +49,63 @@ angular.module("app").controller("rootController", ["$scope", "$rootScope","depa
         }
     };
     
-    $scope.$on("RefuseAddingDepartment", function(event, msg){
+    /*$scope.$on("RefuseAddingDepartment", function(event, msg){
         $scope.addAlert("warning", "Only Allow One Creation Prcess at One Time!");
+    });*/
+    
+    //---------------------------------------------------------------------
+    $scope.edit_button = function(){
+        $scope.$emit("edit_item");
+    };
+    
+    $scope.$on("edit_item", function(event, msg){
+        
+        $rootScope.$broadcast("zTree_editItem");
     });
+    
+    $scope.$on("ZTreeNodeSelected_ToBeEdited", function(event, node_in){
+        //send request to server to get the update html page
+        if(typeof node_in === 'object' && node_in.hasOwnProperty('dataType')){
+            if(node_in.dataType === 'Department'){
+                departmentService.getSaveOrUpdateDepartmentPage($location).then(
+                    function(data){
+                        var message = {obj: node_in, pageContent: data };
+                        $rootScope.$broadcast("DirectiveToUpdateBindPageView", message);
+
+                    },
+                    function(errResponse){
+                        console.error("Error while fetching all departments");
+                    }   
+                );
+            }else if(node_in.dataType === 'Employee'){
+                
+            }
+        }        
+        
+    });
+    
+    $scope.$on("DirectveFinishedTheUpdate", function(event, msg){
+        if(typeof msg === 'object' && msg.hasOwnProperty('obj')){
+            if(msg.obj !== null){
+                //fill the form with obj
+                if(msg.obj.dataType === 'Department'){
+                    $rootScope.$broadcast("DepartmentPageFormToBeFilled", msg.obj);
+                }
+            }
+        }
+    });
+    //----------------------------------------------------------------------------------
+    $scope.delete_button = function(){
+        $scope.$emit("delete_item");
+    };
+    
+    $scope.$on("delete_item", function(event, msg){
+        
+        $rootScope.$broadcast("zTree_deleteItem");
+    });
+    
+    
+    //---------------------------------------------------------------------
                     
     $scope.$on("DisplayAllDepartments", function(event, msg){
         console.log("received displayAllDepartments message", msg);
@@ -72,20 +135,13 @@ angular.module("app").controller("rootController", ["$scope", "$rootScope","depa
         
         console.log("received addOneDepartment request");
         $rootScope.$broadcast("zTree_addOneDepartment");
-        /*if($scope.addDepartmentInProcess === false){
-            // this is the first time to access in
-            $scope.addDepartmentInProcess = true;
-            
-        }else{
-            $scope.addAlert("warning", "Only Adding One Department at One Time");
-        }*/
         
     });
     
-    $scope.$on("zTree_noNodeSelected", function(event, msg){
+    /*$scope.$on("zTree_noNodeSelected", function(event, msg){
         //alert user that no tree node is selected.
         $scope.addAlert("danger", "No node selected");
-    });
+    });*/
             
     //-----------------------------------------------------------------
     //The message for the communication for update the tree node name
@@ -105,13 +161,13 @@ angular.module("app").controller("rootController", ["$scope", "$rootScope","depa
         
         if(nodeId === ""){
             //console.log("no node selected");            
-            $scope.addAlert("danger", "No node selected");
+            $scope.addAlert("warning", "No node is selected, please select one node!");
             return;
         }
             
         console.log("$location.path(/department/new)");
         //start departmentForm.jsp to let user input new department information                                
-        departmentService.setURI($location.path());
+        //departmentService.setURI($location.path());
         departmentService.getSaveOrUpdateDepartmentPage($location).then(
             function(data){
                 //$scope.$emit("updateBindPageView", response.data);

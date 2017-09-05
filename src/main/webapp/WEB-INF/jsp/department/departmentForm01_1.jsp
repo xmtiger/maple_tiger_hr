@@ -187,6 +187,8 @@
             // The dynamic registration of the controller must be done before the definition of the indicated ng-controller
             angular.module("app").controller("DepartmentFormController", ["$scope","departmentService", "$location",function($scope, departmentService, $location){
                     
+                    $scope.formTitle = 'DEPARTMENT CREATION FORM';
+                    $scope.button = 'Create';
                     //create a blank object to hold the form information, and $scope will allow this to pass between controller and view
                     $scope.formData = {};
                     
@@ -326,6 +328,19 @@
                         //console.log("received msg of rootMsg_zTreeNodeNameUpdated");
                         //$scope.formData.name = data;
                     });
+                    
+                    $scope.$on("DepartmentPageFormToBeFilled", function(event, obj){
+                        
+                        if(typeof obj === 'object' && obj.hasOwnProperty('data') ){
+                            $scope.formData.name = obj.data.name;
+                            $scope.formData.address = obj.data.address;
+                            $scope.formData.beginTime = obj.data.begin_time;
+                            
+                            $scope.formTitle = 'DEPARTMENT UPDATE FORM';
+                            $scope.button = 'Update';
+                        }
+                        
+                    });
                             
                 }]);
             
@@ -340,7 +355,7 @@
             <fieldset>
 
                 <!-- Form Name -->
-                <legend>DEPARTMENT FORM</legend>
+                <legend>{{formTitle}}</legend>
 
                 <!-- Text input-->
 
@@ -410,7 +425,7 @@
                 <div class="form-group">
                   <label class="col-md-4 control-label"></label>
                   <div class="col-md-4">
-                      <button id="sendButton" class="btn btn-warning" >Send <span class="glyphicon glyphicon-send"></span></button>
+                      <button id="sendButton" class="btn btn-warning" >{{button}}<span class="glyphicon glyphicon-send"></span></button>
                   </div>
                 </div>               
                 

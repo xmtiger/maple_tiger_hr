@@ -321,6 +321,8 @@ angular.module('app_utils').factory('UtilService', [ function(){
         
         this.UID = "";  //unique id for get node in the tree, and the formate is "dataType/id"
         
+        this.data = {}; //save the data for the node
+        
         this.setUID = function(type, name, id){
             this.UID = type + "/" + name + "/" + id;
         };
@@ -381,10 +383,12 @@ angular.module('app_utils').factory('UtilService', [ function(){
             var icon_user = path + "/resources/vendors/zTree/css/zTreeStyle/img/diy/user.png";
             
             if(objFromServer.data !== null){
-                this.id = objFromServer.data.id;
+                this.id = objFromServer.data.id;                
+                
                 if(objFromServer.dataType === typeOfBranchOfTree){
                     this.name = objFromServer.data.name;
                     this.dataType = objFromServer.dataType;      
+                    this.data = objFromServer.data;
                     //this.icon = path + "/resources/vendors/zTree/css/zTreeStyle/img/diy/team.png";                 
                     this.setUID(this.datType, this.name, this.id);
                     
@@ -415,6 +419,8 @@ angular.module('app_utils').factory('UtilService', [ function(){
                             this.children[j+i].name = objFromServer.data.employees[j].firstName + " " + objFromServer.data.employees[j].lastName;
                             //note: employee does not have type due to field members of Department
                             this.children[j+i].dataType = typeOfLeafOfTree;   
+                            
+                            this.children[j+i].data = objFromServer.data.employees[j];
                           
                             this.children[j+i].icon = icon_user;
                             

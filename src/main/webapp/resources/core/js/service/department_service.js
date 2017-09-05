@@ -77,8 +77,6 @@ angular.module("app").factory("departmentService", ["$http", "$q", function($htt
     
     function createDepartment($scope, $location, department, nodeInfo){
         
-        uri_path = $location.path();
-        
         var curNodeId = nodeInfo.id;
         var curNodeType = nodeInfo.type;       
         var curFatherId = nodeInfo.fatherId;
@@ -92,7 +90,7 @@ angular.module("app").factory("departmentService", ["$http", "$q", function($htt
         }
         
         var deferred = $q.defer();
-        var request = this.uri_path + REST_SERVICE_URI + "create" ;
+        var request =  $location.path() + REST_SERVICE_URI + "create" ;
         request = request + "/" + curNodeType + "/" + curNodeId;        
         request = request + "/" + curFatherType + "/" + curFatherId;
                 

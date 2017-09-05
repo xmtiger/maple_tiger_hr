@@ -77,11 +77,19 @@ app.directive('bindPage', ['$compile', '$parse', '$sce', function ($compile, $pa
             //compile the template upon receiving the message of "DirectiveToUpdateBindPageView"             
             scope.$on("DirectiveToUpdateBindPageView", function(event, data){
                 console.log("proceed the message updateBindPageView in the directive");
+                var message = {obj: {}};
                 
-                element.html(data);
+                if(typeof data === 'object' && data.hasOwnProperty('obj') && data.hasOwnProperty('pageContent')){
+                    element.html(data.pageContent);
+                    message.obj = data.obj;
+                }else{
+                    element.html(data);
+                }                
+                
                 $compile(element.contents())(scope);
                 
-                //scope.$emit("DirectveFinishedTheUpdate");
+                
+                scope.$emit("DirectveFinishedTheUpdate", message);
                
             });
         }    
@@ -110,37 +118,7 @@ app.directive('bindPage', ['$compile', '$parse', '$sce', function ($compile, $pa
          }
      };  */
 }]);
-/*
-app.directive('c3PieChart1', function(){
-    
-    return {
-        require: '^c3chart',
-        restrict: 'E',        
-        replace: true,
-        link: pieLinker
-    };
-    
-    var pieLinker = function (scope, element, attrs, chartCtrl) {
-        var pie = {};
-        if (attrs.showLabel) {
-            pie.label = {"show": (attrs.showLabel === 'true')};
-        }
-        if (attrs.thresholdLabel) {
-            if (!pie.label) {
-                pie.label = {};
-            }
-            pie.label.threshold = parseFloat(attrs.thresholdLabel);
-        }
-        if (attrs.expand) {
-            pie.expand = (attrs.expand === 'true');
-        }
-        chartCtrl.addPie(pie);
-        if (attrs.labelFormatFunction) {
-            chartCtrl.addPieLabelFormatFunction(scope.labelFormatFunction());
-        }
-    };
-    
-});*/
+
 
 // Two-way bound treeView
 //树形结构 
@@ -164,11 +142,7 @@ app.directive('ztree',function(){
                     
                 } 
             }; 
-            
-            function zTreeOnNodeCreated(event, treeId, treeNode){
-                
-            };
-            
+                 
             //var zTreeId = "#xmTreeView";
             var zTreeObj = {};
             //var nodeToBeCreatedOrUpdated = {};
@@ -180,6 +154,39 @@ app.directive('ztree',function(){
             var leafType = "";
             var leafKey = "";
             //向控制器发送消息，进行菜单数据的获取 
+            $scope.$on("zTree_editItem", function(event, msg){
+                //just if one node is in the creation or update process, a warning shall be raised to client to select if giving up the current process
+                /*if(nodeUId_toBeCreatedOrUpdated !== ""){
+                    var message = {type: 'warning', msg: 'Only one process is allowed at one time'};
+                    $scope.$emit("Alert_Msg", message);
+                    return;
+                };*/
+                          
+                if(zTreeObj !== null){
+                    //get the selected node first.
+                    var nodes = zTreeObj.getSelectedNodes();
+                    if(nodes === null || nodes === undefined || nodes.length === 0){
+                        var message = {type: 'warning', msg: 'No node is selected. Please select one node'};
+                        $scope.$emit("Alert_Msg", message);
+                        
+                     }else{
+                        //get the selected node 
+                        var firstNode = nodes[0];
+                        if(firstNode !== null){
+                            nodeUId_toBeCreatedOrUpdated = firstNode.getUID();
+                            
+                            var message = {type: 'success', msg: 'one node is selected, and it is under the edit process'};
+                            $scope.$emit("Alert_Msg", message);
+                            
+                            console.log(firstNode.data);
+                            $scope.$emit("ZTreeNodeSelected_ToBeEdited", firstNode);
+                        };
+                    };
+                 };
+            });
+            
+            //------------------------------------------------------------------------------                       
+            
             //$scope.$emit("menu",attrs["value"]);//此处attrs["value"]为ul中的value值，此处作为标记使用 
             //接受控制器返回的菜单的消息 
             $scope.$on("zTree_displayAllDepartments",function(event,data){ 
@@ -212,7 +219,9 @@ app.directive('ztree',function(){
                 console.log("zTree received message of zTree_addOneDepartment");
                 //just if one node was already created. if yes, then give up add department process
                 if(nodeUId_toBeCreatedOrUpdated !== ""){
-                    $scope.$emit("RefuseAddingDepartment");
+                    var message = {type: 'warning', msg: 'Only one process is allowed at one time'};
+                    $scope.$emit("Alert_Msg", message);
+                    //$scope.$emit("RefuseAddingDepartment");
                     return;
                 }
                 //judge if one node is selected, 
@@ -221,7 +230,9 @@ app.directive('ztree',function(){
                 if(zTreeObj !== null){
                     var nodes = zTreeObj.getSelectedNodes();
                     if(nodes === null || nodes === undefined || nodes.length === 0){
-                         $scope.$emit("zTree_noNodeSelected");
+                        var message = {type: 'warning', msg: 'No node is selected. Please select one node'};
+                        $scope.$emit("Alert_Msg", message);
+                        //$scope.$emit("zTree_noNodeSelected");
                     }else{
                         //create a new node as child node of the selected node
                         var firstNode = nodes[0];
@@ -376,7 +387,7 @@ app.directive('ztree',function(){
                 
             });
             
-            //The following section is for the testing and initialization of zTree
+            //The following section is for the testing and initialization of zTree, to be removed in the future.
             function Department(id, name, address, begin_time) {
                 this.id = id;
                 this.name = name;

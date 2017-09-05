@@ -96,8 +96,8 @@
                             </li>
                         </ul>
                           
-                        <button id="editButton" type="button" class="btn btn-primary">Edit</button>
-                        <button id="removeButton" type="button" class="btn btn-primary">Remove</button>
+                        <button id="editButton" type="button" class="btn btn-primary" ng-click="edit_button()">Edit</button>
+                        <button id="removeButton" type="button" class="btn btn-primary" ng-click="delete_button()">Remove</button>
                     </div>
 
                     <form >
