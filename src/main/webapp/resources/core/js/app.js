@@ -157,12 +157,17 @@ app.directive('ztree',function(){
                 },
 
                 callback:{ 
-                    beforeClick:function(treeId, treeNode) {//点击菜单时进行的处理 
+                    /*beforeClick:function(treeId, treeNode) {//点击菜单时进行的处理 
                         //var zTree = $.fn.zTree.getZTreeObj("ztree"); 
                         console.log("request for beforeClick of call back of zTree");
-                    } 
+                    } */
+                    
                 } 
             }; 
+            
+            function zTreeOnNodeCreated(event, treeId, treeNode){
+                
+            };
             
             //var zTreeId = "#xmTreeView";
             var zTreeObj = {};

@@ -317,6 +317,8 @@ angular.module('app_utils').factory('UtilService', [ function(){
         
         this.open = false;  //open property is used by ZTree  
         
+        this.icon = ""; //icon for the zTreeNode
+        
         this.UID = "";  //unique id for get node in the tree, and the formate is "dataType/id"
         
         this.setUID = function(type, name, id){
@@ -374,13 +376,16 @@ angular.module('app_utils').factory('UtilService', [ function(){
         /*In this function, the TreeNodeConveter objects are made with matching properties from objFromServer
         * It is very important function for showing nodes in ZTree  */
         this.childrenFunc = function(objFromServer, typeOfBranchOfTree, typeOfLeafOfTree, keyOfLeafOfBranchOfTree){
-
+            // This is to get the current context path : 'maple_tiger_hr/'
+            var path = window.location.pathname.substring(0, window.location.pathname.indexOf("/",1));
+            var icon_user = path + "/resources/vendors/zTree/css/zTreeStyle/img/diy/user.png";
+            
             if(objFromServer.data !== null){
                 this.id = objFromServer.data.id;
                 if(objFromServer.dataType === typeOfBranchOfTree){
                     this.name = objFromServer.data.name;
-                    this.dataType = objFromServer.dataType;                            
-                    
+                    this.dataType = objFromServer.dataType;      
+                    //this.icon = path + "/resources/vendors/zTree/css/zTreeStyle/img/diy/team.png";                 
                     this.setUID(this.datType, this.name, this.id);
                     
                     var i = 0;
@@ -402,12 +407,17 @@ angular.module('app_utils').factory('UtilService', [ function(){
                         this.open = true;
                         //the children is employee object, note the leaf here still tightly bonded with certain type. Here is "employee".
                         //this shall be improved with general type 
+                        
+                                                
                         for(var j = 0; j < objFromServer.data.employees.length; j++){
                             this.children[j+i] = new TreeNodeConverter(objFromServer.data.employees[j]);
                             this.children[j+i].id = objFromServer.data.employees[j].id;
                             this.children[j+i].name = objFromServer.data.employees[j].firstName + " " + objFromServer.data.employees[j].lastName;
                             //note: employee does not have type due to field members of Department
                             this.children[j+i].dataType = typeOfLeafOfTree;   
+                          
+                            this.children[j+i].icon = icon_user;
+                            
                             this.children[j+i].setUID(this.children[j+i].dataType, this.children[j+i].name, this.children[j+i].id);
                         }
                     }                                                          

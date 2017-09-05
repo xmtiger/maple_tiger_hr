@@ -139,10 +139,7 @@
                         <!-- D3 graph --> 
                         <div class="clearfix"></div>
                         <hr>
-                        <!--div class="col-md-12 col-lg-12">
-                        <br><br>
-                        </div-->
-                        
+                                                
                         <div class="col-md-12 col-lg-12">
 
                                 <!--div class="col" ng-controller="D3PieChartController" ng-show="false">

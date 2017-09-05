@@ -44,9 +44,7 @@
         <script src="${context}/resources/vendors/bootstrapDatePicker/js/bootstrap-datepicker.min.js"></script>
    
         <script src= "${context}/resources/vendors/bootstrapValidator/js/bootstrapValidator.min.js"> </script>   
-        
-        <!-- angular js -->
-                
+                        
         <script type="text/javascript">
             $(document).ready(function() {
                                                            
