@@ -75,7 +75,7 @@ app.directive('bindPage', ['$compile', '$parse', '$sce', function ($compile, $pa
             }; */    
             
             //compile the template upon receiving the message of "DirectiveToUpdateBindPageView"             
-            scope.$on("DirectiveToUpdateBindPageView", function(event, data){
+            scope.$on("DirectiveToUpdateBindPage_RootMsg", function(event, data){
                 console.log("proceed the message updateBindPageView in the directive");
                 var message = {obj: {}};
                 
@@ -365,21 +365,35 @@ app.directive('ztree',function(){
                 //var nodeToBeCreatedOrUpdated = zTreeObj.getNodeByParam("UID", nodeUId_toBeCreatedOrUpdated);
                 //var nodeToBeCreatedOrUpdated = zTreeObj.getNodeByTId(nodeId_toBeCreatedOrUpdated);
                 
-                if(nodeToBeCreatedOrUpdated !== null){
+                if(nodeToBeCreatedOrUpdated !== null){  
                                             
-                    var parent = findNodeByUID(zTreeObj.getNodes(), "UID", parentNodeUId_forNodeToBeCreatedOrUpdated);
-
+                    //var parent = findNodeByUID(zTreeObj.getNodes(), "UID", parentNodeUId_forNodeToBeCreatedOrUpdated);
+                    var parent = nodeToBeCreatedOrUpdated.getParentNode();
+                    
+                    var dataToBeSent = {};
+                    dataToBeSent.id = nodeToBeCreatedOrUpdated.getId();
+                    dataToBeSent.type = nodeToBeCreatedOrUpdated.getDataType();
                     //var parent = zTreeObj.getNodeByTId(parentNodeId_forNodeToBeCreatedOrUpdated);
-                    if(parent !== null){
+                    if(parent !== null){    //not root node
                         //send the parent node and current node information to the department form for creating a new department                            
-                        var dataToBeSent = {};
-                        dataToBeSent.id = nodeToBeCreatedOrUpdated.getId();
-                        dataToBeSent.type = nodeToBeCreatedOrUpdated.getDataType();
+                                                
                         dataToBeSent.fatherId = parent.getId();
                         dataToBeSent.fatherType = parent.getDataType();
 
-                        $scope.$emit("zTree_SendCurNodeInfo", dataToBeSent);
-                    }                        
+                        
+                    } else{
+                                                
+                        dataToBeSent.fatherId = -1;
+                        dataToBeSent.fatherType = "";
+                    }     
+                    
+                    if(typeof data === 'object' && data.hasOwnProperty('data')){
+                        data.obj = dataToBeSent;
+                    
+                        $scope.$emit("zTree_SendCurNodeInfo", data);
+                    }else{
+                        console.log("wrong message");
+                    }                    
                     
                 }
             });

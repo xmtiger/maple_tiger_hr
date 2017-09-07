@@ -34,7 +34,7 @@ public class AbstractHRServiceTests {
     
     @Autowired
     protected HRService hrService;
-    
+       
     @Test
     public void shouldFindEmployeeByLastName() {
         Collection<Employee> employees = this.hrService.findEmployeeByLastName("Davis");
@@ -45,6 +45,12 @@ public class AbstractHRServiceTests {
     public void shouldFindDepartmentByName(){
         Collection<Department> departments = this.hrService.findDepartmentByName("engineering");
         assertThat(departments.size()).isEqualTo(1);
+    }
+    
+    
+    @Test 
+    public void shouldDeleteDepartmentById(){
+        
     }
     
     @Test

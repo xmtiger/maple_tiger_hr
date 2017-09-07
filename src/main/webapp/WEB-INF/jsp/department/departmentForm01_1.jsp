@@ -189,6 +189,7 @@
                     
                     $scope.formTitle = 'DEPARTMENT CREATION FORM';
                     $scope.button = 'Create';
+                    $scope.displayDeleteButton = false;
                     //create a blank object to hold the form information, and $scope will allow this to pass between controller and view
                     $scope.formData = {};
                     
@@ -227,13 +228,13 @@
                         var bootstrapValidator = $("#dept_form").data('bootstrapValidator');
                         bootstrapValidator.validate();
                         if(bootstrapValidator.isValid()){
-                            $('#resultContainer_click').text("validation is passed in click function");
-                            $('#resultContainer_click').show();
+                            //$('#resultContainer_click').text("validation is passed in click function");
+                            //$('#resultContainer_click').show();
 
                             return true;                      
                         } else{
-                            $('#resultContainer_click').text("validation is not passed in click function");
-                            $('#resultContainer_click').show();  
+                            //$('#resultContainer_click').text("validation is not passed in click function");
+                            //$('#resultContainer_click').show();  
 
                             return false;
                         }  
@@ -258,7 +259,8 @@
                                                 
                         if(validateDepartmentForm() === true){
                             //send request to tree for currrent node and the father node information
-                            $scope.$emit("RequestCurrentTreeNodeInfo");
+                            var message = {type:"createOrUpdateDepartment", data:{}};
+                            $scope.$emit("RequestCurrentTreeNodeInfo", message);
                             
                         } else{ 
                             //The validation is not passed
@@ -267,8 +269,21 @@
 
                     };
                     // This function is to send form data to the server for update or save a new department
-                    $scope.$on("RootCtrl_SendCurNodeInfo", function(event, nodeInfo){                        
+                    $scope.$on("RootCtrl_SendCurNodeInfo", function(event, msg){                   
                         
+                        if(typeof msg === 'object' && msg.hasOwnProperty('type') && msg.hasOwnProperty('data')){
+                            if(msg.type === 'createOrUpdateDepartment'){
+                                var nodeInfo = msg.data;
+                                saveOrUpdateDepartment(nodeInfo);
+                            }else if(msg.type === 'deleteDepartment'){
+                                console.log("delete department");
+                            }
+                        }               
+                        
+                    });
+                    
+                    //
+                    function saveOrUpdateDepartment(nodeInfo){
                         //perform the database actions here.
                         console.log("client validation is passed, then perform database request");
 
@@ -279,12 +294,25 @@
                         
                         var jsonData = getJsonDataFromDeptForm();                           
                         console.log(jsonData);
-                        departmentService.createDepartment($scope, $location, jsonData, nodeInfo).then(
+                        departmentService.createOrUpateDepartment($scope, $location, jsonData, nodeInfo).then(
                             function(data){
                                 if(data.hasOwnProperty('validated')){
                                     if(data.validated === true){
-                                        $scope.$emit("oneDepartmentCreated", data);
+                                        
+                                        var str = "<h4 style='color:green'>The Process was successfully done!</h4> <hr>"
+                                        
+                                        if($scope.button === 'Update'){
+                                            str = "<h4 style='color:green'>The Department was successfully Updated!</h4> <hr>";
+                                            
+                                        }else if($scope.button === 'Create'){
+                                            
+                                            str = "<h4 style='color:green'>The Department was successfully Created!</h4> <hr>";
+                                            
+                                        }       
+                                        
+                                        $scope.$emit("DirectiveToUpdateBindPage", str);
                                         clearContent();
+                                        
                                     }else{
                                         console.log("Get Error Messages from the server");
                                         console.log(data);
@@ -302,8 +330,7 @@
                                 console.error("Error while create one department");
                             }  
                         );
-                        
-                    });
+                    };                    
                     
                     //-----------------------------------------------------------------
                     //functions handling name changes
@@ -326,11 +353,11 @@
                     
                     $scope.beginTimeChange = function(){
                         formChanged();
-                    }
+                    };
                     
                     function formChanged(){
                         $scope.$emit("departmentForm_changed");
-                    }
+                    };
                     
                     //this function is not requried.
                     $scope.$on("rootMsg_zTreeNodeNameUpdated", function(event, msg){
@@ -342,17 +369,47 @@
                     });
                     
                     $scope.$on("DepartmentPageFormToBeFilled", function(event, obj){
-                        
-                        if(typeof obj === 'object' && obj.hasOwnProperty('data') ){
+                        //The following is to extract data from the treeview, but the data shall be extracted from the server.
+                        /*if(typeof obj === 'object' && obj.hasOwnProperty('data') ){
                             $scope.formData.name = obj.data.name;
                             $scope.formData.address = obj.data.address;
                             $scope.formData.beginTime = obj.data.begin_time;
                             
                             $scope.formTitle = 'DEPARTMENT UPDATE FORM';
                             $scope.button = 'Update';
-                        }
-                        
+                        }*/
+                                                
+                        departmentService.findDepartmentById($scope, $location, obj).then(
+                            function(data){
+                                console.log(data);
+                                $scope.formData.name = data.name;
+                                $scope.formData.address = data.address;
+                                $scope.formData.beginTime = data.begin_time;
+
+                                $scope.formTitle = 'DEPARTMENT UPDATE FORM';
+                                $scope.button = 'Update';     
+                                $scope.displayDeleteButton = true;
+                            },
+                            function(errResponse){
+                                console.error("Error while fetching the indicated department");
+                            }  
+                    
+                        );
                     });
+                    
+                    //--------------------------------------------------------------------------
+                    $scope.departmentFormDelete = function(){
+                        var rs = confirm("The deletion is irrevocable. Please make sure you really want delete the item");
+                        if(rs === true){
+                            //delete the item
+                            var message = {type:"deleteDepartment", data:{}};
+                            $scope.$emit("RequestCurrentTreeNodeInfo", message);
+                        }
+                    };
+                    
+                    $scope.departmentFormCancel = function(){
+                        alert("cancel button");
+                    };
                             
                 }]);
             
@@ -363,7 +420,7 @@
     <body>
         <!-- disable action and method properties of the following form action=" " method="post"
         Only activate click event and start submit from click function-->
-        <form class="well form-horizontal"   id="dept_form" ng-submit="departmentFormSubmit()" ng-controller="DepartmentFormController">
+        <form class="well form-horizontal"   id="dept_form" ng-controller="DepartmentFormController">
             <fieldset>
 
                 <!-- Form Name -->
@@ -372,13 +429,13 @@
                 <!-- Text input-->
 
                 <div class="form-group">
-                  <label class="col-md-4 control-label">Name</label>  
-                  <div class="col-md-4 inputGroupContainer">
-                  <div class="input-group">
-                  <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
-                  <input  name="name" placeholder="Name" class="form-control"  type="text" id="dept_name" ng-model="formData.name" ng-change="nameChange()"/>
+                    <label class="col-md-4 control-label">Name</label>  
+                    <div class="col-md-4 inputGroupContainer">
+                        <div class="input-group">
+                            <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
+                            <input  name="name" placeholder="Name" class="form-control"  type="text" id="dept_name" ng-model="formData.name" ng-change="nameChange()"/>
+                        </div>
                     </div>
-                  </div>
                 </div>
                 
                
@@ -409,10 +466,15 @@
                 
                 <!-- Button -->
                 <div class="form-group">
-                  <label class="col-md-4 control-label"></label>
-                  <div class="col-md-4">
-                      <button id="sendButton" class="btn btn-warning" >{{button}}<span class="glyphicon glyphicon-send"></span></button>
-                  </div>
+                    <label class="col-md-4 control-label"></label>
+                    <div class="col-md-4">
+                        <button id="sendButton" class="btn btn-warning" ng-click="departmentFormSubmit()">{{button}}<span class="glyphicon glyphicon-send"></span></button>
+                        <button type="button" class="btn btn-warning" ng-click="departmentFormCancel()">Cancel</button>
+                    </div>
+                  <!-- Indicates a dangerous or potentially negative action -->
+                    <div class = "col-md-4">
+                        <button type="button" class="btn btn-danger" ng-click="departmentFormDelete()" ng-show="displayDeleteButton">Delete</button>
+                    </div>
                 </div>               
                 
                 

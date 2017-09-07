@@ -70,7 +70,7 @@ angular.module("app").controller("rootController", ["$scope", "$rootScope","depa
                 departmentService.getSaveOrUpdateDepartmentPage($location).then(
                     function(data){
                         var message = {obj: node_in, pageContent: data };
-                        $rootScope.$broadcast("DirectiveToUpdateBindPageView", message);
+                        $rootScope.$broadcast("DirectiveToUpdateBindPage_RootMsg", message);
 
                     },
                     function(errResponse){
@@ -82,6 +82,12 @@ angular.module("app").controller("rootController", ["$scope", "$rootScope","depa
             }
         }        
         
+    });
+    
+    $scope.$on("DirectiveToUpdateBindPage", function(event, msg){
+        
+        $rootScope.$broadcast("DirectiveToUpdateBindPage_RootMsg", msg);
+                
     });
     
     $scope.$on("DirectveFinishedTheUpdate", function(event, msg){
@@ -176,7 +182,7 @@ angular.module("app").controller("rootController", ["$scope", "$rootScope","depa
         departmentService.getSaveOrUpdateDepartmentPage($location).then(
             function(data){
                 //$scope.$emit("updateBindPageView", response.data);
-                $rootScope.$broadcast("DirectiveToUpdateBindPageView", data);
+                $rootScope.$broadcast("DirectiveToUpdateBindPage_RootMsg", data);
                 
             },
             function(errResponse){
@@ -186,12 +192,12 @@ angular.module("app").controller("rootController", ["$scope", "$rootScope","depa
                
     });
     
-    $scope.$on("RequestCurrentTreeNodeInfo", function(event, data){
-        $rootScope.$broadcast("RootCtrl_RequestCurrentTreeNodeInfo", data);
+    $scope.$on("RequestCurrentTreeNodeInfo", function(event, msg){
+        $rootScope.$broadcast("RootCtrl_RequestCurrentTreeNodeInfo", msg);
     });
     
-    $scope.$on("zTree_SendCurNodeInfo", function(event, data){
-        $rootScope.$broadcast("RootCtrl_SendCurNodeInfo", data);
+    $scope.$on("zTree_SendCurNodeInfo", function(event, msg){
+        $rootScope.$broadcast("RootCtrl_SendCurNodeInfo", msg);
     });
     
     /*$scope.$on("updateBindPageView", function (event, data){
@@ -204,7 +210,7 @@ angular.module("app").controller("rootController", ["$scope", "$rootScope","depa
         
     });*/
     
-    $scope.$on("oneDepartmentCreated", function(event, data){
+    /*$scope.$on("oneDepartmentCreated", function(event, data){
         
         $rootScope.$broadcast("RootCtrlMsg_OneDepartmentCreated", data);
         
@@ -213,7 +219,7 @@ angular.module("app").controller("rootController", ["$scope", "$rootScope","depa
         $rootScope.$broadcast("DirectiveToUpdateBindPageView", str);
         //$scope.bindPage = $sce.trustAsHtml("The Department was successfully Created");
         
-    });
+    });*/
     
 }]);
 

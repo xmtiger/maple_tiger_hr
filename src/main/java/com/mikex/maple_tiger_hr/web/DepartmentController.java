@@ -154,7 +154,7 @@ public class DepartmentController {
         return response;              
     }
     
-    @RequestMapping(value = "department/id/{id}", method = RequestMethod.GET)
+    @RequestMapping(value = "department/id/{id}", method = RequestMethod.POST)
     public @ResponseBody Department findDepartmentById(@PathVariable String id){
         
         Department dept = new Department();
