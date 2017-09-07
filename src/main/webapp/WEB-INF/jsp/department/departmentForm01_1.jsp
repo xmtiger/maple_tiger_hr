@@ -310,7 +310,7 @@
                     $scope.nameChange = function(){
                         
                         $scope.$emit("nameChangedToBeSent", $scope.formData.name);
-                        
+                        formChanged();
                         //reset submit as zero
                         if($scope.submit > 0){
                             $scope.submit = 0;
@@ -319,6 +319,18 @@
                         };
                         
                     };
+                    
+                    $scope.addressChange = function(){
+                        formChanged();
+                    };
+                    
+                    $scope.beginTimeChange = function(){
+                        formChanged();
+                    }
+                    
+                    function formChanged(){
+                        $scope.$emit("departmentForm_changed");
+                    }
                     
                     //this function is not requried.
                     $scope.$on("rootMsg_zTreeNodeNameUpdated", function(event, msg){
@@ -377,44 +389,18 @@
                     <div class="col-md-4 inputGroupContainer">
                     <div class="input-group" >
                   <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
-                  <input name="address" placeholder="Address" class="form-control"  type="text" id="dept_address" ng-model="formData.address"/>
+                  <input name="address" placeholder="Address" class="form-control"  type="text" id="dept_address" ng-model="formData.address" ng-change="addressChange()"/>
                     </div>
                   </div>
-                </div>
-                
-                <!--div class="col-md-4">
-                    <label class="col-md-4 control-label" >Address</label> 
-                    <div class="input-group">
-                      <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
-                      <input name="address" type="text" class="form-control" placeholder="address" ng-model="formData.address"  close-text="Close" />
-                     
-                    </div>
-                  </div>
-                </div-->
-               
-                <!-- time input -->
-                <!--div class="form-group">
-                    <label class="col-md-4" control-label"> Begin Date </label>
-                         
-                        <div class="col-md-4 inputGroupContainer">
-                            <div class="input-group" >
-                                <input name="begin_time" type="date" class="form-control" placeholder="yyyy-MM-dd" uib-datepicker-popup ng-model="formData.beginTime" is-open="popup2.opened" datepicker-options="dateOptions" ng-required="true" close-text="Close" />
-                                
-                                <span class="input-group-btn">
-                                  <button type="button" class="btn btn-default" ng-click="open2()"><i class="glyphicon glyphicon-calendar"></i></button>
-                                </span>
-                            </div>
-                        </div>
-                      </div>
-                </div-->
-                
+                </div>        
+                               
                 <div class="form-group">
                   <label class="col-md-4 control-label" >Begin Date</label> 
                     <!--div class="col-xs-5 date"-->
                     <div class="col-md-4 date">
                         <div class="input-group input-append date" id="datePicker">
                             
-                            <input type="text" placeholder="yyyy-MM-dd" class="form-control"  name="begin_time" id="dept_begin_time" ng-model="formData.beginTime"/>
+                            <input type="text" placeholder="yyyy-MM-dd" class="form-control"  name="begin_time" id="dept_begin_time" ng-model="formData.beginTime" ng-change="beginTimeChange()"/>
                             <span class="input-group-addon add-on"><span class="glyphicon glyphicon-calendar"></span></span>
                         </div>
                     </div>     

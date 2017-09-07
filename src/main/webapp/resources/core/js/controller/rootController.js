@@ -153,6 +153,11 @@ angular.module("app").controller("rootController", ["$scope", "$rootScope","depa
     $scope.$on("zTreeNodeNameUpdated", function(event, msg){
         $rootScope.$broadcast("rootMsg_zTreeNodeNameUpdated", msg);
     });
+    
+    $scope.$on("departmentForm_changed", function(event, msg){
+        $rootScope.$broadcast("departmentForm_changed_sent");
+    });
+    
     //-----------------------------------------------------------------    
     
     $scope.$on("zTreeNewNodeCreated_addNewDepartment", function(event, nodeId){

@@ -139,7 +139,26 @@ app.directive('ztree',function(){
                         //var zTree = $.fn.zTree.getZTreeObj("ztree"); 
                         console.log("request for beforeClick of call back of zTree");
                     } */
-                    
+                    onClick: function(event, treeId, treeNode){
+                        // check if the selected node is the smae node, which in the current process
+                        if(treeNode !== null){
+                            var curUID = treeNode.getUID();
+                            
+                            if(nodeUId_toBeCreatedOrUpdated !== "" && actionInProcess === true && curUID !== nodeUId_toBeCreatedOrUpdated){
+                                var rs = confirm("Are you sure to select another node, and give up the current process?");
+                                if(rs !== true){    //reset the selected node to be the current working node
+                                    if(zTreeObj !== null){
+                                        var allNodes = zTreeObj.getNodes();
+                                        var nodeToBeCreatedOrUpdated = findNodeByUID(allNodes, "UID", nodeUId_toBeCreatedOrUpdated);
+                                        zTreeObj.selectNode(nodeToBeCreatedOrUpdated);
+                                    }
+                                    
+                                }
+                            }
+                        }
+                       
+                        // emit alert 
+                    }
                 } 
             }; 
                  
@@ -153,6 +172,7 @@ app.directive('ztree',function(){
             var branchType = "";
             var leafType = "";
             var leafKey = "";
+            var actionInProcess = false;
             //向控制器发送消息，进行菜单数据的获取 
             $scope.$on("zTree_editItem", function(event, msg){
                 //just if one node is in the creation or update process, a warning shall be raised to client to select if giving up the current process
@@ -183,6 +203,10 @@ app.directive('ztree',function(){
                         };
                     };
                  };
+            });
+            
+            $scope.$on("departmentForm_changed_sent", function(event, msg){
+                actionInProcess = true;
             });
             
             //------------------------------------------------------------------------------                       
