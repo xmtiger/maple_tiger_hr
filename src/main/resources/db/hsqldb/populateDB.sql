@@ -14,7 +14,6 @@ INSERT INTO departments VALUES (4, 'civil', '1990-03-01', '1990-03-01', '223 wil
 INSERT INTO departments VALUES (5, 'mechanical', '1990-03-01', '1990-03-01', '233 willibrord St.');
 INSERT INTO departments VALUES (6, 'Yamax Group', '1990-03-01', '1990-03-01', '233 willibrord St.');
 INSERT INTO departments VALUES (7, 'construction', '1990-03-01', '1990-03-01', '233 willibrord St.');
-INSERT INTO departments VALUES (8, 'test', '1990-03-01', '1990-03-01', '233 willibrord St.');
 
 INSERT INTO department_relationship VALUES(3, 4);
 INSERT INTO department_relationship VALUES(3, 5);

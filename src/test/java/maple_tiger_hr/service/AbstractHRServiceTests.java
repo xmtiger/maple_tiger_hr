@@ -145,9 +145,16 @@ public class AbstractHRServiceTests {
     
     @Test
     public void shouldDeleteDepartmentById(){
-                            
-        this.hrService.deleteDepartmentById(7);
+        
+        Department dept = this.hrService.findDepartmentById(7);
+        if(dept != null){
+            this.hrService.deleteDepartmentById(7);
+        }        
             
+        TreeNode<Department> tree = this.hrService.getTreeFromDepartments();
+        System.out.println("tree: After deletion --------------------------------------------");
+        System.out.println(tree);
+        System.out.println("tree: --------------------------------------------");
         //Department dept = this.hrService.findDepartmentById(7);
         //assertThat(dept).isNull();
         
