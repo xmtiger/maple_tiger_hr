@@ -202,6 +202,7 @@
                     $scope.curNodeType = "";
                     
                     $scope.submit = 0;  //0 means un-submitted
+                    $scope.delete = 0;  //0 means un-deleted
                     
                     function clearContent(){
                         $scope.formData.name = "";
@@ -272,15 +273,50 @@
                     $scope.$on("RootCtrl_SendCurNodeInfo", function(event, msg){                   
                         
                         if(typeof msg === 'object' && msg.hasOwnProperty('type') && msg.hasOwnProperty('data')){
-                            if(msg.type === 'createOrUpdateDepartment'){
-                                var nodeInfo = msg.data;
+                            var nodeInfo = msg.data.obj;
+                            
+                            if(msg.type === 'createOrUpdateDepartment'){                                
                                 saveOrUpdateDepartment(nodeInfo);
                             }else if(msg.type === 'deleteDepartment'){
                                 console.log("delete department");
+                                deleteDepartment(nodeInfo);
                             }
                         }               
                         
                     });
+                    
+                    function deleteDepartment(nodeInfo){
+                        
+                        if($scope.delete !== 0)
+                            return;
+                        
+                        $scope.delete++;
+                        
+                        departmentService.deleteDepartmentById($scope, $location, nodeInfo).then(
+                            function(data){
+                                if(data.hasOwnProperty('validated')){
+                                    if(data.validated === true){
+                                        var str = "<h4 style='color:green'>The deletion was successfully done!</h4> <hr>"
+                                                                      
+                                        $scope.$emit("DirectiveToUpdateBindPage", str);
+                                        clearContent();
+                                    }else{
+                                        console.log("Get Error Messages from the server");
+                                        console.log(data);
+                                        var str_error = "";
+                                        $.each(data.errorMessages,function(key,value){
+                                            str_error = str_error + value + "; ";                                            
+                                        });
+                                        var message = { type: 'warning', msg: str_error};
+                                                                                
+                                        $scope.$emit("Alert_Msg", message);
+                                    }
+                                }
+                            },function(errResponse){
+                                console.error("Error while create one department");
+                            } 
+                        );
+                    };
                     
                     //
                     function saveOrUpdateDepartment(nodeInfo){

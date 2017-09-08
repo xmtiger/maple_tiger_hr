@@ -57,7 +57,11 @@ public class HRServiceImpl implements HRService {
         this.departmentRepository = departmentRepository;
     }*/
     
-    
+    @Override
+    @Transactional
+    public void deleteDepartment(Department department) throws DataAccessException {
+        departmentRepository.deleteDepartment(department);
+    }
 
     @Override
     @Transactional(readOnly = true)
@@ -72,7 +76,7 @@ public class HRServiceImpl implements HRService {
     }
 
     @Override
-    @Transactional
+    @Transactional(readOnly = true)
     public Collection<Employee> findEmployeeByLastName(String lastName) throws DataAccessException {
         return employeeRepository.findByLastName(lastName);        
     }   
@@ -102,13 +106,14 @@ public class HRServiceImpl implements HRService {
     }
     
     @Override
-    @Transactional
+    @Transactional(readOnly = true)
     public Collection<Department> findAllDepartments() throws DataAccessException{
         return departmentRepository.findAllDepartments();
         
     }
     
     @Override
+    @Transactional(readOnly = true)
     public TreeNode<Department> getTreeFromDepartments(){
         TreeNode<Department> tree = new TreeNode<>();
         

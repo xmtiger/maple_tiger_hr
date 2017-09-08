@@ -25,4 +25,6 @@ public interface DepartmentRepository {
     Collection<Department> findAllDepartments() throws DataAccessException;
     
     Collection<Department> findDepartmentByName_Address_BeginTime(String name, String address, Date beginTime) throws DataAccessException;
+    
+    public void deleteDepartment(Department department) throws DataAccessException;
 }

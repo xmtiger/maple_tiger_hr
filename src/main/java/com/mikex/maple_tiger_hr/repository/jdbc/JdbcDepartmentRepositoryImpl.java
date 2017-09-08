@@ -105,4 +105,9 @@ public class JdbcDepartmentRepositoryImpl implements DepartmentRepository{
     public Collection<Department> findDepartmentByName_Address_BeginTime(String name, String address, Date beginTime) throws DataAccessException{
         throw new UnsupportedOperationException("Not supported yet.");
     }
+    
+    @Override
+    public void deleteDepartment(Department department) throws DataAccessException{
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
 }

@@ -21,7 +21,8 @@ angular.module("app").factory("departmentService", ["$http", "$q", function($htt
         setURI : setURI,
         getSaveOrUpdateDepartmentPage : getSaveOrUpdateDepartmentPage,
         createOrUpateDepartment : createOrUpateDepartment,
-        findDepartmentById : findDepartmentById
+        findDepartmentById : findDepartmentById,
+        deleteDepartmentById : deleteDepartmentById
     };
     
     return factory;
@@ -143,7 +144,28 @@ angular.module("app").factory("departmentService", ["$http", "$q", function($htt
     }
     
     function deleteDepartmentById($scope, $location, nodeInfo){
+        var curNodeId = nodeInfo.id;             
+                
+        var deferred = $q.defer();
         
+        var request =  REST_SERVICE_URI + "delete/id/" + curNodeId;
+                                
+        request = request.replace("/#", "");
+        
+        console.log(request);
+                
+        $http.post(request).then(
+            function(response){
+                //deferred.resolve function will send the data the upper level function whith .then(...)
+                deferred.resolve(response.data);                
+            },
+            function(errResponse){
+                console.error("Error while fetching the indicated department");
+                deferred.reject(errResponse);
+            }        
+        );
+        
+        return deferred.promise;
     }
     
 }]);

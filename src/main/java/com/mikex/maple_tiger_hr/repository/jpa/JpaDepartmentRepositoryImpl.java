@@ -91,4 +91,11 @@ public class JpaDepartmentRepositoryImpl implements DepartmentRepository{
         Query query = this.em.createQuery("SELECT dept FROM Department dept");
         return query.getResultList();
     }
+    
+    @Override
+    public void deleteDepartment(Department department) throws DataAccessException{                
+        if(department != null){
+            this.em.remove(department);
+        }        
+    }
 }
