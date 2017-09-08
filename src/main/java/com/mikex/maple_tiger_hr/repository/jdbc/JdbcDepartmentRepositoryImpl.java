@@ -107,7 +107,7 @@ public class JdbcDepartmentRepositoryImpl implements DepartmentRepository{
     }
     
     @Override
-    public void deleteDepartment(Department department) throws DataAccessException{
+    public void deleteDepartmentById(int deptId) throws DataAccessException{
         throw new UnsupportedOperationException("Not supported yet.");
     }
 }

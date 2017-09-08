@@ -373,7 +373,7 @@ app.directive('ztree',function(){
                     var dataToBeSent = {};
                     dataToBeSent.id = nodeToBeCreatedOrUpdated.getId();
                     dataToBeSent.type = nodeToBeCreatedOrUpdated.getDataType();
-                    //var parent = zTreeObj.getNodeByTId(parentNodeId_forNodeToBeCreatedOrUpdated);
+                    
                     if(parent !== null){    //not root node
                         //send the parent node and current node information to the department form for creating a new department                            
                                                 

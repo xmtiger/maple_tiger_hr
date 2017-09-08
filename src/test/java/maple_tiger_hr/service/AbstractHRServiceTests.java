@@ -46,13 +46,7 @@ public class AbstractHRServiceTests {
         Collection<Department> departments = this.hrService.findDepartmentByName("engineering");
         assertThat(departments.size()).isEqualTo(1);
     }
-    
-    
-    @Test 
-    public void shouldDeleteDepartmentById(){
-        
-    }
-    
+      
     @Test
     public void shouldFindDepartmentByName_Address_BeginTime(){
         String name = "engineering";
@@ -146,6 +140,17 @@ public class AbstractHRServiceTests {
         System.out.println("tree: --------------------------------------------");
         System.out.println(tree);
         System.out.println("tree: --------------------------------------------");
+                
+    }
+    
+    @Test
+    public void shouldDeleteDepartmentById(){
+                            
+        this.hrService.deleteDepartmentById(7);
+            
+        //Department dept = this.hrService.findDepartmentById(7);
+        //assertThat(dept).isNull();
+        
     }
     
     /*

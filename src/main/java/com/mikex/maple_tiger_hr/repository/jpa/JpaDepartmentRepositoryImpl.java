@@ -93,9 +93,13 @@ public class JpaDepartmentRepositoryImpl implements DepartmentRepository{
     }
     
     @Override
-    public void deleteDepartment(Department department) throws DataAccessException{                
-        if(department != null){
-            this.em.remove(department);
+    public void deleteDepartmentById(int deptId) throws DataAccessException{                
+        if(deptId > 0){
+            Department dept = this.findDepartmentById(deptId);
+            
+            this.em.remove(dept);
+            //Query query = this.em.createQuery("DELETE FROM Department dept Where dept.id = :id");
+            //int delCount = query.setParameter("id", deptId).executeUpdate();
         }        
     }
 }

@@ -174,32 +174,32 @@ public class DepartmentController {
     }
     
     @RequestMapping(value = "department/delete/id/{id}", method = RequestMethod.POST)
-    public @ResponseBody DepartmentJsonResponse deleteDepartmentById(@PathVariable String id){
+    public @ResponseBody DepartmentJsonResponse deleteDepartmentById(@PathVariable String id) throws Exception{
         
         DepartmentJsonResponse response = new DepartmentJsonResponse();
-        //1> use getDepartmentById to get the department, and find if the department has children or employees
-        Department dept = new Department();
+        //1> use getDepartmentById to get the department, and find if the department has children or employees        
         int dep_id = Integer.parseInt(id);
         if(dep_id > 0){
-            dept = this.hrService.findDepartmentById(dep_id);
+            Department dept = this.hrService.findDepartmentById(dep_id);
             
             Map<String, String> errors = new HashMap<>();
             
             if(dept.getChildren().size() > 0){
                 // the department has children department, so it can not be deleted                
-                errors.put("ChildrenDepartment", "The Department has chidren departments, so it can not be deleted!");                                
+                errors.put("ChildrenDepartment", "The Department has chidren departments, so it can not be deleted !");                                
             }
             
             if(dept.getEmployees().size() > 0){
                 // the department has employess, so it can not be deleted.
-                errors.put("Employees", "The Department has employees, so it can not be deleted!");          
+                errors.put("Employees", "The Department has employees, so it can not be deleted !");          
             }
             
             if(errors.size() > 0){
                 response.setValidated(false);
             }else{
                 // the department can be deleted
-                this.hrService.deleteDepartment(dept);
+                this.hrService.deleteDepartmentById(dep_id);
+                response.setValidated(true);
             }
                 
             response.setErrorMessages(errors);

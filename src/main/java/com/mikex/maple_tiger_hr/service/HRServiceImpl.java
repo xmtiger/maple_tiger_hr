@@ -59,8 +59,8 @@ public class HRServiceImpl implements HRService {
     
     @Override
     @Transactional
-    public void deleteDepartment(Department department) throws DataAccessException {
-        departmentRepository.deleteDepartment(department);
+    public void deleteDepartmentById(int deptId) throws DataAccessException {
+        departmentRepository.deleteDepartmentById(deptId);
     }
 
     @Override

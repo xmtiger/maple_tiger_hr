@@ -273,7 +273,7 @@
                     $scope.$on("RootCtrl_SendCurNodeInfo", function(event, msg){                   
                         
                         if(typeof msg === 'object' && msg.hasOwnProperty('type') && msg.hasOwnProperty('data')){
-                            var nodeInfo = msg.data.obj;
+                            var nodeInfo = msg.obj;
                             
                             if(msg.type === 'createOrUpdateDepartment'){                                
                                 saveOrUpdateDepartment(nodeInfo);
@@ -290,7 +290,7 @@
                         if($scope.delete !== 0)
                             return;
                         
-                        $scope.delete++;
+                        $scope.delete++;    //only allow delete once
                         
                         departmentService.deleteDepartmentById($scope, $location, nodeInfo).then(
                             function(data){
@@ -313,7 +313,7 @@
                                     }
                                 }
                             },function(errResponse){
-                                console.error("Error while create one department");
+                                console.error("Error while delete one department");
                             } 
                         );
                     };

@@ -27,7 +27,7 @@ public interface HRService {
     
     Department findDepartmentById(int id) throws DataAccessException;
     
-    void deleteDepartment(Department department) throws DataAccessException;
+    void deleteDepartmentById(int deptId) throws DataAccessException;
     
     Collection<Department> findDepartmentByName(String name) throws DataAccessException;
     
