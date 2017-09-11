@@ -7,8 +7,8 @@
 
 "use strict";
 
-angular.module("app").controller("rootController", ["$scope", "$rootScope","departmentService","$location",
-    function($scope, $rootScope, departmentService, $location){ 
+angular.module("app").controller("rootController", ["$scope", "$rootScope","departmentService","employeeService","$location",
+    function($scope, $rootScope, departmentService, employeeService, $location){ 
      
     //The following $scope.items is for the dropdown button, which gives dynamically selection choice.
     $scope.items = [
@@ -74,11 +74,19 @@ angular.module("app").controller("rootController", ["$scope", "$rootScope","depa
 
                     },
                     function(errResponse){
-                        console.error("Error while fetching all departments");
+                        console.error("Error while fetching department form page");
                     }   
                 );
             }else if(node_in.dataType === 'Employee'){
-                
+                employeeService.getSaveOrUpdateEmployeePage($location).then(
+                    function(data){
+                        var message = {obj: node_in, pageContent: data };
+                        $rootScope.$broadcast("DirectiveToUpdateBindPage_RootMsg", message);
+                    },
+                    function(errResponse){
+                        console.error("Error while fetching employee form page");
+                    }
+                );
             }
         }        
         
@@ -96,6 +104,8 @@ angular.module("app").controller("rootController", ["$scope", "$rootScope","depa
                 //fill the form with obj
                 if(msg.obj.dataType === 'Department'){
                     $rootScope.$broadcast("DepartmentPageFormToBeFilled", msg.obj);
+                }else if(msg.obj.dataType === 'Employee'){
+                    $rootScope.$broadcast("EmployeePageFormToBeFilled", msg.obj);
                 }
             }
         }

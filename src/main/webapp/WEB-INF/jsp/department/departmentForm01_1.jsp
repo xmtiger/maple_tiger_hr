@@ -414,17 +414,16 @@
                             $scope.formTitle = 'DEPARTMENT UPDATE FORM';
                             $scope.button = 'Update';
                         }*/
-                                                
+                        $scope.formTitle = 'DEPARTMENT UPDATE FORM';
+                        $scope.button = 'Update';     
+                        $scope.displayDeleteButton = true;
+                                
                         departmentService.findDepartmentById($scope, $location, obj).then(
                             function(data){
                                 console.log(data);
                                 $scope.formData.name = data.name;
                                 $scope.formData.address = data.address;
-                                $scope.formData.beginTime = data.begin_time;
-
-                                $scope.formTitle = 'DEPARTMENT UPDATE FORM';
-                                $scope.button = 'Update';     
-                                $scope.displayDeleteButton = true;
+                                $scope.formData.beginTime = data.begin_time;                                
                             },
                             function(errResponse){
                                 console.error("Error while fetching the indicated department");
@@ -463,7 +462,6 @@
                 <legend>{{formTitle}}</legend>
 
                 <!-- Text input-->
-
                 <div class="form-group">
                     <label class="col-md-4 control-label">Name</label>  
                     <div class="col-md-4 inputGroupContainer">
@@ -472,19 +470,18 @@
                             <input  name="name" placeholder="Name" class="form-control"  type="text" id="dept_name" ng-model="formData.name" ng-change="nameChange()"/>
                         </div>
                     </div>
-                </div>
-                
+                </div>                
                
                 <!-- Text input-->
-
                 <div class="form-group">
-                  <label class="col-md-4 control-label" >Address</label> 
+                    <label class="col-md-4 control-label" >Address</label> 
+                    
                     <div class="col-md-4 inputGroupContainer">
-                    <div class="input-group" >
-                  <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
-                  <input name="address" placeholder="Address" class="form-control"  type="text" id="dept_address" ng-model="formData.address" ng-change="addressChange()"/>
+                        <div class="input-group" >
+                            <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
+                            <input name="address" placeholder="Address" class="form-control"  type="text" id="dept_address" ng-model="formData.address" ng-change="addressChange()"/>
+                        </div>
                     </div>
-                  </div>
                 </div>        
                                
                 <div class="form-group">
@@ -497,22 +494,20 @@
                             <span class="input-group-addon add-on"><span class="glyphicon glyphicon-calendar"></span></span>
                         </div>
                     </div>     
-                </div>
-                                          
+                </div>                                          
                 
                 <!-- Button -->
                 <div class="form-group">
                     <label class="col-md-4 control-label"></label>
                     <div class="col-md-4">
-                        <button id="sendButton" class="btn btn-warning" ng-click="departmentFormSubmit()">{{button}}<span class="glyphicon glyphicon-send"></span></button>
+                        <button id="sendButton" class="btn btn-primary" ng-click="departmentFormSubmit()">{{button}}<span class="glyphicon glyphicon-send"></span></button>
                         <button type="button" class="btn btn-warning" ng-click="departmentFormCancel()">Cancel</button>
                     </div>
-                  <!-- Indicates a dangerous or potentially negative action -->
+                    <!-- Indicates a dangerous or potentially negative action -->
                     <div class = "col-md-4">
                         <button type="button" class="btn btn-danger" ng-click="departmentFormDelete()" ng-show="displayDeleteButton">Delete</button>
                     </div>
-                </div>               
-                
+                </div>        
                 
             </fieldset>
          </form>

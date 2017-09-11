@@ -188,7 +188,8 @@
         <!-- application js by using angularjs framework -->        
         <script type="text/javascript" src="${context}/resources/core/js/app.js"></script>        
         <script type="text/javascript" src="${context}/resources/core/js/service/app_utils.js"></script>
-        <script type="text/javascript" src="${context}/resources/core/js/service/department_service.js"></script>        
+        <script type="text/javascript" src="${context}/resources/core/js/service/department_service.js"></script>  
+        <script type="text/javascript" src="${context}/resources/core/js/service/employee_service.js"></script>
         <script type="text/javascript" src="${context}/resources/core/js/controller/departmentNavMenuController.js"></script>
         <script type="text/javascript" src="${context}/resources/core/js/controller/rootController.js"></script>                
         

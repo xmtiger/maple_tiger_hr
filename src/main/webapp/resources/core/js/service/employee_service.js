@@ -6,33 +6,22 @@
 
 'use strict';
 
-angular.module("app").factory("departmentService", ["$http", "$q", function($http, $q){
-        
-    //var self = this;
-    
-    //var departmentsFromServer = {};
-    
-    var REST_SERVICE_URI = "department/";
+angular.module("app").factory("employeeService", ["$http", "$q", function($http, $q){
+   
+    var REST_SERVICE_URI = "employee/";
     var REST_DEPARTMENT_FORM_PAGE_URI = "getCreationOrUpdateFormPage";
-    
-    var uri_path = {};
-    
+     
     var factory = {
-        fetchAllDepartments : fetchAllDepartments,
-        setURI : setURI,
-        getSaveOrUpdateDepartmentPage : getSaveOrUpdateDepartmentPage,
-        createOrUpateDepartment : createOrUpateDepartment,
-        findDepartmentById : findDepartmentById,
-        deleteDepartmentById : deleteDepartmentById
+        fetchAllEmployees : fetchAllEmployees,        
+        getSaveOrUpdateEmployeePage : getSaveOrUpdateEmployeePage,
+        createOrUpateEmployee : createOrUpateEmployee,
+        findEmployeeById : findEmployeeById,
+        deleteDepartmentById : deleteEmployeeById
     };
     
     return factory;
     
-    function setURI(location){
-        this.uri_path = location;
-    }
-    
-    function fetchAllDepartments($location){
+    function fetchAllEmployees($location){
         var deferred = $q.defer();
         var request = $location.path() + REST_SERVICE_URI + "all";
         request = request.replace("/#", "");
@@ -50,8 +39,8 @@ angular.module("app").factory("departmentService", ["$http", "$q", function($htt
         return deferred.promise;        
     }
     
-    function getSaveOrUpdateDepartmentPage($location){
-        console.log("begin departmentService on function saveOrUpdateDepartment()");
+    function getSaveOrUpdateEmployeePage($location){
+        console.log("begin employeeService on function saveOrUpdateEmployee()");
         
         var deferred = $q.defer();
         var request = $location.path() + REST_SERVICE_URI + REST_DEPARTMENT_FORM_PAGE_URI;
@@ -64,13 +53,10 @@ angular.module("app").factory("departmentService", ["$http", "$q", function($htt
                 console.log("received response");
                 //deferred.resolve function will send the data the upper level function whith .then(...)
                 deferred.resolve(response.data);                
-                //$scope.$emit("updateBindPageView", response.data);
-                //return data to controller, let controller send message rather than send message in service.                                
-                //return response.data;
-                
+                                
             },
             function(errResponse){
-                console.error("Error while fetching new department form");
+                console.error("Error while fetching employee form");
                 deferred.reject(errResponse);
             }        
         );
@@ -78,7 +64,7 @@ angular.module("app").factory("departmentService", ["$http", "$q", function($htt
         return deferred.promise;
     }
     
-    function createOrUpateDepartment($scope, $location, department, nodeInfo){
+    function createOrUpateEmployee($scope, $location, department, nodeInfo){
         
         var curNodeId = nodeInfo.id;
         var curNodeType = nodeInfo.type;       
@@ -88,7 +74,7 @@ angular.module("app").factory("departmentService", ["$http", "$q", function($htt
             curNodeType = curFatherType;
         }
         if(curFatherType === null || curFatherType === ""){
-            curNodeType = "Department";
+            curNodeType = "Employee";
             curFatherType = "Department";
         }
         
@@ -109,7 +95,7 @@ angular.module("app").factory("departmentService", ["$http", "$q", function($htt
                 //$scope.$emit("oneDepartmentCreated", deferred.promise);
             },
             function(errResponse){
-                console.error("Error while fetching all departments");
+                console.error("Error while fetching all employees");
                 deferred.reject(errResponse);
             }        
         );
@@ -117,7 +103,7 @@ angular.module("app").factory("departmentService", ["$http", "$q", function($htt
         return deferred.promise;
     }
         
-    function findDepartmentById($scope, $location, nodeInfo){
+    function findEmployeeById($scope, $location, nodeInfo){
         
         var curNodeId = nodeInfo.id;
         //var curNodeType = nodeInfo.dataType;       
@@ -136,7 +122,7 @@ angular.module("app").factory("departmentService", ["$http", "$q", function($htt
                 deferred.resolve(response.data);                
             },
             function(errResponse){
-                console.error("Error while fetching the indicated department");
+                console.error("Error while fetching the indicated employee");
                 deferred.reject(errResponse);
             }        
         );
@@ -144,7 +130,7 @@ angular.module("app").factory("departmentService", ["$http", "$q", function($htt
         return deferred.promise;
     }
     
-    function deleteDepartmentById($scope, $location, nodeInfo){
+    function deleteEmployeeById($scope, $location, nodeInfo){
         var curNodeId = nodeInfo.id;             
                 
         var deferred = $q.defer();
@@ -161,7 +147,7 @@ angular.module("app").factory("departmentService", ["$http", "$q", function($htt
                 deferred.resolve(response.data);                
             },
             function(errResponse){
-                console.error("Error while fetching the indicated department");
+                console.error("Error while fetching the indicated employee");
                 deferred.reject(errResponse);
             }        
         );

@@ -72,13 +72,13 @@ public class DepartmentController {
         binder.addValidators(departmentFormValidator);
     }*/
     
-    @RequestMapping(value = "department/new", method = RequestMethod.GET)
-    public String getDepartmentCreationForm(Map<String, Object> model){
+    @RequestMapping(value = "department/getCreationOrUpdateFormPage", method = RequestMethod.GET)
+    public String getDepartmentCreationOrUpdateForm(){
         
-        logger.debug("initCreationForm");
+        logger.debug("get departmentCreationOrUpdate Form");
         
-        Department dept = new Department();
-        model.put("department", dept);
+        //Department dept = new Department();
+        //model.put("department", dept);
         return VIEWS_DEPT_CREATE_OR_UPDATE_FORM;
     }   
         
