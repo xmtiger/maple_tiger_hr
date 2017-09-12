@@ -9,6 +9,7 @@
  */
 /*table employee and department_relationship dependent on department must be dropped first, 
 then the table department can be dropped */
+DROP TABLE designations IF EXISTS;
 DROP TABLE employees IF EXISTS;
 DROP TABLE department_relationship IF EXISTS;
 DROP TABLE departments IF EXISTS;
@@ -21,6 +22,7 @@ CREATE TABLE employees (
     first_name      VARCHAR(30),
     last_name       VARCHAR_IGNORECASE(30),
     birth_date      DATE,
+    gender          VARCHAR(30),
     home_address    VARCHAR(255),
     phone_mobile    VARCHAR(20),
     dept_id         INTEGER NOT NULL

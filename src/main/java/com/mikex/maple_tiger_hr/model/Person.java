@@ -7,6 +7,8 @@ package com.mikex.maple_tiger_hr.model;
 
 import java.util.Date;
 import javax.persistence.Column;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.MappedSuperclass;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -34,7 +36,19 @@ public class Person extends BaseEntity {
     @Temporal(TemporalType.TIMESTAMP)
     @DateTimeFormat(pattern = "yyyy/MM/dd")
     protected Date birth_date;
+    
+    @Column(name = "gender")
+    @Enumerated(EnumType.STRING)
+    protected Gender gender;  //0: female, 1: male
 
+    public Gender getGender() {
+        return gender;
+    }
+
+    public void setGender(Gender gender) {
+        this.gender = gender;
+    }
+    
     public String getFirstName() {
         return firstName;
     }
