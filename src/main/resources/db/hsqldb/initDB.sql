@@ -13,7 +13,7 @@ DROP TABLE person IF EXISTS;
 
 DROP TABLE clients IF EXISTS;
 
-DROP TABLE employee_history IF EXISTS;
+DROP TABLE employee_job_history IF EXISTS;
 DROP TABLE employee_salary_history IF EXISTS;
 DROP TABLE employee_assignments IF EXISTS;
 
@@ -34,7 +34,7 @@ CREATE TABLE person(
     middle_name VARCHAR(30),
     last_name   VARCHAR(30),
 
-    gender          VARCHAR(20),
+    gender      VARCHAR(20),
     birth_date  DATE,
     
     address     VARCHAR(255),
@@ -43,10 +43,12 @@ CREATE TABLE person(
     country     VARCHAR(60),
     postcode    VARCHAR(20),
 
+    email_office    VARCHAR(255),
+    email_personal  VARCHAR(255),
+
     home_phone      VARCHAR(30),
     mobile_phone    VARCHAR(30),
     fax             VARCHAR(30),
-    email           VARCHAR(30),
 
     hobbies         VARCHAR(255)
 );
@@ -93,7 +95,7 @@ CREATE TABLE project_finance(
     
     cost_description    VARCHAR(255),
     direct_cost         DECIMAL(12,2),
-    indirect_cost       DECIMAL(12,2),
+    indirect_cost       DECIMAL(12,2)
 );
 
 CREATE TABLE projects (
@@ -120,21 +122,32 @@ CREATE TABLE projects (
 
 ALTER TABLE project_finance ADD CONSTRAINT fk_project_finance_projects FOREIGN KEY (project_id) REFERENCES projects (id);
 
-CREATE TABLE employee_history (
+CREATE TABLE employee_job_history (
     id              INTEGER IDENTITY PRIMARY KEY,
+    employee_id     INTEGER NOT NULL,
+
     title           VARCHAR(255),
+    job_description VARCHAR(255),
+
     start_date      DATE,
-    end_date        DATE,
-    employee_id     INTEGER NOT NULL
+    end_date        DATE    
+    
 );
 
 CREATE TABLE employee_salary_history (
     id              INTEGER IDENTITY PRIMARY KEY,
+    employee_id     INTEGER NOT NULL,
+
     start_date      DATE,
     end_date        DATE,
+    
+    pay_type        VARCHAR(255),
+
+    currency_type   VARCHAR(20),
+
     base_rate       DECIMAL(10,2),
-    overtime_rate   DECIMAL(10,2),
-    employee_id     INTEGER NOT NULL
+    overtime_rate   DECIMAL(10,2)
+    
 );
 
 CREATE TABLE employee_assignments (
@@ -147,20 +160,30 @@ CREATE TABLE employee_assignments (
 
 CREATE TABLE employees (
     id              INTEGER IDENTITY PRIMARY KEY,
+    dept_id         INTEGER NOT NULL,
 
     first_name      VARCHAR(30),
+    middle_name     VARCHAR(30),
     last_name       VARCHAR_IGNORECASE(30),
 
     birth_date      DATE,
     gender          VARCHAR(20),
 
     home_address    VARCHAR(255),
+    city            VARCHAR(60),
+    province        VARCHAR(60),
+    country         VARCHAR(60),
+    postcode        VARCHAR(20),
 
-    phone_mobile    VARCHAR(20),
-    dept_id         INTEGER NOT NULL
+    email_office    VARCHAR(255),
+    email_personal  VARCHAR(255),
+    
+    home_phone      VARCHAR(30),
+    phone_mobile    VARCHAR(30),
+    fax             VARCHAR(30)   
 );
 
-ALTER TABLE employee_history ADD CONSTRAINT fk_employee_employeeHistory FOREIGN KEY (employee_id) REFERENCES employees (id);
+ALTER TABLE employee_job_history ADD CONSTRAINT fk_employee_employeeHistory FOREIGN KEY (employee_id) REFERENCES employees (id);
 
 ALTER TABLE employee_salary_history ADD CONSTRAINT fk_employee_salaryHistory FOREIGN KEY (employee_id) REFERENCES employees (id);
 
