@@ -7,13 +7,13 @@
  * Author:  xmtig
  * Created: 24-Jul-2017
  */
-INSERT INTO departments VALUES (1, 'management', '1990-03-01', '1990-03-01', '233 willibrord St.');
-INSERT INTO departments VALUES (2, 'accounting', '1990-05-01', '1990-05-01', '233 willibrord St.');
-INSERT INTO departments VALUES (3, 'engineering', '1990-03-01', '1990-03-01', '233 willibrord St.');
-INSERT INTO departments VALUES (4, 'civil', '1990-03-01', '1990-03-01', '223 willibrord, St.');
-INSERT INTO departments VALUES (5, 'mechanical', '1990-03-01', '1990-03-01', '233 willibrord St.');
-INSERT INTO departments VALUES (6, 'Yamax Group', '1990-03-01', '1990-03-01', '233 willibrord St.');
-INSERT INTO departments VALUES (7, 'construction', '1990-03-01', '1990-03-01', '233 willibrord St.');
+INSERT INTO departments VALUES (1, 'management', '1990-03-01', '1900-01-01', '233 willibrord St.');
+INSERT INTO departments VALUES (2, 'accounting', '1990-05-01', '1900-01-01', '233 willibrord St.');
+INSERT INTO departments VALUES (3, 'engineering', '1990-03-01', '1900-01-01', '233 willibrord St.');
+INSERT INTO departments VALUES (4, 'civil', '1990-03-01', '1900-01-01', '223 willibrord, St.');
+INSERT INTO departments VALUES (5, 'mechanical', '1990-03-01', '1900-01-01', '233 willibrord St.');
+INSERT INTO departments VALUES (6, 'Yamax Group', '1990-03-01', '1900-01-01', '233 willibrord St.');
+INSERT INTO departments VALUES (7, 'construction', '1990-03-01', '1900-01-01', '233 willibrord St.');
 
 INSERT INTO department_relationship VALUES(3, 4);
 INSERT INTO department_relationship VALUES(3, 5);
@@ -30,6 +30,15 @@ INSERT INTO employees VALUES (5, 'Alix', 'Jackson', '1988-03-12', 'MALE','2698 C
 INSERT INTO employees VALUES (6, 'James', 'Lee', '1988-11-16','MALE', '2690 Commerce St.', '6085558783', 4);
 INSERT INTO employees VALUES (7, 'Alex', 'Zoe', '1988-12-09', 'MALE','2098 Commerce St.', '6087558753', 5);
 INSERT INTO employees VALUES (8, 'Anne', 'Urta', '1988-06-17', 'FEMALE', '2198 Commerce St.', '6087558753', 5);
+
+INSERT INTO employee_history VALUES(1,'Manager' ,'2001-01-01', '1900-01-01', 1);
+
+INSERT INTO employee_salary_history VALUES(1, '2001-01-01', '1992-01-01', 25.6, -1, 1); 
+
+
+INSERT INTO projects VALUES (1, 1, 'P2017-09-01', 'Project Test 01', 'Renovation Project', 
+                            '1832 Springland', 'Verdun', 'Quebec',  'Canada', 'H8N 3H6',
+                            '2017-07-28 6:00:00' , '1900-01-01 00:00:00', '2017-07-28 09:33:36', '2017-09-28 12:30:00');
 
 INSERT INTO timecodes VALUES (1, 'P2017-07-01', 1, 'charge code for project AAA', 'TRUE', 1, 'TRUE', 
                                 '2017-07-28 09:33:36', 1,
