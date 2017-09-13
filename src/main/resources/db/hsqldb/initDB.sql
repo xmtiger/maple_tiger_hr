@@ -22,7 +22,7 @@ CREATE TABLE employees (
     first_name      VARCHAR(30),
     last_name       VARCHAR_IGNORECASE(30),
     birth_date      DATE,
-    gender          VARCHAR(30),
+    gender          VARCHAR(20),
     home_address    VARCHAR(255),
     phone_mobile    VARCHAR(20),
     dept_id         INTEGER NOT NULL
