@@ -120,7 +120,7 @@ public class JdbcEmployeeRepositoryImpl implements EmployeeRepository {
                 .addValue("lastName", employee.getLastName())
                 .addValue("birth_date", employee.getBirth_date())
                 .addValue("home_address", employee.getHome_address())
-                .addValue("phone_mobile", employee.getPhone_mobile())
+                .addValue("phone_mobile", employee.getMobile_phone())
                 .addValue("dept_id", employee.getDepartment().getId());
     }
     
@@ -136,7 +136,7 @@ public class JdbcEmployeeRepositoryImpl implements EmployeeRepository {
             Date birthDate = rs.getDate("birth_date");
             employee.setBirth_date(new Date(birthDate.getTime()));
             employee.setHome_address(rs.getString("home_address"));
-            employee.setPhone_mobile(rs.getString("phone_mobile"));
+            employee.setMobile_phone(rs.getString("phone_mobile"));
             return employee;
             //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
         }

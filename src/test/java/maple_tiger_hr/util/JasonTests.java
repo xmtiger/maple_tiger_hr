@@ -53,7 +53,7 @@ public class JasonTests {
         employee01.setId(0);
         employee01.setFirstName("Tom");
         employee01.setLastName("Jaskson");
-        employee01.setPhone_mobile("1233213236");
+        employee01.setMobile_phone("1233213236");
         employee01.setBirth_date((new SimpleDateFormat("YYYY-MM-dd").parse("1987-08-01")));
         employee01.setHome_address("565 Springland, Montreal, Q.C");
         employee01.setDepartment(dept01);
@@ -86,7 +86,7 @@ public class JasonTests {
                         "  \"lastName\" : \"Jaskson\",\n" +
                         "  \"birth_date\" : \"1986-12-28\",\n" +
                         "  \"home_address\" : \"565 Springland, Montreal, Q.C\",\n" +
-                        "  \"phone_mobile\" : \"1233213236\",\n" +
+                        "  \"mobile_phone\" : \"1233213236\",\n" +
                         "  \"department\" : {\n" +
                         "    \"id\" : 0,\n" +
                         "    \"name\" : \"Management\",\n" +

@@ -43,8 +43,8 @@ CREATE TABLE person(
     country     VARCHAR(60),
     postcode    VARCHAR(20),
 
-    email_office    VARCHAR(255),
-    email_personal  VARCHAR(255),
+    office_email    VARCHAR(255),
+    personal_email  VARCHAR(255),
 
     home_phone      VARCHAR(30),
     mobile_phone    VARCHAR(30),
@@ -175,11 +175,11 @@ CREATE TABLE employees (
     country         VARCHAR(60),
     postcode        VARCHAR(20),
 
-    email_office    VARCHAR(255),
-    email_personal  VARCHAR(255),
+    office_email    VARCHAR(255),
+    personal_email  VARCHAR(255),
     
     home_phone      VARCHAR(30),
-    phone_mobile    VARCHAR(30),
+    mobile_phone    VARCHAR(30),
     fax             VARCHAR(30)   
 );
 

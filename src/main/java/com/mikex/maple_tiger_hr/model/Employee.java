@@ -25,12 +25,12 @@ import org.hibernate.validator.constraints.NotEmpty;
 @Table(name = "employees")
 public class Employee extends Person implements Comparable<Employee>, Familyable<Employee> {
          
-    @Column(name = "home_address")
-    private String home_address;
+    //@Column(name = "home_address")
+    //private String home_address;
     
-    @Column(name = "phone_mobile")
+    /*@Column(name = "phone_mobile")
     @Digits(fraction = 0, integer = 10)
-    private String phone_mobile;
+    private String phone_mobile;*/
     
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "dept_id")
@@ -38,21 +38,21 @@ public class Employee extends Person implements Comparable<Employee>, Familyable
     private Department department;
 
     
-    public String getHome_address() {
+    /*public String getHome_address() {
         return home_address;
     }
 
     public void setHome_address(String home_address) {
         this.home_address = home_address;
-    }
+    }*/
 
-    public String getPhone_mobile() {
+    /*public String getPhone_mobile() {
         return phone_mobile;
     }
 
     public void setPhone_mobile(String phone_mobile) {
         this.phone_mobile = phone_mobile;
-    }
+    }*/
 
     public Department getDepartment() {
         return department;
