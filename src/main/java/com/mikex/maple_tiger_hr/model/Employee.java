@@ -6,6 +6,8 @@
 package com.mikex.maple_tiger_hr.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import java.util.Set;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
@@ -14,6 +16,7 @@ import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.Digits;
 import javax.persistence.FetchType;
+import javax.persistence.OneToMany;
 
 import org.hibernate.validator.constraints.NotEmpty;
 
@@ -36,7 +39,17 @@ public class Employee extends Person implements Comparable<Employee>, Familyable
     @JoinColumn(name = "dept_id")
     @JsonIgnore
     private Department department;
-
+    
+    //mappedBy means the class field name of the class 'EmployeeJobHistory'
+    //FecthType.EAGER is to get associated beans right way, but FetchType.LAZY is to get beans when the beans are required by using explict sql by using fetch join ...
+    @OneToMany(mappedBy = "employee", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    private Set<EmployeeJobHistory> jobHistory;
+    
+    @OneToMany(mappedBy = "employee", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    private Set<EmployeeSalaryHistory> salaryHistory;
+    
+    @OneToMany(mappedBy = "employee", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    private Set<EmployeeAssignments> assignments;
     
     /*public String getHome_address() {
         return home_address;

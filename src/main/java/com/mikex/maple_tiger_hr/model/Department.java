@@ -58,7 +58,7 @@ public class Department extends NamedEntity implements Comparable<Department>, F
     @NotEmpty(message="Enter an address.")
     private String address;
     
-    //mappedBy means the class field name 
+    //mappedBy means the class field name of the class 'Employee'
     @OneToMany(mappedBy = "department", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     //@JsonIgnore 
     private Set<Employee> employees;

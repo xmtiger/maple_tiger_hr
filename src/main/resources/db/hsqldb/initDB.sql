@@ -113,7 +113,7 @@ CREATE TABLE projects (
     country             VARCHAR(255),
     postcode            VARCHAR(30),
     
-    start_time          TIMESTAMP,
+    begin_time          TIMESTAMP,
     end_time            TIMESTAMP,
     
     estimated_start_time    TIMESTAMP,
@@ -129,8 +129,8 @@ CREATE TABLE employee_job_history (
     title           VARCHAR(255),
     job_description VARCHAR(255),
 
-    start_date      DATE,
-    end_date        DATE    
+    begin_time      DATE,
+    end_time        DATE    
     
 );
 
@@ -138,12 +138,12 @@ CREATE TABLE employee_salary_history (
     id              INTEGER IDENTITY PRIMARY KEY,
     employee_id     INTEGER NOT NULL,
 
-    start_date      DATE,
-    end_date        DATE,
+    begin_time      DATE,
+    end_time        DATE,
     
-    pay_type        VARCHAR(255),
+    pay_type        VARCHAR(100),
 
-    currency_type   VARCHAR(20),
+    currency_type   VARCHAR(30),
 
     base_rate       DECIMAL(10,2),
     overtime_rate   DECIMAL(10,2)
@@ -153,8 +153,9 @@ CREATE TABLE employee_salary_history (
 CREATE TABLE employee_assignments (
     id              INTEGER IDENTITY PRIMARY KEY,
     job_code        VARCHAR(30),                /*this job code shall be FK referred from 'project table' which will be added*/
-    start_date      TIMESTAMP,
-    end_date        TIMESTAMP,
+    
+    begin_time      TIMESTAMP,
+    end_time        TIMESTAMP,
     employee_id     INTEGER NOT NULL
 );
 

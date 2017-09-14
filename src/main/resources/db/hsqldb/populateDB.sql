@@ -36,8 +36,15 @@ INSERT INTO employees VALUES (7,5, 'Alex','' ,'Zoe', '1988-12-09', 'MALE','2098 
 INSERT INTO employees VALUES (8,6, 'Anne','' ,'Urta', '1988-06-17', 'FEMALE', '2198 Commerce St.', 'Montreal', 'Quebec', 'Canada', 'H8N 3H5','test01@yamax.com', 'test01@gmail.com','6087558753', '', '');
 
 INSERT INTO employee_job_history VALUES(1,1,'Manager','Take charge of the managemet of the whole organization' ,'2001-01-01', '1900-01-01');
+INSERT INTO employee_job_history VALUES(2,2,'Manager','Take charge of the managemet of the engineering' ,'2001-01-01', '1900-01-01');
+INSERT INTO employee_job_history VALUES(3,3,'Accountant','Accounting' ,'2001-01-01', '1900-01-01');
+INSERT INTO employee_job_history VALUES(4,4,'Inspector','Inspection' ,'2001-01-01', '1900-01-01');
+INSERT INTO employee_job_history VALUES(5,5,'Designer','Drafting' ,'2001-01-01', '1900-01-01');
+INSERT INTO employee_job_history VALUES(6,6,'Designer','Drafting' ,'2001-01-01', '1900-01-01');
+INSERT INTO employee_job_history VALUES(7,7,'Engineer','Design' ,'2001-01-01', '1900-01-01');
+INSERT INTO employee_job_history VALUES(8,8,'Engineer','Design' ,'2001-01-01', '1900-01-01');
 
-INSERT INTO employee_salary_history VALUES(1,1, '2001-01-01', '1992-01-01','Full-Time','CAD', 25.6, -1); 
+INSERT INTO employee_salary_history VALUES(1,1, '2001-01-01', '1992-01-01','DIRECT_DEPOSIT_BIWEEKLY','CAD', 25.6, -1); 
 
 
 INSERT INTO projects VALUES (1, 1, 'P2017-09-01', 'Project Test 01', 'Renovation Project', 
