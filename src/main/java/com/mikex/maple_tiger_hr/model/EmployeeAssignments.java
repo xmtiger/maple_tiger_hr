@@ -8,10 +8,13 @@ package com.mikex.maple_tiger_hr.model;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.util.Date;
+import java.util.Set;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
@@ -27,8 +30,11 @@ import org.springframework.format.annotation.DateTimeFormat;
 @Table(name = "employee_assignments")
 public class EmployeeAssignments extends BaseEntity{
     
-    @Column(name = "job_code")
-    private String job_code;
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(name = "job_codes_assignments", joinColumns = @JoinColumn(name = "job_code_id"), 
+            inverseJoinColumns = @JoinColumn(name = "assignment_id"))
+    @JsonIgnore
+    private Set<JobCode> job_codes;
     
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "employee_id")
@@ -47,15 +53,7 @@ public class EmployeeAssignments extends BaseEntity{
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     @JsonIgnore         //to avoid json version error from ajax to controller, when coversion with json data type.
     private Date end_time;
-
-    public String getJob_code() {
-        return job_code;
-    }
-
-    public void setJob_code(String job_code) {
-        this.job_code = job_code;
-    }
-
+    
     public Employee getEmployee() {
         return employee;
     }

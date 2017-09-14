@@ -102,7 +102,6 @@ CREATE TABLE projects (
     id                  INTEGER IDENTITY PRIMARY KEY, 
     
     client_id           INTEGER,
-    job_code            VARCHAR(255),
     
     project_name        VARCHAR(255),
     project_descriptin  VARCHAR(1023),
@@ -120,7 +119,18 @@ CREATE TABLE projects (
     estimated_end_time      TIMESTAMP
 );
 
+CREATE TABLE job_codes (
+    id                  INTEGER IDENTITY PRIMARY KEY,
+    
+    project_id          INTEGER NOT NULL,
+
+    job_code            VARCHAR(255) NOT NULL UNIQUE,
+    description         VARCHAR(255)
+);
+
 ALTER TABLE project_finance ADD CONSTRAINT fk_project_finance_projects FOREIGN KEY (project_id) REFERENCES projects (id);
+
+ALTER TABLE job_codes ADD CONSTRAINT fk_project_job_code FOREIGN KEY (project_id) REFERENCES projects (id);
 
 CREATE TABLE employee_job_history (
     id              INTEGER IDENTITY PRIMARY KEY,
@@ -152,12 +162,20 @@ CREATE TABLE employee_salary_history (
 
 CREATE TABLE employee_assignments (
     id              INTEGER IDENTITY PRIMARY KEY,
-    job_code        VARCHAR(30),                /*this job code shall be FK referred from 'project table' which will be added*/
+    job_code        INTEGER NOT NULL,                /*this job code shall be FK referred from 'job codes' */
     
     begin_time      TIMESTAMP,
     end_time        TIMESTAMP,
     employee_id     INTEGER NOT NULL
 );
+
+CREATE TABLE job_codes_assignments (
+    job_code_id INTEGER NOT NULL,
+    assignment_id   INTEGER NOT NULL,
+);
+
+ALTER TABLE job_codes_assignments ADD CONSTRAINT fk_project_code_assignments_job_code FOREIGN KEY (job_code_id) REFERENCES job_codes (id);
+ALTER TABLE job_codes_assignments ADD CONSTRAINT fk_project_code_assignments_assignment FOREIGN KEY (assignment_id) REFERENCES employee_assignments (id);
 
 CREATE TABLE employees (
     id              INTEGER IDENTITY PRIMARY KEY,
