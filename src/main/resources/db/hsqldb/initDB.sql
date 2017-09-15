@@ -9,26 +9,33 @@
  */
 /*table employee and department_relationship dependent on department must be dropped first, 
 then the table department can be dropped */
-DROP TABLE person IF EXISTS;
 
-DROP TABLE clients IF EXISTS;
 
 DROP TABLE employee_job_history IF EXISTS;
 DROP TABLE employee_salary_history IF EXISTS;
 DROP TABLE employee_assignments IF EXISTS;
 
+DROP TABLE job_codes_assignments IF EXISTS;
+DROP TABLE job_codes IF EXISTS;
+
 DROP TABLE employees IF EXISTS;
+
 DROP TABLE department_relationship IF EXISTS;
 DROP TABLE departments IF EXISTS;
 
 DROP TABLE timecodes IF EXISTS;
 DROP TABLE timesheets IF EXISTS;
 
-DROP TABLE project_finance IF EXISTS;
+DROP TABLE project_incomes IF EXISTS;
+DROP TABLE project_costs IF EXISTS;
 DROP TABLE projects IF EXISTS;
 
+DROP TABLE clients_contacts IF EXISTS;
+DROP TABLE clients IF EXISTS;
+DROP TABLE person_contacts IF EXISTS;
+
 /* if the end_date is '1990-01-01', it means this is the current record*/
-CREATE TABLE person(
+CREATE TABLE person_contacts(
     id          INTEGER IDENTITY PRIMARY KEY,
     first_name  VARCHAR(30),
     middle_name VARCHAR(30),
@@ -54,38 +61,32 @@ CREATE TABLE person(
 );
 
 CREATE TABLE clients(
-    id                  INTEGER IDENTITY PRIMARY KEY,
-    client_name         VARCHAR(255) NOT NULL,
-    location            VARCHAR(255),
-    description         VARCHAR(255),
+    id              INTEGER IDENTITY PRIMARY KEY,
+    name            VARCHAR(255) NOT NULL UNIQUE,
     
-    /*person_contact shall be FK of the table 'person_contacts'*/
-    person_contact_id      INTEGER,    
-    person_contact_id_1    INTEGER,
-    person_contact_id_2    INTEGER, 
-                                
-    phone               VARCHAR(30),
-    phone_1             VARCHAR(30),
-    phone_2             VARCHAR(30),
+    description     VARCHAR(255),
     
-    fax                 VARCHAR(30),
-    fax_1               VARCHAR(30),
-    fax_2               VARCHAR(30),
+    address         VARCHAR(255),
+    city            VARCHAR(60),
+    province        VARCHAR(60),
+    country         VARCHAR(60),
+    postcode        VARCHAR(20),
+    
+    office_phone    VARCHAR(30),
+    fax             VARCHAR(30),
 
-    email               VARCHAR(255),
-    email_1             VARCHAR(255),
-    email_2             VARCHAR(255),
-    
-    webSite             VARCHAR(255),
-    webSite_1           VARCHAR(255),
-    webSite_2           VARCHAR(255)
+    website         VARCHAR(255)    
 );
 
-ALTER TABLE clients ADD CONSTRAINT fk_clients_person FOREIGN KEY (person_contact_id) REFERENCES person (id);
-ALTER TABLE clients ADD CONSTRAINT fk_clients_person_1 FOREIGN KEY (person_contact_id_1) REFERENCES person (id);
-ALTER TABLE clients ADD CONSTRAINT fk_clients_person_2 FOREIGN KEY (person_contact_id_2) REFERENCES person (id);
+CREATE TABLE clients_contacts(
+    client_id       INTEGER NOT NULL,
+    contact_id      INTEGER NOT NULL
+);
 
-CREATE TABLE project_finance(
+ALTER TABLE clients_contacts ADD CONSTRAINT fk_clients_contacts_clients FOREIGN KEY (client_id) REFERENCES clients (id);
+ALTER TABLE clients_contacts ADD CONSTRAINT fk_clients_contacts_contacts FOREIGN KEY (contact_id) REFERENCES person_contacts (id);
+
+/*CREATE TABLE project_finances(
     id                  INTEGER IDENTITY PRIMARY KEY, 
     project_id          INTEGER NOT NULL,
     
@@ -94,6 +95,24 @@ CREATE TABLE project_finance(
     indirect_income     DECIMAL(12,2),
     
     cost_description    VARCHAR(255),
+    direct_cost         DECIMAL(12,2),
+    indirect_cost       DECIMAL(12,2)
+);*/
+
+CREATE TABLE project_incomes(
+    id                  INTEGER IDENTITY PRIMARY KEY, 
+    project_id          INTEGER NOT NULL,
+    
+    description         VARCHAR(255),
+    direct_income       DECIMAL(12,2),
+    indirect_income     DECIMAL(12,2)      
+);
+
+CREATE TABLE project_costs(
+    id                  INTEGER IDENTITY PRIMARY KEY, 
+    project_id          INTEGER NOT NULL,
+
+    description         VARCHAR(255),
     direct_cost         DECIMAL(12,2),
     indirect_cost       DECIMAL(12,2)
 );
@@ -128,7 +147,10 @@ CREATE TABLE job_codes (
     description         VARCHAR(255)
 );
 
-ALTER TABLE project_finance ADD CONSTRAINT fk_project_finance_projects FOREIGN KEY (project_id) REFERENCES projects (id);
+ALTER TABLE projects ADD CONSTRAINT fk_projects_client_id FOREIGN KEY (client_id) REFERENCES clients (id);
+
+ALTER TABLE project_incomes ADD CONSTRAINT fk_project_incomes_projects FOREIGN KEY (project_id) REFERENCES projects (id);
+ALTER TABLE project_costs ADD CONSTRAINT fk_project_costs_projects FOREIGN KEY (project_id) REFERENCES projects (id);
 
 ALTER TABLE job_codes ADD CONSTRAINT fk_project_job_code FOREIGN KEY (project_id) REFERENCES projects (id);
 

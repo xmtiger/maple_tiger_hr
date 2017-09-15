@@ -47,6 +47,10 @@ INSERT INTO employee_job_history VALUES(8,8,'Engineer','Design' ,'2001-01-01', '
 INSERT INTO employee_salary_history VALUES(1,1, '2001-01-01', '1992-01-01','DIRECT_DEPOSIT_BIWEEKLY','CAD', 25.6, -1); 
 
 
+INSERT INTO clients VALUES(1, 'Iron Ore Canada', 'Iron ore producer in Canada', 
+                            '121 University St.', 'Montreal', 'Quebec', 'Canada','H83 2E3', 
+                            '514-9887645', '514-9776754', 'www.ioc.ca');
+
 INSERT INTO projects VALUES (1, 1, 'P2017-09-01', 'Renovation Project', 
                             '1832 Springland', 'Verdun', 'Quebec',  'Canada', 'H8N 3H6',
                             '2017-07-28 6:00:00' , '1900-01-01 00:00:00', '2017-07-28 09:33:36', '2017-09-28 12:30:00');

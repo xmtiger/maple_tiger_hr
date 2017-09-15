@@ -40,4 +40,38 @@ public class JobCode extends BaseEntity{
             inverseJoinColumns = @JoinColumn(name = "job_code_id"))
     @JsonIgnore
     private Set<EmployeeAssignments> assignments;
+
+    public String getProject_id() {
+        return project_id;
+    }
+
+    public void setProject_id(String project_id) {
+        this.project_id = project_id;
+    }
+
+    public String getJob_code() {
+        return job_code;
+    }
+
+    public void setJob_code(String job_code) {
+        this.job_code = job_code;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public Set<EmployeeAssignments> getAssignments() {
+        return assignments;
+    }
+
+    public void setAssignments(Set<EmployeeAssignments> assignments) {
+        this.assignments = assignments;
+    }
+    
+    
 }
