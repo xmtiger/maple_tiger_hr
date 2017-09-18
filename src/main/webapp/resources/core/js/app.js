@@ -86,7 +86,15 @@ app.directive('bindPage', ['$compile', '$parse', '$sce', function ($compile, $pa
                     element.html(data);
                 }                
                 
-                $compile(element.contents())(scope);
+                /*var bCompile = true;
+                if(typeof data === 'object' && data.hasOwnProperty('obj')){
+                    if(data.obj.dataType === 'Employee'){
+                        bCompile = false;
+                    }
+                }*/
+                
+                //if(bCompile === true)
+                    $compile(element.contents())(scope);
                 
                 
                 scope.$emit("DirectveFinishedTheUpdate", message);
