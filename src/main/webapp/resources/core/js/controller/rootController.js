@@ -14,30 +14,32 @@ angular.module("app").controller("rootController", ["$scope", "$rootScope","depa
     //tabs
     $scope.tabs = [{
             index: 0,
-            title: 'EmployeeForm',
-            url: 'tab_1',
+            title: 'tab_0',
+            url: 'tab_0',
             disabled: false,
             invalid: true
             }, {
             index: 1,
-            title: 'Two',
-            url: 'tab_2',
+            title: 'tab_1',
+            url: 'tab_1',
             disabled : false,
             invalid: true
             }, {
             index: 2,
-            title: 'Three',
-            url: 'tab_3',
+            title: 'tab_2',
+            url: 'tab_2',
             disabled : false,
             invalid: true
-    }];				
+        }
+    ];				
 
     $scope.currentTab = $scope.tabs[0];
     
 
     $scope.tabFinishLoading = function(){
         console.log("tab finished loading");
-
+        //emit message to child controller to infill the data
+        $rootScope.$broadcast("tabFinishedLoading", $scope.currentTab);
     };
                 
     //The following $scope.items is for the dropdown button, which gives dynamically selection choice.
@@ -108,7 +110,13 @@ angular.module("app").controller("rootController", ["$scope", "$rootScope","depa
                     }   
                 );
             }else if(node_in.dataType === 'Employee'){
-                employeeService.getSaveOrUpdateEmployeePage($location).then(
+                //instead of requesting page from server, use ng-include to set page url
+                $scope.tabs[0].title = 'EmployeeForm';
+                $scope.tabs[0].url = 'tab_0/employeeForm';
+                $scope.currentTab = $scope.tabs[0];
+                //get employee data from server and infill into the employeeForm page
+                
+                /*employeeService.getSaveOrUpdateEmployeePage($location).then(
                     function(data){
                         var message = {obj: node_in, pageContent: data };
                         $rootScope.$broadcast("DirectiveToUpdateBindPage_RootMsg", message);
@@ -116,7 +124,7 @@ angular.module("app").controller("rootController", ["$scope", "$rootScope","depa
                     function(errResponse){
                         console.error("Error while fetching employee form page");
                     }
-                );
+                );*/
             }
         }        
         

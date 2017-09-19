@@ -31,9 +31,12 @@
 
                 $scope.submit = 0;  //0 means un-submitted
                 $scope.delete = 0;  //0 means un-deleted
-                     
+                
+                //-------------------------------------------------------------------------
+				
                 $scope.user = {};
-                                
+                
+                
                 //-----------------------------------------------
                 $scope.today = function() {
                         //$scope.dt = new Date();
@@ -124,7 +127,7 @@
 
                         return '';
                 }
-				
+
                 //----------------------------------------------------------------------------------
 
                 function clearContent(){
@@ -138,38 +141,20 @@
                 //here the function validateDepartmentForm is jquery function, which is not recommended.
                 //but this page is end page, so it is flexible to use jquery--------------------------------------
                 function validateEmployeeForm($scope){
-                    /*var bootstrapValidator = $("#employee_form").data('bootstrapValidator');
-                    bootstrapValidator.validate();
-                    if(bootstrapValidator.isValid()){
-                        
-                        return true;                      
-                    } else{
-                        
-                        return false;
-                    }  */
-					
-					if (!$scope.form_data.invalid) {
-						alert('our form is valid');
-						return true;
-					}else{
-						alert('our form is invalid');
-						return false;
-					}       
+                    				
+                    if (!$scope.form_data.invalid) {
+                            alert('our form is valid');
+                            return true;
+                    }else{
+                            alert('our form is invalid');
+                            return false;
+                    }       
                     
                 };
 
                 function getJsonDataFromEmployeeForm(){
-                    /*var form = $('#employee_form');
-
-                    //The following conversion is necessary to send server the correct json data
-                    var jsonData = {};
-                    $.each($(form).serializeArray(), function() {
-                        jsonData[this.name] = this.value;
-                    });
-
-                    return JSON.stringify(jsonData);*/
-					
-					return $scope.user;
+                   			
+                    return $scope.user;
                 };
 
                 //-----------------------------------------------------------------------------------------
@@ -288,7 +273,7 @@
                 //functions handling name changes
                 $scope.nameChange = function(){
 					//$scope.currentTab.invalid = this.formData.$invalid;
-					
+                    console.log($scope.user.name);                    
                     $scope.$emit("nameChangedToBeSent", $scope.user.name);
                     formChanged($scope, this);
                     //reset submit as zero
@@ -311,21 +296,21 @@
                 };
 
                 function formChanged($scope, self){
-					$scope.currentTab.invalid = self.formData.$invalid;
-					
-					if($scope.user.hasOwnProperty('name') && $scope.user.name !== ''){
-						$scope.currentTab.invalid = false;
-						
-					}else{
-						$scope.currentTab.invalid = true;
-					}
-					
-					if($scope.user.hasOwnProperty('address') && $scope.user.address !== ''){
-						$scope.currentTab.invalid = false;
-						
-					}else{
-						$scope.currentTab.invalid = true;
-					}
+                    $scope.currentTab.invalid = self.formData.$invalid;
+
+                    if($scope.user.hasOwnProperty('name') && $scope.user.name !== ''){
+                            $scope.currentTab.invalid = false;
+
+                    }else{
+                            $scope.currentTab.invalid = true;
+                    }
+
+                    if($scope.user.hasOwnProperty('address') && $scope.user.address !== ''){
+                            $scope.currentTab.invalid = false;
+
+                    }else{
+                            $scope.currentTab.invalid = true;
+                    }
 					
                     $scope.$emit("employeeForm_changed");
                 };
@@ -364,194 +349,80 @@
         
     </head>
     <body >
+        
         <div ng-controller="EmployeeFormController">
-		<uib-tabset active="active" >
-			
-			<!--uib-tab ng-repeat="tab in tabs" index="tab.index" heading="{{tab.title}}" disable="tab.disabled">
-				<div ng-include = "tab.url" onload = "tabFinishLoading()"></div>			
-			</uib-tab-->
-			
-                    <uib-tab index="0", heading="tab1">
-				<form class="well form-horizontal"   id="employee_form" name="formData" validate >
-				<fieldset>
-
-					<!-- Form Name -->
-					<legend>{{formTitle}}</legend>
-
-					<!-- Text input-->
-					<!-- NAME -->
-											
-					<div class="form-group" ng-class="{ 'has-error' : formData.name.$invalid && !formData.name.$pristine }">
-						<label class="col-md-4 control-label">Name</label>  
-						<div class="col-md-8 inputGroupContainer">
-							<div class="input-group">
-								<span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
-								<input  name="name" placeholder="Name" class="form-control"  type="text" ng-model="user.name" ng-change="nameChange()" ng-minlength="3" />							
-							</div>
-							<p ng-show="formData.name.$error.minlength" class="help-block">The Name is required.</p>
-						</div>
-					</div>
-									
-							
-					<!-- Text input-->
-					<div class="form-group" ng-class="{ 'has-error' : formData.address.$invalid && !formData.address.$pristine }">
-						<label class="col-md-4 control-label" >Home Address</label> 
-						<div class="col-md-8 inputGroupContainer">
-							<div class="input-group" >
-								<span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
-								<input name="address" placeholder="Address" class="form-control"  type="text" ng-model="user.address" ng-change="addressChange()" ng-minlength="3"/>							
-							</div>
-							<p ng-show="formData.address.$error.minlength" class="help-block">The Address is too short.</p>
-						</div>
-					</div>        
-						
-					
-					<div class="form-group" ng-class="{ 'has-error' : formData.begin_time.$invalid && !formData.begin_time.$pristine }">
-					  <label class="col-md-4 control-label" >Begin Date</label> 
-						
-						<div class="col-md-8 date">                       
-							
-							<p class="input-group">
-								<input name="begin_time" type="text" class="form-control" uib-datepicker-popup ng-model="user.beginTime" ng-change="beginTimeChange()" is-open="popup2.opened" datepicker-options="dateOptions" ng-required="true" close-text="Close" />
-								<span class="input-group-btn">
-									<button type="button" class="btn btn-default" ng-click="open2()"><i class="glyphicon glyphicon-calendar"></i></button>
-								</span>
-								<p ng-show="formData.begin_time.$invalid && !formData.begin_time.$pristine" class="help-block">The date is required.</p>
-							</p>
-								
-						</div>     
-					</div>
-								 
-					
-					
-				</fieldset>
-				<!-- Button -->
-					<div class="form-group">
-						<label class="col-md-4 control-label"></label>
-						<div class="col-md-4">
-							<button class="btn btn-primary" ng-click="employeeFormSubmit()" ng-disabled="currentTab.invalid">{{button}}<span class="glyphicon glyphicon-send"></span></button>
-							<button type="button" class="btn btn-warning" ng-click="employeeFormCancel()">Cancel</button>
-						</div>
-						
-						<div class = "col-md-4">
-							<button type="button" class="btn btn-danger" ng-click="employeeFormDelete()" ng-show="displayDeleteButton">Delete</button>
-						</div>
-					</div> 
-				
-			</form>
-			</uib-tab>
-			
-			<uib-tab index="1", heading="tab2">
-				<h1> tab2 </h1>
-			</uib-tab>
-			
-			<uib-tab index="2", heading="tab3">
-				<h1> tab3 </h1>
-			</uib-tab>
-			
-			
-		</uib-tabset>
-		
-		<!-- Buttons -->
-		<!--div class="form-group">
-			<label class="col-md-4 control-label"></label>
-			<div class="col-md-4">
-				<button id="sendButton" class="btn btn-primary" ng-click="employeeFormSubmit()">{{button}}<span class="glyphicon glyphicon-send"></span></button>
-				<button type="button" class="btn btn-warning" ng-click="employeeFormCancel()">Cancel</button>
-			</div>
-			
-			<div class = "col-md-4">
-				<button type="button" class="btn btn-danger" ng-click="employeeFormDelete()" ng-show="displayDeleteButton">Delete</button>
-			</div>
-		</div-> 
+            
         
-        <!-- disable action and method properties of the following form action=" " method="post"
-        Only activate click event and start submit from click function-->
-        
-		<script type="text/ng-template" id="one.tpl.html">
+            <form class="well form-horizontal"   id="employee_form" name="formData" validate >
+                <fieldset>
+
+                <!-- Form Name -->
+                <legend>{{formTitle}}</legend>
+
+                <!-- Text input-->
+                <!-- NAME -->
+
+                <div class="form-group" ng-class="{ 'has-error' : formData.name.$invalid && !formData.name.$pristine }">
+                        <label class="col-md-4 control-label">Name</label>  
+                        <div class="col-md-8 inputGroupContainer">
+                                <div class="input-group">
+                                        <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
+                                        <input  name="name" placeholder="Name" class="form-control"  type="text" ng-model="user.name" ng-change="nameChange()" ng-minlength="3" />							
+                                </div>
+                                <p ng-show="formData.name.$error.minlength" class="help-block">The Name is required.</p>
+                        </div>
+                </div>
+
+
+                <!-- Text input-->
+                <div class="form-group" ng-class="{ 'has-error' : formData.address.$invalid && !formData.address.$pristine }">
+                        <label class="col-md-4 control-label" >Home Address</label> 
+                        <div class="col-md-8 inputGroupContainer">
+                                <div class="input-group" >
+                                        <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
+                                        <input name="address" placeholder="Address" class="form-control"  type="text" ng-model="user.address" ng-change="addressChange()" ng-minlength="3"/>							
+                                </div>
+                                <p ng-show="formData.address.$error.minlength" class="help-block">The Address is too short.</p>
+                        </div>
+                </div>        
+
+
+                <div class="form-group" ng-class="{ 'has-error' : formData.begin_time.$invalid && !formData.begin_time.$pristine }">
+                  <label class="col-md-4 control-label" >Begin Date</label> 
+
+                        <div class="col-md-8 date">                       
+
+                                <p class="input-group">
+                                        <input name="begin_time" type="text" class="form-control" uib-datepicker-popup ng-model="user.beginTime" ng-change="beginTimeChange()" is-open="popup2.opened" datepicker-options="dateOptions" ng-required="true" close-text="Close" />
+                                        <span class="input-group-btn">
+                                                <button type="button" class="btn btn-default" ng-click="open2()"><i class="glyphicon glyphicon-calendar"></i></button>
+                                        </span>
+                                        <p ng-show="formData.begin_time.$invalid && !formData.begin_time.$pristine" class="help-block">The date is required.</p>
+                                </p>
+
+                        </div>     
+                </div>
+
+
+
+                </fieldset>
+                <!-- Button -->
+                <div class="form-group">
+                    <label class="col-md-4 control-label"></label>
+                    <div class="col-md-4">
+                            <button class="btn btn-primary" ng-click="employeeFormSubmit()" ng-disabled="currentTab.invalid">{{button}}<span class="glyphicon glyphicon-send"></span></button>
+                            <button type="button" class="btn btn-warning" ng-click="employeeFormCancel()">Cancel</button>
+                    </div>
+
+                    <div class = "col-md-4">
+                            <button type="button" class="btn btn-danger" ng-click="employeeFormDelete()" ng-show="displayDeleteButton">Delete</button>
+                    </div>
+                </div> 
+
+            </form>
 			
-			<form class="well form-horizontal"   id="employee_form" name="formData" validate >
-				<fieldset>
-
-					<!-- Form Name -->
-					<legend>{{formTitle}}</legend>
-
-					<!-- Text input-->
-					<!-- NAME -->
-											
-					<div class="form-group" ng-class="{ 'has-error' : formData.name.$invalid && !formData.name.$pristine }">
-						<label class="col-md-4 control-label">Name</label>  
-						<div class="col-md-4 inputGroupContainer">
-							<div class="input-group">
-								<span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
-								<input  name="name" placeholder="Name" class="form-control"  type="text" ng-model="user.name" ng-change="nameChange()" ng-minlength="3" />							
-							</div>
-							<p ng-show="formData.name.$error.minlength" class="help-block">The Name is required.</p>
-						</div>
-					</div>
-									
-							
-					<!-- Text input-->
-					<div class="form-group" ng-class="{ 'has-error' : formData.address.$invalid && !formData.address.$pristine }">
-						<label class="col-md-4 control-label" >Home Address</label> 
-						<div class="col-md-4 inputGroupContainer">
-							<div class="input-group" >
-								<span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
-								<input name="address" placeholder="Address" class="form-control"  type="text" ng-model="user.address" ng-change="addressChange()" ng-minlength="3"/>							
-							</div>
-							<p ng-show="formData.address.$error.minlength" class="help-block">The Address is too short.</p>
-						</div>
-					</div>        
-						
-					
-					<div class="form-group" ng-class="{ 'has-error' : formData.begin_time.$invalid && !formData.begin_time.$pristine }">
-					  <label class="col-md-4 control-label" >Begin Date</label> 
-						
-						<div class="col-md-4 date">                       
-							
-							<p class="input-group">
-								<input name="begin_time" type="text" class="form-control" uib-datepicker-popup ng-model="user.beginTime" ng-change="beginTimeChange()" is-open="popup2.opened" datepicker-options="dateOptions" ng-required="true" close-text="Close" />
-								<span class="input-group-btn">
-									<button type="button" class="btn btn-default" ng-click="open2()"><i class="glyphicon glyphicon-calendar"></i></button>
-								</span>
-								<p ng-show="formData.begin_time.$invalid && !formData.begin_time.$pristine" class="help-block">The date is required.</p>
-							</p>
-								
-						</div>     
-					</div>
-								 
-					
-					
-				</fieldset>
-				<!-- Button -->
-					<div class="form-group">
-						<label class="col-md-4 control-label"></label>
-						<div class="col-md-4">
-							<button class="btn btn-primary" ng-click="employeeFormSubmit()" ng-disabled="currentTab.invalid">{{button}}<span class="glyphicon glyphicon-send"></span></button>
-							<button type="button" class="btn btn-warning" ng-click="employeeFormCancel()">Cancel</button>
-						</div>
-						
-						<div class = "col-md-4">
-							<button type="button" class="btn btn-danger" ng-click="employeeFormDelete()" ng-show="displayDeleteButton">Delete</button>
-						</div>
-					</div> 
-				
-			</form>
-		</script>
 		
-		<script type="text/ng-template" id="two.tpl.html">
-			<div id="viewOne">
-				<h1>View One</h1>
-				<p>Content of tab 2</p>
-			</div>
-		</script>
-		
-		<script type="text/ng-template" id="three.tpl.html">
-			<div id="viewTwo">
-				<h1>View Two</h1>
-				<p>Content of tab 3</p>
-			</div>
-		</script>
-        </div>                
+	</div>		
+                        
     </body>
 </html>
