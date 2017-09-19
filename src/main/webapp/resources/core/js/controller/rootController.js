@@ -10,6 +10,36 @@
 angular.module("app").controller("rootController", ["$scope", "$rootScope","departmentService","employeeService","$location",
     function($scope, $rootScope, departmentService, employeeService, $location){ 
      
+    //-----------------------------------------------------------------------------
+    //tabs
+    $scope.tabs = [{
+            index: 0,
+            title: 'EmployeeForm',
+            url: 'tab_1',
+            disabled: false,
+            invalid: true
+            }, {
+            index: 1,
+            title: 'Two',
+            url: 'tab_2',
+            disabled : false,
+            invalid: true
+            }, {
+            index: 2,
+            title: 'Three',
+            url: 'tab_3',
+            disabled : false,
+            invalid: true
+    }];				
+
+    $scope.currentTab = $scope.tabs[0];
+    
+
+    $scope.tabFinishLoading = function(){
+        console.log("tab finished loading");
+
+    };
+                
     //The following $scope.items is for the dropdown button, which gives dynamically selection choice.
     $scope.items = [
         {id: '', name:'The first choice!'}        
