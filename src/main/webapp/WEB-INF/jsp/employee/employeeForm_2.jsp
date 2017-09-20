@@ -41,17 +41,25 @@
                     console.log("EmployeeFormController received message of tabFinishedLoading");
                     if(typeof tab_info === 'object' && tab_info.hasOwnProperty('url')){
                         if(tab_info.url === $scope.page_url && tab_info.hasOwnProperty('node')){
-                            //proceed with infilling data
-                            employeeService.findEmployeeById($scope, $location, tab_info.node).then(
-                                function(data){
-                                    if(data.id >0){
-                                       $scope.employee = data; 
-                                       $scope.$emit("EmployeePageFormToBeFilled");                                         
-                                    }
-                                },function(errResponse){
-                                    console.error("Error while delete one employee");
-                                } 
-                            );
+                            if(tab_info.node.id > 0){
+                                //proceed with update or delete 
+                                //proceed with infilling data
+                                employeeService.findEmployeeById($scope, $location, tab_info.node).then(
+                                    function(data){
+                                        if(data.id >0){
+                                           $scope.employee = data; 
+                                           $scope.$emit("EmployeePageFormToBeFilled");                                         
+                                        }
+                                    },function(errResponse){
+                                        console.error("Error while delete one employee");
+                                    } 
+                                );
+                                
+                            }else{
+                                //proceed with creation form
+                                $scope.formTitle = 'EMPLOYEE CREATION FORM';
+                            }
+                            
                         }
                     }
                 });          

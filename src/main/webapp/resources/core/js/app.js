@@ -298,6 +298,64 @@ app.directive('ztree',function(){
                 }
             }); 
             
+            $scope.$on("zTree_addOneEmployee",function(event,data){ 
+                console.log("zTree received message of zTree_addOneEmployee");
+                //just if one node was already created. if yes, then give up add department process
+                if(nodeUId_toBeCreatedOrUpdated !== ""){
+                    var message = {type: 'warning', msg: 'Only one process is allowed at one time'};
+                    $scope.$emit("Alert_Msg", message);
+                    //$scope.$emit("RefuseAddingDepartment");
+                    return;
+                }
+                //judge if one node is selected, 
+                //then send the selected node information to the root controller
+                 
+                if(zTreeObj !== null){
+                    var nodes = zTreeObj.getSelectedNodes();
+                    if(nodes === null || nodes === undefined || nodes.length === 0){
+                        var message = {type: 'warning', msg: 'No department node is selected. Please select one department node'};
+                        $scope.$emit("Alert_Msg", message);
+                        //$scope.$emit("zTree_noNodeSelected");
+                    }else{
+                        //create a new node as child node of the selected node
+                        var firstNode = nodes[0];
+                        if(firstNode !== null){
+                            var parentNodeType = firstNode.getDataType();
+                            if(parentNodeType !== branchType){
+                                var message = {type: 'warning', msg: ' Please select one department node'};
+                                $scope.$emit("Alert_Msg", message);
+                                return;
+                            }
+                            //save the parent UID for future database process
+                            parentNodeUId_forNodeToBeCreatedOrUpdated = firstNode.getUID();
+                            
+                            var util_service = angular.element(document.body).injector().get('UtilService');
+                            
+                            if(util_service !== null){
+                                var nodeTmpValue = {name : "newEmployee"};    //new employee id is -1
+                                var newNode = new util_service.TreeNodeConverter();
+                                newNode.setName(nodeTmpValue.name);
+                                newNode.setDataType(leafType);
+                                newNode.setIcon_newUser();
+                                                                                                
+                                var nodesAdded = zTreeObj.addNodes(firstNode,-1, newNode);
+                                if(nodes.length >0){
+                                    var nodeToBeCreatedOrUpdated = nodesAdded[0];
+                                    //get the current node UID for future database process
+                                    nodeUId_toBeCreatedOrUpdated = nodesAdded[0].getUID();
+                                    
+                                    zTreeObj.selectNode(nodeToBeCreatedOrUpdated);
+                                    console.log("zTree create a new node, and send it to the root controller");                
+                               
+                                    $scope.$emit("zTreeNewNodeCreated_addNewEmployee", nodeToBeCreatedOrUpdated);
+                                }
+                                
+                            }                     
+                        }                      
+                    }                  
+                }
+            }); 
+            
             // this is the deep first search, and is only for small set of data
             function findNodeByUID(nodes, key, value){
                 var find = null;

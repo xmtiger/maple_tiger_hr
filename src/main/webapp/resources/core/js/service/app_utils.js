@@ -318,10 +318,23 @@ angular.module('app_utils').factory('UtilService', [ function(){
         this.open = false;  //open property is used by ZTree  
         
         this.icon = ""; //icon for the zTreeNode
-        
+                
         this.UID = "";  //unique id for get node in the tree, and the formate is "dataType/id"
         
         this.data = {}; //save the data for the node
+        
+        this.path = window.location.pathname.substring(0, window.location.pathname.indexOf("/",1));
+        this.setIcon_user = function(){
+            //var path = window.location.pathname.substring(0, window.location.pathname.indexOf("/",1));
+            var icon_user = this.path + "/resources/vendors/zTree/css/zTreeStyle/img/diy/user.png";
+            this.icon = icon_user;
+        };
+        
+        this.setIcon_newUser = function(){
+            //var path = window.location.pathname.substring(0, window.location.pathname.indexOf("/",1));
+            var icon_user = this.path + "/resources/vendors/zTree/css/zTreeStyle/img/diy/user_new.png";
+            this.icon = icon_user;
+        };
         
         this.setUID = function(type, name, id){
             this.UID = type + "/" + name + "/" + id;
@@ -379,8 +392,8 @@ angular.module('app_utils').factory('UtilService', [ function(){
         * It is very important function for showing nodes in ZTree  */
         this.childrenFunc = function(objFromServer, typeOfBranchOfTree, typeOfLeafOfTree, keyOfLeafOfBranchOfTree){
             // This is to get the current context path : 'maple_tiger_hr/'
-            var path = window.location.pathname.substring(0, window.location.pathname.indexOf("/",1));
-            var icon_user = path + "/resources/vendors/zTree/css/zTreeStyle/img/diy/user.png";
+            //var path = window.location.pathname.substring(0, window.location.pathname.indexOf("/",1));
+            //var icon_user = path + "/resources/vendors/zTree/css/zTreeStyle/img/diy/user.png";
             
             if(objFromServer.data !== null){
                 this.id = objFromServer.data.id;                
@@ -422,8 +435,8 @@ angular.module('app_utils').factory('UtilService', [ function(){
                             
                             this.children[j+i].data = objFromServer.data.employees[j];
                           
-                            this.children[j+i].icon = icon_user;
-                            
+                            //this.children[j+i].icon = icon_user;
+                            this.children[j+i].setIcon_user();
                             this.children[j+i].setUID(this.children[j+i].dataType, this.children[j+i].name, this.children[j+i].id);
                         }
                     }                                                          

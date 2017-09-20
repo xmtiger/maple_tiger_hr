@@ -78,9 +78,22 @@ angular.module("app").controller("rootController", ["$scope", "$rootScope","depa
         if(choice === 'Department'){
             $scope.$emit("addOneDepartment");
         }else if(choice === 'Employee'){
-            
+            $scope.$emit("addOneEmployee");
         }
     };
+        
+    // The following functions are for adding one department
+    $scope.$on("addOneDepartment", function(event, msg){
+                
+        $rootScope.$broadcast("zTree_addOneDepartment");
+        
+    });
+    
+    $scope.$on("addOneEmployee", function(event, msg){
+                
+        $rootScope.$broadcast("zTree_addOneEmployee");
+        
+    });
     
     /*$scope.$on("RefuseAddingDepartment", function(event, msg){
         $scope.addAlert("warning", "Only Allow One Creation Prcess at One Time!");
@@ -195,14 +208,7 @@ angular.module("app").controller("rootController", ["$scope", "$rootScope","depa
         
     });
     
-    //--------------------------------------------------------
-    // The following functions are for adding one department
-    $scope.$on("addOneDepartment", function(event, msg){
-        
-        console.log("received addOneDepartment request");
-        $rootScope.$broadcast("zTree_addOneDepartment");
-        
-    });
+    
     
     /*$scope.$on("zTree_noNodeSelected", function(event, msg){
         //alert user that no tree node is selected.
@@ -234,11 +240,8 @@ angular.module("app").controller("rootController", ["$scope", "$rootScope","depa
             //console.log("no node selected");            
             $scope.addAlert("warning", "No node is selected, please select one node!");
             return;
-        }
-            
-        console.log("$location.path(/department/new)");
-        //start departmentForm.jsp to let user input new department information                                
-        //departmentService.setURI($location.path());
+        }        
+       
         departmentService.getSaveOrUpdateDepartmentPage($location).then(
             function(data){
                 //$scope.$emit("updateBindPageView", response.data);
@@ -250,6 +253,30 @@ angular.module("app").controller("rootController", ["$scope", "$rootScope","depa
             }   
         );
                
+    });
+    
+    $scope.$on("zTreeNewNodeCreated_addNewEmployee", function(event, node_in){
+       
+        $scope.addAlert("success", "one new employee node was created in the tree view");
+        
+        if(node_in.nodeId === ""){
+            //console.log("no node selected");            
+            $scope.addAlert("warning", "No node is selected, please select one node!");
+            return;
+        }
+            
+        $scope.tabs[0].title = 'EmployeeForm';
+        $scope.tabs[0].url = $scope.employeeFormURL;
+
+        $scope.currentTab.node = node_in;
+
+        if($scope.currentTab.url === $scope.employeeFormURL){
+            //send message directly
+            $rootScope.$broadcast("tabFinishedLoading", $scope.currentTab);
+        }else{
+            //add page first, and then send messag in function after loading the page
+            $scope.currentTab = $scope.tabs[0];
+        }    
     });
     
     $scope.$on("RequestCurrentTreeNodeInfo", function(event, msg){
