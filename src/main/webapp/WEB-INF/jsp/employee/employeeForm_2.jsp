@@ -14,7 +14,7 @@
             // The dynamic registration of the controller must be done before the definition of the indicated ng-controller
             angular.module("app").controller("EmployeeFormController", ["$scope","employeeService", "$location",function($scope,employeeService, $location){
                     
-                $scope.formTitle = 'EMPLOYEE CREATION FORM';
+                $scope.formTitle = 'EMPLOYEE FORM';
                 $scope.button = 'Create';
                 $scope.displayDeleteButton = false;
                 //create a blank object to hold the form information, and $scope will allow this to pass between controller and view
@@ -34,14 +34,24 @@
                 
                 //-------------------------------------------------------------------------
 		$scope.page_url = "tab_0/employeeForm";		
-                $scope.user = {};
+                $scope.employee = {};
                 
                 
                 $scope.$on("tabFinishedLoading", function(event, tab_info){
                     console.log("EmployeeFormController received message of tabFinishedLoading");
                     if(typeof tab_info === 'object' && tab_info.hasOwnProperty('url')){
-                        if(tab_info.url === $scope.page_url){
+                        if(tab_info.url === $scope.page_url && tab_info.hasOwnProperty('node')){
                             //proceed with infilling data
+                            employeeService.findEmployeeById($scope, $location, tab_info.node).then(
+                                function(data){
+                                    if(data.id >0){
+                                       $scope.employee = data; 
+                                       $scope.$emit("EmployeePageFormToBeFilled");                                         
+                                    }
+                                },function(errResponse){
+                                    console.error("Error while delete one employee");
+                                } 
+                            );
                         }
                     }
                 });          
@@ -49,14 +59,14 @@
                 //-----------------------------------------------
                 $scope.today = function() {
                         //$scope.dt = new Date();
-                        $scope.user.beginTime = new Date();
+                        $scope.employee.beginTime = new Date();
                 };
 
                 $scope.today();
 
                 $scope.clear = function() {
                         //$scope.dt = null;
-                        $scope.user.beginTime = null;
+                        $scope.employee.beginTime = null;
                 };
 
                 $scope.inlineOptions = {
@@ -92,7 +102,7 @@
                 };
 
                 $scope.setDate = function(year, month, day) {
-                        $scope.user.beginTime = new Date(year, month, day);
+                        $scope.employee.beginTime = new Date(year, month, day);
                 };
 
                 $scope.formats = ['yyyy-MM-dd','dd-MM-yyyy', 'yyyy/MM/dd', 'dd.MM.yyyy', 'shortDate'];
@@ -163,7 +173,7 @@
 
                 function getJsonDataFromEmployeeForm(){
                    			
-                    return $scope.user;
+                    return $scope.employee;
                 };
 
                 //-----------------------------------------------------------------------------------------
@@ -204,11 +214,11 @@
 
                     $scope.delete++;    //only allow delete once
 
-                    departmentService.deleteDepartmentById($scope, $location, nodeInfo).then(
+                    departmentService.deleteEmployeeById($scope, $location, nodeInfo).then(
                         function(data){
                             if(data.hasOwnProperty('validated')){
                                 if(data.validated === true){
-                                    var str = "<h4 style='color:green'>The deletion was successfully done!</h4> <hr>"
+                                    var str = "<h4 style='color:green'>The deletion was successfully done!</h4> <hr>";
 
                                     $scope.$emit("DirectiveToUpdateBindPage", str);
                                     clearContent();
@@ -247,7 +257,7 @@
                             if(data.hasOwnProperty('validated')){
                                 if(data.validated === true){
 
-                                    var str = "<h4 style='color:green'>The Process was successfully done!</h4> <hr>"
+                                    var str = "<h4 style='color:green'>The Process was successfully done!</h4> <hr>";
 
                                     if($scope.button === 'Update'){
                                         str = "<h4 style='color:green'>The Employee was successfully Updated!</h4> <hr>";
@@ -282,14 +292,14 @@
                 //functions handling name changes
                 $scope.nameChange = function(){
 					//$scope.currentTab.invalid = this.formData.$invalid;
-                    console.log($scope.user.name);                    
-                    $scope.$emit("nameChangedToBeSent", $scope.user.name);
+                    //console.log($scope.employee.first_name);                    
+                    $scope.$emit("nameChangedToBeSent", $scope.employee.firstName + " " + $scope.employee.middleName + " " + $scope.employee.lastName);
                     formChanged($scope, this);
                     //reset submit as zero
                     if($scope.submit > 0){
                         $scope.submit = 0;
                         //reset the error messages                            
-                        $("#employee_name").nextAll().remove();
+                        //$("#employee_first_name").nextAll().remove();
                     };
 
                 };
@@ -299,7 +309,7 @@
                     formChanged($scope, this);
                 };
 
-                $scope.beginTimeChange = function(){
+                $scope.birthDateChange = function(){
 				
                     formChanged($scope, this);
                 };
@@ -307,14 +317,15 @@
                 function formChanged($scope, self){
                     $scope.currentTab.invalid = self.formData.$invalid;
 
-                    if($scope.user.hasOwnProperty('name') && $scope.user.name !== ''){
+                    if($scope.employee.hasOwnProperty('firstName') && $scope.employee.firstName !== ''
+                            && $scope.employee.hasOwnProperty('lastName') && $scope.employee.lastName !== ''){
                             $scope.currentTab.invalid = false;
 
                     }else{
                             $scope.currentTab.invalid = true;
                     }
 
-                    if($scope.user.hasOwnProperty('address') && $scope.user.address !== ''){
+                    if($scope.employee.hasOwnProperty('home_address') && $scope.employee.home_address !== ''){
                             $scope.currentTab.invalid = false;
 
                     }else{
@@ -371,17 +382,38 @@
                 <!-- Text input-->
                 <!-- NAME -->
 
-                <div class="form-group" ng-class="{ 'has-error' : formData.name.$invalid && !formData.name.$pristine }">
-                        <label class="col-md-4 control-label">Name</label>  
+                <div class="form-group" ng-class="{ 'has-error' : formData.first_name.$invalid && !formData.first_name.$pristine }">
+                        <label class="col-md-4 control-label">First Name</label>  
                         <div class="col-md-8 inputGroupContainer">
                                 <div class="input-group">
                                         <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
-                                        <input  name="name" placeholder="Name" class="form-control"  type="text" ng-model="user.name" ng-change="nameChange()" ng-minlength="3" />							
+                                        <input  name="first_name" placeholder="First Name" class="form-control"  type="text" ng-model="employee.firstName" ng-change="nameChange()" ng-minlength="3" />							
                                 </div>
-                                <p ng-show="formData.name.$error.minlength" class="help-block">The Name is required.</p>
+                                <p ng-show="formData.first_name.$error.minlength" class="help-block">The Name is required and the input length is too short.</p>
+                        </div>
+                </div>
+                
+                <div class="form-group" >
+                        <label class="col-md-4 control-label">Middle Name</label>  
+                        <div class="col-md-8 inputGroupContainer">
+                                <div class="input-group">
+                                        <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
+                                        <input  name="middle_name" placeholder="Middle Name" class="form-control"  type="text" ng-model="employee.middleName" ng-change="nameChange()" />							
+                                </div>
+                                
                         </div>
                 </div>
 
+                <div class="form-group" ng-class="{ 'has-error' : formData.last_name.$invalid && !formData.last_name.$pristine }">
+                        <label class="col-md-4 control-label">Last Name</label>  
+                        <div class="col-md-8 inputGroupContainer">
+                                <div class="input-group">
+                                        <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
+                                        <input  name="last_name" placeholder="Last Name" class="form-control"  type="text" ng-model="employee.lastName" ng-change="nameChange()" ng-minlength="3" />							
+                                </div>
+                                <p ng-show="formData.last_name.$error.minlength" class="help-block">The Name is required and the input length is too short.</p>
+                        </div>
+                </div>
 
                 <!-- Text input-->
                 <div class="form-group" ng-class="{ 'has-error' : formData.address.$invalid && !formData.address.$pristine }">
@@ -389,24 +421,24 @@
                         <div class="col-md-8 inputGroupContainer">
                                 <div class="input-group" >
                                         <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
-                                        <input name="address" placeholder="Address" class="form-control"  type="text" ng-model="user.address" ng-change="addressChange()" ng-minlength="3"/>							
+                                        <input name="address" placeholder="Address" class="form-control"  type="text" ng-model="employee.home_address" ng-change="addressChange()" ng-minlength="3"/>							
                                 </div>
                                 <p ng-show="formData.address.$error.minlength" class="help-block">The Address is too short.</p>
                         </div>
                 </div>        
 
 
-                <div class="form-group" ng-class="{ 'has-error' : formData.begin_time.$invalid && !formData.begin_time.$pristine }">
-                  <label class="col-md-4 control-label" >Begin Date</label> 
+                <div class="form-group" ng-class="{ 'has-error' : formData.birth_date.$invalid && !formData.birth_date.$pristine }">
+                  <label class="col-md-4 control-label" >Birth Date</label> 
 
                         <div class="col-md-8 date">                       
 
                                 <p class="input-group">
-                                        <input name="begin_time" type="text" class="form-control" uib-datepicker-popup ng-model="user.beginTime" ng-change="beginTimeChange()" is-open="popup2.opened" datepicker-options="dateOptions" ng-required="true" close-text="Close" />
+                                        <input name="begin_time" type="text" class="form-control" uib-datepicker-popup ng-model="employee.birth_date" ng-change="birthDateChange()" is-open="popup2.opened" datepicker-options="dateOptions" ng-required="true" close-text="Close" />
                                         <span class="input-group-btn">
                                                 <button type="button" class="btn btn-default" ng-click="open2()"><i class="glyphicon glyphicon-calendar"></i></button>
                                         </span>
-                                        <p ng-show="formData.begin_time.$invalid && !formData.begin_time.$pristine" class="help-block">The date is required.</p>
+                                        <p ng-show="formData.birth_date.$invalid && !formData.birth_date.$pristine" class="help-block">The date is required.</p>
                                 </p>
 
                         </div>     

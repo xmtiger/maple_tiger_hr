@@ -35,7 +35,8 @@ angular.module("app").controller("rootController", ["$scope", "$rootScope","depa
 
     $scope.currentTab = $scope.tabs[0];
     
-
+    $scope.employeeFormURL = 'tab_0/employeeForm';
+    
     $scope.tabFinishLoading = function(){
         console.log("tab finished loading");
         //emit message to child controller to infill the data
@@ -112,8 +113,19 @@ angular.module("app").controller("rootController", ["$scope", "$rootScope","depa
             }else if(node_in.dataType === 'Employee'){
                 //instead of requesting page from server, use ng-include to set page url
                 $scope.tabs[0].title = 'EmployeeForm';
-                $scope.tabs[0].url = 'tab_0/employeeForm';
-                $scope.currentTab = $scope.tabs[0];
+                $scope.tabs[0].url = $scope.employeeFormURL;
+                
+                $scope.currentTab.node = node_in;
+                
+                if($scope.currentTab.url === $scope.employeeFormURL){
+                    //send message directly
+                    $rootScope.$broadcast("tabFinishedLoading", $scope.currentTab);
+                }else{
+                    //add page first, and then send messag in function after loading the page
+                    $scope.currentTab = $scope.tabs[0];
+                }
+                // this is additaionl information
+                
                 //get employee data from server and infill into the employeeForm page
                 
                 /*employeeService.getSaveOrUpdateEmployeePage($location).then(
