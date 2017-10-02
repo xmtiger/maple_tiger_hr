@@ -35,7 +35,7 @@ angular.module("app").controller("rootController", ["$scope", "$rootScope","depa
 
     $scope.currentTab = $scope.tabs[0];
     
-    $scope.employeeFormURL = 'tab_0/employeeForm';
+    $scope.EMPLOYEE_FORM_URL = 'tab_0/employeeForm';
     
     $scope.tabFinishLoading = function(){
         console.log("tab finished loading");
@@ -126,11 +126,11 @@ angular.module("app").controller("rootController", ["$scope", "$rootScope","depa
             }else if(node_in.dataType === 'Employee'){
                 //instead of requesting page from server, use ng-include to set page url
                 $scope.tabs[0].title = 'EmployeeForm';
-                $scope.tabs[0].url = $scope.employeeFormURL;
+                $scope.tabs[0].url = $scope.EMPLOYEE_FORM_URL;
                 
                 $scope.currentTab.node = node_in;
                 
-                if($scope.currentTab.url === $scope.employeeFormURL){
+                if($scope.currentTab.url === $scope.EMPLOYEE_FORM_URL){
                     //send message directly
                     $rootScope.$broadcast("tabFinishedLoading", $scope.currentTab);
                 }else{
@@ -266,11 +266,11 @@ angular.module("app").controller("rootController", ["$scope", "$rootScope","depa
         }
             
         $scope.tabs[0].title = 'EmployeeForm';
-        $scope.tabs[0].url = $scope.employeeFormURL;
+        $scope.tabs[0].url = $scope.EMPLOYEE_FORM_URL;
 
         $scope.currentTab.node = node_in;
 
-        if($scope.currentTab.url === $scope.employeeFormURL){
+        if($scope.currentTab.url === $scope.EMPLOYEE_FORM_URL){
             //send message directly
             $rootScope.$broadcast("tabFinishedLoading", $scope.currentTab);
         }else{

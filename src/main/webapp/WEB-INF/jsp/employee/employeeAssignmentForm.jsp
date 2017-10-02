@@ -12,9 +12,9 @@
         <script type="text/javascript">				
 			
             // The dynamic registration of the controller must be done before the definition of the indicated ng-controller
-            angular.module("app").controller("EmployeeFormController", ["$scope","employeeService", "$location",function($scope,employeeService, $location){
+            angular.module("app").controller("EmployeeAssignmentFormController", ["$scope","employeeService", "$location",function($scope,employeeService, $location){
                     
-                $scope.formTitle = 'EMPLOYEE FORM';
+                $scope.formTitle = 'EMPLOYEE ASSIGNMENT FORM';
                 $scope.button = 'Create';
                 $scope.displayDeleteButton = false;
                 //create a blank object to hold the form information, and $scope will allow this to pass between controller and view
@@ -33,18 +33,18 @@
                 $scope.delete = 0;  //0 means un-deleted
                 
                 //-------------------------------------------------------------------------
-		$scope.page_url = "tab_0/employeeForm";		
+		$scope.page_url = "tab_1/employeeAssignmentForm";		
                 $scope.employee = {};
                 
                 
                 $scope.$on("tabFinishedLoading", function(event, tab_info){
-                    console.log("EmployeeFormController received message of tabFinishedLoading");
+                    console.log("EmployeeAssignmentFormController received message of tabFinishedLoading");
                     if(typeof tab_info === 'object' && tab_info.hasOwnProperty('url')){
                         if(tab_info.url === $scope.page_url && tab_info.hasOwnProperty('node')){
                             if(tab_info.node.id > 0){
                                 //proceed with update or delete 
                                 //proceed with infilling data
-                                employeeService.findEmployeeById($scope, $location, tab_info.node).then(
+                                /*employeeService.findEmployeeById($scope, $location, tab_info.node).then(
                                     function(data){
                                         if(data.id >0){
                                            $scope.employee = data; 
@@ -53,7 +53,7 @@
                                     },function(errResponse){
                                         console.error("Error while delete one employee");
                                     } 
-                                );
+                                );*/
                                 
                             }else{
                                 //proceed with creation form
@@ -64,9 +64,9 @@
                     }
                 });          
                 
-                $scope.$on("EmployeePageFormToBeFilled", function(event, obj){
+                $scope.$on("EmployeeAssignmentPageFormToBeFilled", function(event, obj){
                     
-                    $scope.formTitle = 'EMPLOYEE UPDATE FORM';
+                    $scope.formTitle = 'EMPLOYEE ASSIGNMENT UPDATE FORM';
                     $scope.button = 'Update';     
                     $scope.displayDeleteButton = true;                            
                    
@@ -378,7 +378,7 @@
     </head>
     <body >
         
-        <div ng-controller="EmployeeFormController">
+        <div ng-controller="EmployeeAssignmentFormController">
             
         
             <form class="well form-horizontal"   id="employee_form" name="formData" validate >
@@ -391,7 +391,7 @@
                 <!-- NAME -->
 
                 <div class="form-group" ng-class="{ 'has-error' : formData.first_name.$invalid && !formData.first_name.$pristine }">
-                        <label class="col-md-2 control-label">First Name</label>  
+                        <label class="col-md-4 control-label">First Name</label>  
                         <div class="col-md-8 inputGroupContainer">
                                 <div class="input-group">
                                         <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
@@ -402,7 +402,7 @@
                 </div>
                 
                 <div class="form-group" >
-                        <label class="col-md-2 control-label">Middle Name</label>  
+                        <label class="col-md-4 control-label">Middle Name</label>  
                         <div class="col-md-8 inputGroupContainer">
                                 <div class="input-group">
                                         <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
@@ -413,7 +413,7 @@
                 </div>
 
                 <div class="form-group" ng-class="{ 'has-error' : formData.last_name.$invalid && !formData.last_name.$pristine }">
-                        <label class="col-md-2 control-label">Last Name</label>  
+                        <label class="col-md-4 control-label">Last Name</label>  
                         <div class="col-md-8 inputGroupContainer">
                                 <div class="input-group">
                                         <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
@@ -425,7 +425,7 @@
 
                 <!-- Text input-->
                 <div class="form-group" ng-class="{ 'has-error' : formData.address.$invalid && !formData.address.$pristine }">
-                        <label class="col-md-2 control-label" >Home Address</label> 
+                        <label class="col-md-4 control-label" >Home Address</label> 
                         <div class="col-md-8 inputGroupContainer">
                                 <div class="input-group" >
                                         <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
@@ -437,7 +437,7 @@
 
 
                 <div class="form-group" ng-class="{ 'has-error' : formData.birth_date.$invalid && !formData.birth_date.$pristine }">
-                  <label class="col-md-2 control-label" >Birth Date</label> 
+                  <label class="col-md-4 control-label" >Birth Date</label> 
 
                         <div class="col-md-8 date">                       
 
@@ -451,20 +451,7 @@
 
                         </div>     
                 </div>
-                
-                <div class="form-group" >
-                        <label class="col-md-2 control-label">Gender</label>  
-                        <div class="col-md-8 inputGroupContainer">
-                                <div class="input-group">
-                                        <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
-                                        <label class="radio-inline col-md-1"></label>
-                                        <label class="radio-inline col-md-2"><input type="radio" ng-model="employee.gender" value="MALE">Male</label>
-                                        <label class="radio-inline col-md-2"><input type="radio" ng-model="employee.gender" value="FEMALE">Female</label>
-                                        <label class="radio-inline col-md-2"><input type="radio" ng-model="employee.gender" ng-value="UNKNOWN">Unknown</label>							
-                                </div>
-                                
-                        </div>
-                </div>
+
 
 
         </fieldset>

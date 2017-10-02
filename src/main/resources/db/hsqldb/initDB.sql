@@ -184,11 +184,12 @@ CREATE TABLE employee_salary_history (
 
 CREATE TABLE employee_assignments (
     id              INTEGER IDENTITY PRIMARY KEY,
-    job_code        INTEGER NOT NULL,                /*this job code shall be FK referred from 'job codes' */
-    
+    /*job_code        INTEGER NOT NULL,           */     /*this job code shall be FK referred from 'job codes' */
+    employee_id     INTEGER NOT NULL,
+
     begin_time      TIMESTAMP,
     end_time        TIMESTAMP,
-    employee_id     INTEGER NOT NULL
+    
 );
 
 CREATE TABLE job_codes_assignments (

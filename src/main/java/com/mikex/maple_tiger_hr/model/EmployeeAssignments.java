@@ -31,8 +31,8 @@ import org.springframework.format.annotation.DateTimeFormat;
 public class EmployeeAssignments extends BaseEntity{
     
     @ManyToMany(fetch = FetchType.EAGER)
-    @JoinTable(name = "job_codes_assignments", joinColumns = @JoinColumn(name = "job_code_id"), 
-            inverseJoinColumns = @JoinColumn(name = "assignment_id"))
+    @JoinTable(name = "job_codes_assignments", joinColumns = @JoinColumn(name = "assignment_id"), 
+            inverseJoinColumns = @JoinColumn(name = "job_code_id"))
     @JsonIgnore
     private Set<JobCode> job_codes;
     
