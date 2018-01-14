@@ -11,7 +11,7 @@
         
         <script type="text/javascript">				
 			
-            // The dynamic registration of the controller must be done before the definition of the indicated ng-controller
+            // The dynamic registration of the controller must be done before the definition of the indicated ng-controller in the html content
             angular.module("app").controller("EmployeeFormController", ["$scope","employeeService", "$location",function($scope,employeeService, $location){
                     
                 $scope.formTitle = 'EMPLOYEE FORM';
@@ -178,7 +178,7 @@
                 function validateEmployeeForm($scope){
                     				
                     if (!$scope.form_data.invalid) {
-                            alert('our form is valid');
+                            //alert('our form is valid');
                             return true;
                     }else{
                             alert('our form is invalid');
@@ -218,6 +218,7 @@
                         }else if(msg.type === 'deleteEmployee'){
                             console.log("delete employee");
                             deleteEmployee(nodeInfo);
+                            $scope.$emit("removeEmployeeNode");
                         }
                     }               
 
@@ -367,7 +368,8 @@
                 };
 
                 $scope.employeeFormCancel = function(){
-                    alert("cancel button");
+                    //send the following message to root controller
+                    $scope.$emit("employeeForm_cancel");
                 };
 
             }]);

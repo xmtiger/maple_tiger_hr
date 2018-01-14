@@ -137,13 +137,43 @@ public class AbstractHRServiceTests {
         assertThat(dept11.getId().intValue()).isNotEqualTo(0);
         
         TreeNode<Department> tree = this.hrService.getTreeFromDepartments();
-        System.out.println("tree: --------------------------------------------");
+        System.out.println("tree list for insertion test: --------------------------------------------");
         System.out.println(tree);
+        System.out.println("tree: --------------------------------------------");
+        
+        //delete a department
+        Department depToBeDel = this.hrService.findDepartmentById(dept11.getId());
+        if(depToBeDel != null){
+            this.hrService.deleteDepartmentById(dept11.getId());
+        } 
+        
+        //add new department 
+        Department dept12 = new Department();
+        dept12.setName("Civil_11_1");
+        dept12.setAddress("123 Springland, Verdun, Q.C");
+        
+        Department fatherDept10 = this.hrService.findDepartmentById(10);
+        dept12.setFather(fatherDept10);
+
+        DateFormat dateFormat12 = new SimpleDateFormat("yyyy-MM-dd");
+        try {
+            Date date = dateFormat12.parse("1971-07-06");
+            dept12.setBegin_time(date);
+        } catch (ParseException ex) {
+            Logger.getLogger(AbstractHRServiceTests.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        this.hrService.saveDepartment(dept12);
+        
+        TreeNode<Department> treeAfterDel = this.hrService.getTreeFromDepartments();
+        System.out.println("tree list for delete and insert test: --------------------------------------------");
+        System.out.println(treeAfterDel);
         System.out.println("tree: --------------------------------------------");
                 
     }
     
     @Test
+    @Transactional
     public void shouldDeleteDepartmentById(){
         
         Department dept = this.hrService.findDepartmentById(7);
@@ -152,7 +182,7 @@ public class AbstractHRServiceTests {
         }        
             
         TreeNode<Department> tree = this.hrService.getTreeFromDepartments();
-        System.out.println("tree: After deletion --------------------------------------------");
+        System.out.println("tree: After deletion test --------------------------------------------");
         System.out.println(tree);
         System.out.println("tree: --------------------------------------------");
         //Department dept = this.hrService.findDepartmentById(7);

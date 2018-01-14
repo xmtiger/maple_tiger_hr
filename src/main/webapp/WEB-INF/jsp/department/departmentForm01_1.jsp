@@ -296,9 +296,10 @@
                             function(data){
                                 if(data.hasOwnProperty('validated')){
                                     if(data.validated === true){
-                                        var str = "<h4 style='color:green'>The deletion was successfully done!</h4> <hr>"
-                                                                      
+                                        var str = "<h4 style='color:green'>The deletion was successfully done!</h4> <hr>"                                         
+                                        $scope.$emit("removeDepartmentNode");
                                         $scope.$emit("DirectiveToUpdateBindPage", str);
+                                        
                                         clearContent();
                                     }else{
                                         console.log("Get Error Messages from the server");
@@ -337,16 +338,27 @@
                                         
                                         var str = "<h4 style='color:green'>The Process was successfully done!</h4> <hr>"
                                         
-                                        if($scope.button === 'Update'){
+                                        /*if($scope.button === 'Update'){
                                             str = "<h4 style='color:green'>The Department was successfully Updated!</h4> <hr>";
                                             
                                         }else if($scope.button === 'Create'){
                                             
                                             str = "<h4 style='color:green'>The Department was successfully Created!</h4> <hr>";
                                             
-                                        }       
+                                        }*/
+                                        if(nodeInfo.id === -1){
+                                            //the node is the new node 
+                                            str = "<h4 style='color:green'>The Department was successfully Created!</h4> <hr>";
+                                            // send the message of newly created department out
+                                            $scope.$emit("newDepartmentCreatedOnServer", data);
+                                        }else if(nodeInfo.id > 0){
+                                            //the node is the existing node
+                                            str = "<h4 style='color:green'>The Department was successfully Updated!</h4> <hr>";
+                                        }else{
+                                            return;
+                                        }
                                         
-                                        $scope.$emit("DirectiveToUpdateBindPage", str);
+                                        $scope.$emit("DirectiveToUpdateBindPage", str);                                        
                                         clearContent();
                                         
                                     }else{
@@ -443,7 +455,17 @@
                     };
                     
                     $scope.departmentFormCancel = function(){
-                        alert("cancel button");
+                        //for the create form, the cancel button is to remove the creation page and remove the newly created node in the treeview.
+                        if($scope.displayDeleteButton === false){
+                            //send message to root controller to proceed cancel process
+                            var msg = "The creation process was cancelled";
+                            $scope.$emit("departmentCreationForm_cancel", msg);
+                        }else if($scope.displayDeleteButton === true){
+                            //for the edit form, the cancel button is to remove the edit page only.
+                            var msg = "The edit process was cancelled";
+                            $scope.$emit("departmentEditForm_cancel", msg);
+                        }
+                        //alert("cancel button");
                     };
                             
                 }]);

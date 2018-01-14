@@ -211,7 +211,7 @@ app.directive('ztree',function(){
                         };
                     };
                  };
-            });
+            });                    
             
             $scope.$on("departmentForm_changed_sent", function(event, msg){
                 actionInProcess = true;
@@ -221,7 +221,7 @@ app.directive('ztree',function(){
             
             //$scope.$emit("menu",attrs["value"]);//此处attrs["value"]为ul中的value值，此处作为标记使用 
             //接受控制器返回的菜单的消息 
-            $scope.$on("zTree_displayAllDepartments",function(event,data){ 
+            $scope.$on("RootCtrl_displayAllDepartments",function(event,data){ 
                 console.log("received zTree_displayAllDepartments" + data);
                 
                 var util_service = angular.element(document.body).injector().get('UtilService');
@@ -247,7 +247,7 @@ app.directive('ztree',function(){
                                 
             }); 
             
-            $scope.$on("zTree_addOneDepartment",function(event,data){ 
+            $scope.$on("RootCtrl_addOneDepartment",function(event,data){ 
                 console.log("zTree received message of zTree_addOneDepartment");
                 //just if one node was already created. if yes, then give up add department process
                 if(nodeUId_toBeCreatedOrUpdated !== ""){
@@ -269,9 +269,16 @@ app.directive('ztree',function(){
                         //create a new node as child node of the selected node
                         var firstNode = nodes[0];
                         if(firstNode !== null){
+                            //verify if the current selected node is department or not, if not, stop creating new node.
+                            var parentNodeType = firstNode.dataType;
+                            if(parentNodeType !== branchType){
+                                var message = {type: 'warning', msg: 'No department is selected. Please select one department'};
+                                $scope.$emit("Alert_Msg", message);
+                                return;
+                            }
                             //save the parent UID for future database process
                             parentNodeUId_forNodeToBeCreatedOrUpdated = firstNode.getUID();
-                            
+                                                                                    
                             var util_service = angular.element(document.body).injector().get('UtilService');
                             
                             if(util_service !== null){
@@ -297,8 +304,8 @@ app.directive('ztree',function(){
                     }                  
                 }
             }); 
-            
-            $scope.$on("zTree_addOneEmployee",function(event,data){ 
+                                    
+            $scope.$on("RootCtrl_addOneEmployee",function(event,data){ 
                 console.log("zTree received message of zTree_addOneEmployee");
                 //just if one node was already created. if yes, then give up add department process
                 if(nodeUId_toBeCreatedOrUpdated !== ""){
@@ -464,9 +471,9 @@ app.directive('ztree',function(){
                 }
             });
             
-            $scope.$on("RootCtrlMsg_OneDepartmentCreated", function(event, data){
+            $scope.$on("RootCtrlMsg_OneDepartmentCreatedOnServer", function(event, data){
                 
-                console.log("zTree received message of oneDepartmentCreatedByDepartmentService");
+                console.log("zTree received message of OneDepartmentCreatedOnServer");
                 //zTree will update the tree nodes
                 if(zTreeObj === null)
                     return;
@@ -483,13 +490,47 @@ app.directive('ztree',function(){
                     var parent = findNodeByUID(zTreeObj.getNodes(), "UID", parentNodeUId_forNodeToBeCreatedOrUpdated);
 
                     if(parent !== null){
-                        zTreeObj.selectNode(parent);
-                        //after successfully creating a department, set tree id as empty
-                        nodeUId_toBeCreatedOrUpdated = "";
-                    }
+                        zTreeObj.selectNode(parent);                                               
+                    }                    
                 }
-                
+                //after successfully creating a department, set tree id as empty 
+                nodeUId_toBeCreatedOrUpdated = "";
             });
+            
+            $scope.$on("RootCtrl_departmentCreationForm_cancelled", function(event, data){
+                removeTheCurrentWorkingNode();
+            });
+            
+            $scope.$on("RootCtrl_departmentEditForm_cancel", function(event, data){
+                nodeUId_toBeCreatedOrUpdated = "";
+            });
+            
+            $scope.$on("RootCtrl_removeDepartmentNode", function(event, data){
+                removeTheCurrentWorkingNode();
+            });
+            
+            $scope.$on("RootCtrl_removeEmployeeNode", function(event, data){
+                removeTheCurrentWorkingNode();
+            });
+            
+            function removeTheCurrentWorkingNode(){
+                // remove the newly created node.
+                if(zTreeObj === null)
+                    return;
+                
+                if(nodeUId_toBeCreatedOrUpdated === "")
+                    return;
+                
+                if(zTreeObj === null)
+                    return;
+                
+                var nodeToBeCreatedOrUpdated = findNodeByUID(zTreeObj.getNodes(), "UID", nodeUId_toBeCreatedOrUpdated);
+                                
+                if(nodeToBeCreatedOrUpdated !== null){  
+                    zTreeObj.removeNode(nodeToBeCreatedOrUpdated, false);
+                    nodeUId_toBeCreatedOrUpdated = "";
+                };
+            };
             
             //The following section is for the testing and initialization of zTree, to be removed in the future.
             function Department(id, name, address, begin_time) {

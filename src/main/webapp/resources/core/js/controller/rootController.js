@@ -85,13 +85,13 @@ angular.module("app").controller("rootController", ["$scope", "$rootScope","depa
     // The following functions are for adding one department
     $scope.$on("addOneDepartment", function(event, msg){
                 
-        $rootScope.$broadcast("zTree_addOneDepartment");
+        $rootScope.$broadcast("RootCtrl_addOneDepartment");
         
     });
     
     $scope.$on("addOneEmployee", function(event, msg){
                 
-        $rootScope.$broadcast("zTree_addOneEmployee");
+        $rootScope.$broadcast("RootCtrl_addOneEmployee");
         
     });
     
@@ -116,8 +116,7 @@ angular.module("app").controller("rootController", ["$scope", "$rootScope","depa
                 departmentService.getSaveOrUpdateDepartmentPage($location).then(
                     function(data){
                         var message = {obj: node_in, pageContent: data };
-                        $rootScope.$broadcast("DirectiveToUpdateBindPage_RootMsg", message);
-
+                        $rootScope.$broadcast("DirectiveToUpdateBindPage_RootMsg", message);                        
                     },
                     function(errResponse){
                         console.error("Error while fetching department form page");
@@ -195,7 +194,7 @@ angular.module("app").controller("rootController", ["$scope", "$rootScope","depa
                 $scope.items[0] = { id: 'Department', name:'Add Department'};
                 $scope.items[1] = { id: 'Employee', name:'Add Employee'};
                 
-                $rootScope.$broadcast("zTree_displayAllDepartments", data);
+                $rootScope.$broadcast("RootCtrl_displayAllDepartments", data);
                 $rootScope.$broadcast("MainGridOne_DisplayInfo", {type: 'Department', msg: data});
                 $rootScope.$broadcast("MainGridTwo_DisplayInfo", {type: 'Employee', msg: data});
                 $rootScope.$broadcast("C3PiePlotChart_DisplayInfo", {type: 'Employee', msg: data});
@@ -241,7 +240,7 @@ angular.module("app").controller("rootController", ["$scope", "$rootScope","depa
             $scope.addAlert("warning", "No node is selected, please select one node!");
             return;
         }        
-       
+        //once the new department node was created in the zTree, ask for department web page to be loaded from server
         departmentService.getSaveOrUpdateDepartmentPage($location).then(
             function(data){
                 //$scope.$emit("updateBindPageView", response.data);
@@ -266,7 +265,7 @@ angular.module("app").controller("rootController", ["$scope", "$rootScope","depa
         }
             
         $scope.tabs[0].title = 'EmployeeForm';
-        $scope.tabs[0].url = $scope.EMPLOYEE_FORM_URL;
+        $scope.tabs[0].url = $scope.EMPLOYEE_FORM_URL;  //the new page request will be sent to server, and spring controller will respond with the returned page
 
         $scope.currentTab.node = node_in;
 
@@ -287,6 +286,38 @@ angular.module("app").controller("rootController", ["$scope", "$rootScope","depa
         $rootScope.$broadcast("RootCtrl_SendCurNodeInfo", msg);
     });
     
+    $scope.$on("newDepartmentCreatedOnServer", function(event, msg){
+        //the transferred argument 'msg' is the department object.
+        $rootScope.$broadcast("RootCtrlMsg_OneDepartmentCreatedOnServer", msg);
+    });
+    
+    $scope.$on("departmentCreationForm_cancel", function(event, msg){
+        //the root controller transfer the message to the directive to update the view
+        $rootScope.$broadcast("DirectiveToUpdateBindPage_RootMsg", msg);
+        //the root controller send message to tree view to remove the newly created view.
+        $rootScope.$broadcast("RootCtrl_departmentCreationForm_cancelled");
+    });
+    
+    $scope.$on("departmentEditForm_cancel", function(event, msg){
+        $rootScope.$broadcast("DirectiveToUpdateBindPage_RootMsg", msg);
+        $rootScope.$broadcast("RootCtrl_departmentEditForm_cancel");
+    });
+    
+    $scope.$on("removeDepartmentNode", function(event, msg){
+        $rootScope.$broadcast("RootCtrl_removeDepartmentNode");
+    });
+    
+    $scope.$on("employeeForm_cancel", function(event, msg){
+        //use default page to replace the employee form page to the default page
+        $scope.tabs[0].title = 'tab_0';
+        $scope.tabs[0].url = 'tab_0';
+        //then send message to zTree to remove the newly created node
+        $rootScope.$broadcast("RootCtrl_removeEmployeeNode", msg);
+    });
+    
+    $scope.$on("removeEmployeeNode", function(event, msg){
+        $rootScope.$broadcast("RootCtrl_removeEmployeeNode");
+    });
     /*$scope.$on("updateBindPageView", function (event, data){
         
         console.log("received message from service to update bindPage");
