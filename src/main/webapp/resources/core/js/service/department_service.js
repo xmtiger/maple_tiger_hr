@@ -17,19 +17,37 @@ angular.module("app").factory("departmentService", ["$http", "$q", function($htt
     
     var uri_path = {};
     
+    var CREATION_TAB_NAME = 'Department Creation';
+    var EDIT_TAB_NAME = 'Department Edit';
+    
     var factory = {
         fetchAllDepartments : fetchAllDepartments,
         setURI : setURI,
+        getCreationEditPageURI : getCreationEditPageURI,
         getSaveOrUpdateDepartmentPage : getSaveOrUpdateDepartmentPage,
         createOrUpateDepartment : createOrUpateDepartment,
         findDepartmentById : findDepartmentById,
-        deleteDepartmentById : deleteDepartmentById
+        deleteDepartmentById : deleteDepartmentById,
+        getCreationTabName : getCreationTabName,
+        getEditTabName: getEditTabName
     };
     
     return factory;
     
+    function getCreationTabName(){
+        return CREATION_TAB_NAME;
+    }
+    
+    function getEditTabName(){
+        return EDIT_TAB_NAME;
+    }
+    
     function setURI(location){
         this.uri_path = location;
+    }
+    
+    function getCreationEditPageURI(){
+        return REST_SERVICE_URI + REST_DEPARTMENT_FORM_PAGE_URI;
     }
     
     function fetchAllDepartments($location){
@@ -99,7 +117,7 @@ angular.module("app").factory("departmentService", ["$http", "$q", function($htt
                 
         request = request.replace("/#", "");
         
-        console.log(request);
+        console.log("saveOrUpdateDepartment" + request);
                 
         $http.post(request, department).then(
             function(response){

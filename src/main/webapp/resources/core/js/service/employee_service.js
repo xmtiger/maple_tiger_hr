@@ -10,16 +10,30 @@ angular.module("app").factory("employeeService", ["$http", "$q", function($http,
    
     var REST_SERVICE_URI = "employee/";
     var REST_DEPARTMENT_FORM_PAGE_URI = "getCreationOrUpdateFormPage";
+    
+    var EMPLOYEE_CREATION_TAB_NAME = 'Employee Creation';
+    var EMPLOYEE_EDIT_TAB_NAME = 'Employee Edit';
      
     var factory = {
         fetchAllEmployees : fetchAllEmployees,        
         getSaveOrUpdateEmployeePage : getSaveOrUpdateEmployeePage,
         createOrUpateEmployee : createOrUpateEmployee,
         findEmployeeById : findEmployeeById,
-        deleteDepartmentById : deleteEmployeeById
+        deleteDepartmentById : deleteEmployeeById,
+        getCreationEditPageURI : getCreationEditPageURI,
+        getCreationTabName : getCreationTabName,
+        getEditTabName : getEditName
     };
     
     return factory;
+    
+    function getCreationTabName(){
+        return EMPLOYEE_CREATION_TAB_NAME;
+    }
+    
+    function getEditName(){
+        return EMPLOYEE_EDIT_TAB_NAME;
+    }
     
     function fetchAllEmployees($location){
         var deferred = $q.defer();
@@ -153,6 +167,10 @@ angular.module("app").factory("employeeService", ["$http", "$q", function($http,
         );
         
         return deferred.promise;
+    }
+    
+    function getCreationEditPageURI(){
+        return REST_SERVICE_URI + REST_DEPARTMENT_FORM_PAGE_URI;
     }
     
 }]);

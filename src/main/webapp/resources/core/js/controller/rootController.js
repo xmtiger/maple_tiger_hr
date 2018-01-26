@@ -35,7 +35,8 @@ angular.module("app").controller("rootController", ["$scope", "$rootScope","depa
 
     $scope.currentTab = $scope.tabs[0];
     
-    $scope.EMPLOYEE_FORM_URL = 'tab_0/employeeForm';
+    //$scope.EMPLOYEE_FORM_URL = 'tab_0/employeeForm';
+    //$scope.DEMPARTMENT_FORM_URL = 'department/getCreationOrUpdateFormPage';
     
     $scope.tabFinishLoading = function(){
         console.log("tab finished loading");
@@ -113,7 +114,7 @@ angular.module("app").controller("rootController", ["$scope", "$rootScope","depa
         //send request to server to get the update html page
         if(typeof node_in === 'object' && node_in.hasOwnProperty('dataType')){
             if(node_in.dataType === 'Department'){
-                departmentService.getSaveOrUpdateDepartmentPage($location).then(
+                /*departmentService.getSaveOrUpdateDepartmentPage($location).then(
                     function(data){
                         var message = {obj: node_in, pageContent: data };
                         $rootScope.$broadcast("DirectiveToUpdateBindPage_RootMsg", message);                        
@@ -121,15 +122,33 @@ angular.module("app").controller("rootController", ["$scope", "$rootScope","depa
                     function(errResponse){
                         console.error("Error while fetching department form page");
                     }   
-                );
-            }else if(node_in.dataType === 'Employee'){
-                //instead of requesting page from server, use ng-include to set page url
-                $scope.tabs[0].title = 'EmployeeForm';
-                $scope.tabs[0].url = $scope.EMPLOYEE_FORM_URL;
+                );*/
+                
+                //use different page loading method
+                //$scope.tabs[0].title = 'Department Form';
+                $scope.currentTab.title = departmentService.getEditTabName();
+                var departmentCreationEditPage = departmentService.getCreationEditPageURI();
+                //$scope.tabs[0].url = departmentCreationEditPage;
+                $scope.currentTab.url = departmentCreationEditPage;
                 
                 $scope.currentTab.node = node_in;
                 
-                if($scope.currentTab.url === $scope.EMPLOYEE_FORM_URL){
+                if($scope.currentTab.url === departmentCreationEditPage){
+                    $rootScope.$broadcast("tabFinishedLoading", $scope.currentTab);
+                }else{
+                    $scope.currentTab = $scope.tabs[0];
+                }               
+            }else if(node_in.dataType === 'Employee'){
+                //instead of requesting page from server, use ng-include to set page url
+                //$scope.tabs[0].title = 'EmployeeForm';
+                $scope.currentTab.title = employeeService.getEditTabName();
+                var employeeCreationEditPage = employeeService.getCreationEditPageURI();
+                //$scope.tabs[0].url = empployeeCreationEditPage;
+                $scope.currentTab.url = employeeCreationEditPage;
+                
+                $scope.currentTab.node = node_in;
+                
+                if($scope.currentTab.url === employeeCreationEditPage){
                     //send message directly
                     $rootScope.$broadcast("tabFinishedLoading", $scope.currentTab);
                 }else{
@@ -241,7 +260,7 @@ angular.module("app").controller("rootController", ["$scope", "$rootScope","depa
             return;
         }        
         //once the new department node was created in the zTree, ask for department web page to be loaded from server
-        departmentService.getSaveOrUpdateDepartmentPage($location).then(
+        /*departmentService.getSaveOrUpdateDepartmentPage($location).then(
             function(data){
                 //$scope.$emit("updateBindPageView", response.data);
                 $rootScope.$broadcast("DirectiveToUpdateBindPage_RootMsg", data);
@@ -250,7 +269,24 @@ angular.module("app").controller("rootController", ["$scope", "$rootScope","depa
             function(errResponse){
                 console.error("Error while fetching all departments");
             }   
-        );
+        );*/
+
+        //$scope.tabs[0].title = 'DepartmentForm';
+        $scope.currentTab.title = departmentService.getCreationTabName();
+        var departmentCreationEditPage = departmentService.getCreationEditPageURI();
+        //$scope.tabs[0].url = departmentCreationEditPage;  //the new page request will be sent to server, and spring controller will respond with the returned page
+        $scope.currentTab.url = departmentCreationEditPage;
+                
+        $scope.currentTab.node = {id:-1};
+        $scope.currentTab.node.id = nodeId;
+
+        if($scope.currentTab.url === departmentCreationEditPage){
+            //send message directly
+            $rootScope.$broadcast("tabFinishedLoading", $scope.currentTab);
+        }else{
+            //add page first, and then send messag in function after loading the page
+            $scope.currentTab = $scope.tabs[0];
+        } 
                
     });
     
@@ -264,12 +300,15 @@ angular.module("app").controller("rootController", ["$scope", "$rootScope","depa
             return;
         }
             
-        $scope.tabs[0].title = 'EmployeeForm';
-        $scope.tabs[0].url = $scope.EMPLOYEE_FORM_URL;  //the new page request will be sent to server, and spring controller will respond with the returned page
+        //$scope.tabs[0].title = 'EmployeeForm';
+        $scope.currentTab.title = employeeService.getCreationTabName();
+        var employeeCreationEditPage = employeeService.getCreationEditPageURI();
+        //$scope.tabs[0].url = empployeeCreationEditPage;  //the new page request will be sent to server, and spring controller will respond with the returned page
+        $scope.currentTab.url = employeeCreationEditPage;
 
         $scope.currentTab.node = node_in;
 
-        if($scope.currentTab.url === $scope.EMPLOYEE_FORM_URL){
+        if($scope.currentTab.url === employeeCreationEditPage){
             //send message directly
             $rootScope.$broadcast("tabFinishedLoading", $scope.currentTab);
         }else{
@@ -279,44 +318,61 @@ angular.module("app").controller("rootController", ["$scope", "$rootScope","depa
     });
     
     $scope.$on("RequestCurrentTreeNodeInfo", function(event, msg){
+        console.log("root contoller received message of RequestCurrentTreeNodeInfo");
         $rootScope.$broadcast("RootCtrl_RequestCurrentTreeNodeInfo", msg);
+        console.log("root contoller sending message of RequestCurrentTreeNodeInfo");
     });
     
     $scope.$on("zTree_SendCurNodeInfo", function(event, msg){
+        console.log("root contorller received message of zTree_SendCurNodeInfo");
         $rootScope.$broadcast("RootCtrl_SendCurNodeInfo", msg);
+        console.log("root controller sending message of RootCtrl_SendCurNodeInfo");
     });
+    
+    function setCurrentTab2Tab0(){
+        $scope.currentTab.title = 'tab_0';        
+        $scope.currentTab.url = "tab_0"; 
+    }
     
     $scope.$on("newDepartmentCreatedOnServer", function(event, msg){
         //the transferred argument 'msg' is the department object.
-        $rootScope.$broadcast("RootCtrlMsg_OneDepartmentCreatedOnServer", msg);
+        //the following message is sent to Tree to update the nodes
+        $rootScope.$broadcast("RootCtrlMsg_OneDepartmentCreatedOnServer", msg);        
+        //then update the page view, the view shall reflect the result of the creation
+        setCurrentTab2Tab0();
     });
     
     $scope.$on("departmentCreationForm_cancel", function(event, msg){
         //the root controller transfer the message to the directive to update the view
-        $rootScope.$broadcast("DirectiveToUpdateBindPage_RootMsg", msg);
+        //$rootScope.$broadcast("DirectiveToUpdateBindPage_RootMsg", msg);
+        ////use default page to replace the employee form page to the default page
+        setCurrentTab2Tab0();
         //the root controller send message to tree view to remove the newly created view.
         $rootScope.$broadcast("RootCtrl_departmentCreationForm_cancelled");
     });
     
     $scope.$on("departmentEditForm_cancel", function(event, msg){
-        $rootScope.$broadcast("DirectiveToUpdateBindPage_RootMsg", msg);
+        //$rootScope.$broadcast("DirectiveToUpdateBindPage_RootMsg", msg);
+        //use default page to replace the employee form page to the default page
+        setCurrentTab2Tab0();
         $rootScope.$broadcast("RootCtrl_departmentEditForm_cancel");
     });
     
     $scope.$on("removeDepartmentNode", function(event, msg){
         $rootScope.$broadcast("RootCtrl_removeDepartmentNode");
+        setCurrentTab2Tab0();        
     });
     
     $scope.$on("employeeForm_cancel", function(event, msg){
         //use default page to replace the employee form page to the default page
-        $scope.tabs[0].title = 'tab_0';
-        $scope.tabs[0].url = 'tab_0';
+        setCurrentTab2Tab0();
         //then send message to zTree to remove the newly created node
         $rootScope.$broadcast("RootCtrl_removeEmployeeNode", msg);
     });
     
     $scope.$on("removeEmployeeNode", function(event, msg){
         $rootScope.$broadcast("RootCtrl_removeEmployeeNode");
+        setCurrentTab2Tab0();
     });
     /*$scope.$on("updateBindPageView", function (event, data){
         

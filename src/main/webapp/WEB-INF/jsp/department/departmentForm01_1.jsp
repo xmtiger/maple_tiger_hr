@@ -210,8 +210,11 @@
                         $scope.parentNodeType = "";
                         $scope.curNodeId = -1;
                         $scope.curNodeType = "";
+                        $scope.submit = 0;  //0 means un-submitted
                     };
                     
+                    //$scope.page_url = 'department/getCreationOrUpdateFormPage';
+                    $scope.page_url = departmentService.getCreationEditPageURI();
                     /*$scope.alert = { type: 'success', msg: 'Welcome using maple_tiger system'};
        
                     $scope.addAlert = function(type, msg) {        
@@ -222,6 +225,25 @@
                     $scope.closeAlert = function(){
                         $scope.alert = {};
                     };*/
+                    $scope.$on("tabFinishedLoading", function(event, tab_info){
+                        console.log("DepartmentFormController received message of tabFinishedLoading");
+                        if(typeof tab_info === 'object' && tab_info.hasOwnProperty('url')){
+                            console.log("pass tab_info 1 step check");
+                            if(tab_info.url === $scope.page_url && tab_info.hasOwnProperty('node')){
+                                console.log("pass tab_info 2 step check");
+                                
+                                if(tab_info.node.id > 0){
+                                    //existing node id >0, so it is for edit process
+                                    $scope.$emit("DepartmentPageFormToBeFilled", tab_info.node);                                    
+
+                                }else{
+                                    //proceed with creation form
+                                    $scope.formTitle = 'DEPARTMENT CREATION FORM';
+                                }
+
+                            }
+                        }
+                    }); 
     
                     //here the function validateDepartmentForm is jquery function, which is not recommended.
                     //but this page is end page, so it is flexible to use jquery--------------------------------------
@@ -271,14 +293,16 @@
                     };
                     // This function is to send form data to the server for update or save a new department
                     $scope.$on("RootCtrl_SendCurNodeInfo", function(event, msg){                   
-                        
+                        console.log("department page received msg: RootCtrl_SendCurNodeInfo");
                         if(typeof msg === 'object' && msg.hasOwnProperty('type') && msg.hasOwnProperty('data')){
                             var nodeInfo = msg.obj;
                             
-                            if(msg.type === 'createOrUpdateDepartment'){                                
+                            if(msg.type === 'createOrUpdateDepartment'){ 
+                                $scope.submit++;
                                 saveOrUpdateDepartment(nodeInfo);
                             }else if(msg.type === 'deleteDepartment'){
                                 console.log("delete department");
+                                $scope.delete++;    //only allow delete once
                                 deleteDepartment(nodeInfo);
                             }
                         }               
@@ -287,10 +311,14 @@
                     
                     function deleteDepartment(nodeInfo){
                         
-                        if($scope.delete !== 0)
+                        if($scope.delete > 1){
+                            console.log("duplicated delete is not allowed");
                             return;
+                        }else{
+                            console.log("$scope.delete:" + $scope.delete);
+                        }
                         
-                        $scope.delete++;    //only allow delete once
+                        //$scope.delete++;    //only allow delete once
                         
                         departmentService.deleteDepartmentById($scope, $location, nodeInfo).then(
                             function(data){
@@ -324,10 +352,12 @@
                         //perform the database actions here.
                         console.log("client validation is passed, then perform database request");
 
-                        if($scope.submit !== 0) //submit is only allowed once.
+                        if($scope.submit > 1){
+                            //submit is only allowed once.
+                            console("duplicate adding is not allowed");
                             return;
-                        
-                        $scope.submit++;
+                        }
+                        //$scope.submit++;
                         
                         var jsonData = getJsonDataFromDeptForm();                           
                         console.log(jsonData);
@@ -449,6 +479,7 @@
                         var rs = confirm("The deletion is irrevocable. Please make sure you really want delete the item");
                         if(rs === true){
                             //delete the item
+                            console.log("$scope.departmentFormDelete:" + $scope.delete);
                             var message = {type:"deleteDepartment", data:{}};
                             $scope.$emit("RequestCurrentTreeNodeInfo", message);
                         }

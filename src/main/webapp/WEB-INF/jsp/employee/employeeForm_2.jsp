@@ -33,7 +33,8 @@
                 $scope.delete = 0;  //0 means un-deleted
                 
                 //-------------------------------------------------------------------------
-		$scope.page_url = "tab_0/employeeForm";		
+		//$scope.page_url = "tab_0/employeeForm";		
+                $scope.page_url = employeeService.getCreationEditPageURI();
                 $scope.employee = {};
                 
                 

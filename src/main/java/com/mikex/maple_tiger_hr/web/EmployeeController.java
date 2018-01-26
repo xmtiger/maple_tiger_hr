@@ -28,7 +28,7 @@ public class EmployeeController {
     
     private final Logger logger = LoggerFactory.getLogger(DepartmentController.class);
     
-    private static final String VIEWS_EMPLOYEE_CREATE_OR_UPDATE_FORM = "employee/employeeForm_1A";
+    private static final String VIEWS_EMPLOYEE_CREATE_OR_UPDATE_FORM = "employee/employeeForm_2";
     
     @RequestMapping(value = "employee/getCreationOrUpdateFormPage", method = RequestMethod.GET)
     public String getEmployeeCreationOrUpdateFormPage(){

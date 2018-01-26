@@ -54,7 +54,7 @@
                             <li class="divider"></li>
                             <li><a href="#" id="department_menu_add" ng-click="addDepartment()">Add</a></li>
                             <li><a href="#" id="department_menu_edit">Edit</a></li>
-                            <li><a href="#" id="department_menu_delete">Remove</a></li>
+                            <!--li><a href="#" id="department_menu_delete">Remove</a></li-->
                         </ul>   
                     </li>
                     
@@ -97,7 +97,7 @@
                         </ul>
                           
                         <button id="editButton" type="button" class="btn btn-primary" ng-click="edit_button()">Edit</button>
-                        <button id="removeButton" type="button" class="btn btn-primary" ng-click="delete_button()">Remove</button>
+                        <!--button id="removeButton" type="button" class="btn btn-primary" ng-click="delete_button()">Remove</button-->
                     </div>
 
                     <form >
