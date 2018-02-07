@@ -192,6 +192,7 @@
                     $scope.displayDeleteButton = false;
                     //create a blank object to hold the form information, and $scope will allow this to pass between controller and view
                     $scope.formData = {};
+                    $scope.department_original_data = {};
                     
                     $scope.parentNodeUID = "";  //unique id for getNodeByParam(key, value, parent) method of the zTree
                     $scope.curNodeUID = "";
@@ -465,7 +466,11 @@
                                 console.log(data);
                                 $scope.formData.name = data.name;
                                 $scope.formData.address = data.address;
-                                $scope.formData.beginTime = data.begin_time;                                
+                                $scope.formData.beginTime = data.begin_time;  
+                                
+                                $scope.department_original_data.name = data.name;
+                                $scope.department_original_data.address = data.address;
+                                $scope.department_original_data.beginTime = data.begin_time;
                             },
                             function(errResponse){
                                 console.error("Error while fetching the indicated department");
@@ -492,11 +497,9 @@
                             var msg = "The creation process was cancelled";
                             $scope.$emit("departmentCreationForm_cancel", msg);
                         }else if($scope.displayDeleteButton === true){
-                            //for the edit form, the cancel button is to remove the edit page only.
-                            var msg = "The edit process was cancelled";
-                            $scope.$emit("departmentEditForm_cancel", msg);
-                        }
-                        //alert("cancel button");
+                            //for the edit form, the cancel button is to remove the edit page only.                            
+                            $scope.$emit("departmentEditForm_cancel", $scope.department_original_data);
+                        }                        
                     };
                             
                 }]);

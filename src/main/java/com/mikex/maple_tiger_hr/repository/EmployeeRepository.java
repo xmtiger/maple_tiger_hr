@@ -19,6 +19,8 @@ public interface EmployeeRepository {
     
     Collection<Employee> findByLastName(String lastName) throws DataAccessException;
     
+    Collection<Employee> findEmployeeByName_Address_BirthDate(Employee employee) throws DataAccessException;
+    
     Employee findById(int id) throws DataAccessException;
     
     void save(Employee employee) throws DataAccessException;

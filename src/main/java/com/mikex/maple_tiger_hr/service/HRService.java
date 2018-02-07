@@ -25,6 +25,8 @@ public interface HRService {
     
     Collection<Employee> findEmployeeByLastName(String lastName) throws DataAccessException;
     
+    Collection<Employee> findEmployeeByName_Address_BirthDate(Employee employee_toBeFound) throws DataAccessException;
+    
     Department findDepartmentById(int id) throws DataAccessException;
     
     void deleteDepartmentById(int deptId) throws DataAccessException;

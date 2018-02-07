@@ -190,13 +190,12 @@ public class AbstractHRServiceTests {
         
     }
     
-    /*
+    
     @Test
     @Transactional
     public void shouldInsertEmployee(){
         
-        Department dept = this.hrService.findDepartmentById(2);
-        
+        Department dept = this.hrService.findDepartmentById(2);        
         
         Employee employee = new Employee();
         employee.setFirstName("Sam");
@@ -211,7 +210,7 @@ public class AbstractHRServiceTests {
         }
                 
         employee.setHome_address("1989 Springland street");
-        employee.setPhone_mobile("5879998888");
+        //employee.setPhone_mobile("5879998888");
         employee.setDepartment(dept);
         
         this.hrService.saveEmployee(employee);
@@ -222,7 +221,7 @@ public class AbstractHRServiceTests {
         assertThat(employees.size()).isEqualTo(1);
     }
     
-    @Test
+    /*@Test
     @Transactional
     public void shouldInsertDepartment(){
         

@@ -36,7 +36,19 @@
 		//$scope.page_url = "tab_0/employeeForm";		
                 $scope.page_url = employeeService.getCreationEditPageURI();
                 $scope.employee = {};
+                $scope.employee_original_data = {};
                 
+                function keepOriginalEmployeeData(newData){
+                    $scope.employee_original_data.firstName = newData.firstName;
+                    $scope.employee_original_data.middleName = newData.middleName;
+                    $scope.employee_original_data.lastName = newData.lastName;
+                    
+                    $scope.employee_original_data.home_address = newData.home_address;
+                    
+                    $scope.employee_original_data.birth_date = newData.birth_date;
+                    
+                    $scope.employee_original_data.gender = newData.gender;
+                }
                 
                 $scope.$on("tabFinishedLoading", function(event, tab_info){
                     console.log("EmployeeFormController received message of tabFinishedLoading");
@@ -49,6 +61,9 @@
                                     function(data){
                                         if(data.id >0){
                                            $scope.employee = data; 
+                                           
+                                           keepOriginalEmployeeData(data);
+                                           
                                            $scope.$emit("EmployeePageFormToBeFilled");                                         
                                         }
                                     },function(errResponse){
@@ -177,12 +192,26 @@
                 //here the function validateDepartmentForm is jquery function, which is not recommended.
                 //but this page is end page, so it is flexible to use jquery--------------------------------------
                 function validateEmployeeForm($scope){
-                    				
-                    if (!$scope.form_data.invalid) {
-                            //alert('our form is valid');
+                    
+                    var valid = true;
+                    if($scope.formData.first_name.$invalid === true)
+                        valid = false;
+                    
+                    if($scope.formData.last_name.$invalid === true)
+                        valid = false;
+                    
+                    if($scope.formData.address.$invalid === true)
+                        valid = false;
+                    
+                    console.log($scope.formData);
+                    if($scope.formData.birth_date.$invalid === true)
+                        valid = false;
+                                        
+                    if (valid) {
+                            
                             return true;
                     }else{
-                            alert('our form is invalid');
+                            alert('The form is invalid, please verfiy the form and resubmit it');
                             return false;
                     }       
                     
@@ -215,7 +244,7 @@
                         var nodeInfo = msg.obj;
 
                         if(msg.type === 'createOrUpdateEmployee'){                                
-                            saveOrUpdateDepartment(nodeInfo);
+                            saveOrUpdateEmployee(nodeInfo);
                         }else if(msg.type === 'deleteEmployee'){
                             console.log("delete employee");
                             deleteEmployee(nodeInfo);
@@ -270,7 +299,7 @@
 
                     var jsonData = getJsonDataFromEmployeeForm();                           
                     console.log(jsonData);
-                    employeeService.createOrUpateDepartment($scope, $location, jsonData, nodeInfo).then(
+                    employeeService.createOrUpateEmployee($scope, $location, jsonData, nodeInfo).then(
                         function(data){
                             if(data.hasOwnProperty('validated')){
                                 if(data.validated === true){
@@ -370,7 +399,18 @@
 
                 $scope.employeeFormCancel = function(){
                     //send the following message to root controller
-                    $scope.$emit("employeeForm_cancel");
+                    if($scope.employee.hasOwnProperty('id')){
+                        console.log('$scope has the property of id');
+                        if($scope.employee.id >= 0){
+                            console.log('$scope has the property of id which is bigger than 1');
+                            console.log($scope.employee_original_data);
+                            $scope.$emit('employeeForm_edit_cancel', $scope.employee_original_data);
+                        }
+                    }else{
+                        console.log('$scope does not have the property of id');
+                        $scope.$emit('employeeForm_creation_cancel');
+                    }
+                    //$scope.$emit("employeeForm_cancel");
                 };
 
             }]);
@@ -445,7 +485,7 @@
                         <div class="col-md-8 date">                       
 
                                 <p class="input-group">
-                                        <input name="begin_time" type="text" class="form-control" uib-datepicker-popup ng-model="employee.birth_date" ng-change="birthDateChange()" is-open="popup2.opened" datepicker-options="dateOptions" ng-required="true" close-text="Close" />
+                                        <input name="birth_date" type="text" class="form-control" uib-datepicker-popup ng-model="employee.birth_date" ng-change="birthDateChange()" is-open="popup2.opened" datepicker-options="dateOptions" ng-required="true" close-text="Close" />
                                         <span class="input-group-btn">
                                                 <button type="button" class="btn btn-default" ng-click="open2()"><i class="glyphicon glyphicon-calendar"></i></button>
                                         </span>

@@ -355,7 +355,7 @@ angular.module("app").controller("rootController", ["$scope", "$rootScope","depa
         //$rootScope.$broadcast("DirectiveToUpdateBindPage_RootMsg", msg);
         //use default page to replace the employee form page to the default page
         setCurrentTab2Tab0();
-        $rootScope.$broadcast("RootCtrl_departmentEditForm_cancel");
+        $rootScope.$broadcast("RootCtrl_departmentEditForm_cancel", msg);
     });
     
     $scope.$on("removeDepartmentNode", function(event, msg){
@@ -363,11 +363,17 @@ angular.module("app").controller("rootController", ["$scope", "$rootScope","depa
         setCurrentTab2Tab0();        
     });
     
-    $scope.$on("employeeForm_cancel", function(event, msg){
+    $scope.$on("employeeForm_creation_cancel", function(event, msg){
         //use default page to replace the employee form page to the default page
         setCurrentTab2Tab0();
         //then send message to zTree to remove the newly created node
         $rootScope.$broadcast("RootCtrl_removeEmployeeNode", msg);
+    });
+    
+    $scope.$on("employeeForm_edit_cancel", function(event, msg){
+        //use default page to replace the employee form page to the default page
+        setCurrentTab2Tab0();
+        $rootScope.$broadcast('RootCtrl_EmployeeForm_Edit_Cancel', msg);
     });
     
     $scope.$on("removeEmployeeNode", function(event, msg){

@@ -80,6 +80,13 @@ public class HRServiceImpl implements HRService {
     public Collection<Employee> findEmployeeByLastName(String lastName) throws DataAccessException {
         return employeeRepository.findByLastName(lastName);        
     }   
+    
+    @Override
+    @Transactional(readOnly = true)
+    public Collection<Employee> findEmployeeByName_Address_BirthDate(Employee employee_toBeFound) throws DataAccessException{
+        return employeeRepository.findEmployeeByName_Address_BirthDate(employee_toBeFound);
+    }
+
 
     @Override
     @Transactional(readOnly = true)

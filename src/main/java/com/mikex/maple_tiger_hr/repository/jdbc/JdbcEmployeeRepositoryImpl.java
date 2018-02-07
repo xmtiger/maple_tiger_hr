@@ -122,7 +122,7 @@ public class JdbcEmployeeRepositoryImpl implements EmployeeRepository {
                 .addValue("home_address", employee.getHome_address())
                 .addValue("phone_mobile", employee.getMobile_phone())
                 .addValue("dept_id", employee.getDepartment().getId());
-    }
+    }    
     
     class JdbcEmployeeRowMapper implements RowMapper<Employee>{
 
@@ -139,7 +139,11 @@ public class JdbcEmployeeRepositoryImpl implements EmployeeRepository {
             employee.setMobile_phone(rs.getString("phone_mobile"));
             return employee;
             //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-        }
-        
+        }        
+    }
+    
+    @Override
+    public Collection<Employee> findEmployeeByName_Address_BirthDate(Employee employee) throws DataAccessException {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 }

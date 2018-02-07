@@ -502,7 +502,25 @@ app.directive('ztree',function(){
             });
             
             $scope.$on("RootCtrl_departmentEditForm_cancel", function(event, data){
-                nodeUId_toBeCreatedOrUpdated = "";
+                //for the cancellation, it is required to reset the name to the original name
+                if(!data.hasOwnProperty('name'))
+                    return;
+                
+                if(zTreeObj === null)
+                    return;
+                
+                if(nodeUId_toBeCreatedOrUpdated === "")
+                    return;
+                
+                var nodeToBeCreatedOrUpdated = findNodeByUID(zTreeObj.getNodes(), "UID", nodeUId_toBeCreatedOrUpdated);
+                
+                if(nodeToBeCreatedOrUpdated !== null){
+                    var name = data.name;
+                    nodeToBeCreatedOrUpdated.setName(name);
+                    
+                    zTreeObj.refresh();       
+                    nodeUId_toBeCreatedOrUpdated = ""; 
+                }
             });
             
             $scope.$on("RootCtrl_removeDepartmentNode", function(event, data){
@@ -511,6 +529,32 @@ app.directive('ztree',function(){
             
             $scope.$on("RootCtrl_removeEmployeeNode", function(event, data){
                 removeTheCurrentWorkingNode();
+            });
+            
+            $scope.$on('RootCtrl_EmployeeForm_Edit_Cancel', function(event, data){
+                //reset the node name to the original name
+                if(!data.hasOwnProperty('firstName'))
+                    return;
+                if(!data.hasOwnProperty('middleName'))
+                    return;
+                if(!data.hasOwnProperty('lastName'))
+                    return;
+                
+                if(zTreeObj === null)
+                    return;
+                
+                if(nodeUId_toBeCreatedOrUpdated === "")
+                    return;
+                
+                var nodeToBeCreatedOrUpdated = findNodeByUID(zTreeObj.getNodes(), "UID", nodeUId_toBeCreatedOrUpdated);
+                
+                if(nodeToBeCreatedOrUpdated !== null){ 
+                    var name = data.firstName +' '+ data.middleName +' '+ data.lastName;
+                    nodeToBeCreatedOrUpdated.setName(name);
+                    
+                    zTreeObj.refresh();       
+                    nodeUId_toBeCreatedOrUpdated = "";                    
+                }
             });
             
             function removeTheCurrentWorkingNode(){

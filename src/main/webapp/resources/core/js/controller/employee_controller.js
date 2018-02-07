@@ -1,71 +1,19 @@
-$(document).ready(function() {      
-                
-    $("#datePicker").datepicker({
-        autoclose: false,
-        format: 'yyyy-mm-dd'
+/* 
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
 
-    }).on('changeDate', function(e) {
-        // Revalidate the date field
-        //alert("datepicker.on");
-        $('#employee_form').bootstrapValidator('revalidateField', 'begin_time');
-    });
+"use strict";
+// The dynamic registration of the controller must be done before the definition of the indicated ng-controller in the html content
+angular.module("app").controller("EmployeeFormController", ["$scope","employeeService", "$location",function($scope,employeeService, $location){
 
-    $('#employee_form').bootstrapValidator({
-        // To use feedback icons, ensure that you use Bootstrap v3.1.0 or later
-        framework: "bootstrap",
-        icon: {
-            valid: 'glyphicon glyphicon-ok',
-            invalid: 'glyphicon glyphicon-remove',
-            validating: 'glyphicon glyphicon-refresh'
-        },
-        fields: {
-            name: {
-                row: '.col-xs-4',
-                validators: {
-                        stringLength: {
-                        min: 2,
-                        message: 'The minimum length is 2'
-                    },
-                        notEmpty: {
-                        message: 'Please input a name'
-                    }
-                }
-            },
-            address: {
-                validators: {
-                     stringLength: {
-                        min: 2,
-                        message: 'The minimum length is 2'
-                    },
-                    notEmpty: {
-                        message: 'Please input an address'
-                    }
-                }
-            },
-            begin_time: {
-                validators: {
-                    date: {
-                        format: 'YYYY-MM-DD',
-                        message: 'The value is not a valid date'
-                    },
-                    notEmpty: {
-                        message: 'Please input or pick a date'
-                    }
-                }
-            }
-        }
-    });               
-
-});           
-
-// The dynamic registration of the controller must be done before the definition of the indicated ng-controller
-angular.module("app").controller("EmployeeFormController", ["$scope","employeeService", "$location",function($scope, employeeService, $location){
-
-    $scope.formTitle = 'EMPLOYEE CREATION FORM';
+    $scope.formTitle = 'EMPLOYEE FORM';
     $scope.button = 'Create';
     $scope.displayDeleteButton = false;
     //create a blank object to hold the form information, and $scope will allow this to pass between controller and view
-    $scope.formData = {};
+    $scope.form_data = {};
+    $scope.form_data.invalid = true;
 
     $scope.parentNodeUID = "";  //unique id for getNodeByParam(key, value, parent) method of the zTree
     $scope.curNodeUID = "";
@@ -78,6 +26,155 @@ angular.module("app").controller("EmployeeFormController", ["$scope","employeeSe
     $scope.submit = 0;  //0 means un-submitted
     $scope.delete = 0;  //0 means un-deleted
 
+    //-------------------------------------------------------------------------
+    //$scope.page_url = "tab_0/employeeForm";		
+    $scope.page_url = employeeService.getCreationEditPageURI();
+    $scope.employee = {};
+    $scope.employee_original_data = {};
+
+    function keepOriginalEmployeeData(newData){
+        $scope.employee_original_data.firstName = newData.firstName;
+        $scope.employee_original_data.middleName = newData.middleName;
+        $scope.employee_original_data.lastName = newData.lastName;
+
+        $scope.employee_original_data.home_address = newData.home_address;
+
+        $scope.employee_original_data.birth_date = newData.birth_date;
+
+        $scope.employee_original_data.gender = newData.gender;
+    }
+
+    $scope.$on("tabFinishedLoading", function(event, tab_info){
+        console.log("EmployeeFormController received message of tabFinishedLoading");
+        if(typeof tab_info === 'object' && tab_info.hasOwnProperty('url')){
+            if(tab_info.url === $scope.page_url && tab_info.hasOwnProperty('node')){
+                if(tab_info.node.id > 0){
+                    //proceed with update or delete 
+                    //proceed with infilling data
+                    employeeService.findEmployeeById($scope, $location, tab_info.node).then(
+                        function(data){
+                            if(data.id >0){
+                               $scope.employee = data; 
+
+                               keepOriginalEmployeeData(data);
+
+                               $scope.$emit("EmployeePageFormToBeFilled");                                         
+                            }
+                        },function(errResponse){
+                            console.error("Error while delete one employee");
+                        } 
+                    );
+
+                }else{
+                    //proceed with creation form
+                    $scope.formTitle = 'EMPLOYEE CREATION FORM';
+                }
+
+            }
+        }
+    });          
+
+    $scope.$on("EmployeePageFormToBeFilled", function(event, obj){
+
+        $scope.formTitle = 'EMPLOYEE UPDATE FORM';
+        $scope.button = 'Update';     
+        $scope.displayDeleteButton = true;                            
+
+    });
+
+    //-----------------------------------------------
+    $scope.today = function() {
+            //$scope.dt = new Date();
+            $scope.employee.beginTime = new Date();
+    };
+
+    $scope.today();
+
+    $scope.clear = function() {
+            //$scope.dt = null;
+            $scope.employee.beginTime = null;
+    };
+
+    $scope.inlineOptions = {
+            customClass: getDayClass,
+            minDate: new Date(),
+            showWeeks: true
+    };
+
+    $scope.dateOptions = {
+            dateDisabled: disabled,
+            formatYear: 'yy',
+            maxDate: new Date(2020, 5, 22),
+            minDate: new Date(),
+            startingDay: 1
+    };
+
+    // Disable weekend selection
+    function disabled(data) {
+            var date = data.date,
+            mode = data.mode;
+            return mode === 'day' && (date.getDay() === 0 || date.getDay() === 6);
+    }
+
+    $scope.toggleMin = function() {
+            $scope.inlineOptions.minDate = $scope.inlineOptions.minDate ? null : new Date();
+            $scope.dateOptions.minDate = $scope.inlineOptions.minDate;
+    };
+
+    $scope.toggleMin();
+
+    $scope.open2 = function() {
+            $scope.popup2.opened = true;
+    };
+
+    $scope.setDate = function(year, month, day) {
+            $scope.employee.beginTime = new Date(year, month, day);
+    };
+
+    $scope.formats = ['yyyy-MM-dd','dd-MM-yyyy', 'yyyy/MM/dd', 'dd.MM.yyyy', 'shortDate'];
+    $scope.format = $scope.formats[0];
+    $scope.altInputFormats = ['yyyy/M!/d!'];				
+
+    $scope.popup2 = {
+            opened: false
+    };
+
+    var tomorrow = new Date();
+    tomorrow.setDate(tomorrow.getDate() + 1);
+    var afterTomorrow = new Date();
+    afterTomorrow.setDate(tomorrow.getDate() + 1);
+
+    $scope.events = [
+            {
+              date: tomorrow,
+              status: 'full'
+            },
+            {
+              date: afterTomorrow,
+              status: 'partially'
+            }
+    ];
+
+    function getDayClass(data) {
+            var date = data.date,
+            mode = data.mode;
+            if (mode === 'day') {
+                    var dayToCheck = new Date(date).setHours(0,0,0,0);
+
+                    for (var i = 0; i < $scope.events.length; i++) {
+                            var currentDay = new Date($scope.events[i].date).setHours(0,0,0,0);
+
+                            if (dayToCheck === currentDay) {
+                                    return $scope.events[i].status;
+                            }
+                    }		
+            }
+
+            return '';
+    }
+
+    //----------------------------------------------------------------------------------
+
     function clearContent(){
         $scope.formData.name = "";
         $scope.parentNodeId = -1;
@@ -88,35 +185,42 @@ angular.module("app").controller("EmployeeFormController", ["$scope","employeeSe
 
     //here the function validateDepartmentForm is jquery function, which is not recommended.
     //but this page is end page, so it is flexible to use jquery--------------------------------------
-    function validateEmployeeForm(){
-        var bootstrapValidator = $("#employee_form").data('bootstrapValidator');
-        bootstrapValidator.validate();
-        if(bootstrapValidator.isValid()){
+    function validateEmployeeForm($scope){
 
-            return true;                      
-        } else{
+        var valid = true;
+        if($scope.formData.first_name.$invalid === true)
+            valid = false;
 
-            return false;
-        }  
+        if($scope.formData.last_name.$invalid === true)
+            valid = false;
+
+        if($scope.formData.address.$invalid === true)
+            valid = false;
+
+        console.log($scope.formData);
+        if($scope.formData.birth_date.$invalid === true)
+            valid = false;
+
+        if (valid) {
+
+                return true;
+        }else{
+                alert('The form is invalid, please verfiy the form and resubmit it');
+                return false;
+        }       
+
     };
 
     function getJsonDataFromEmployeeForm(){
-        var form = $('#employee_form');
 
-        //The following conversion is necessary to send server the correct json data
-        var jsonData = {};
-        $.each($(form).serializeArray(), function() {
-            jsonData[this.name] = this.value;
-        });
-
-        return JSON.stringify(jsonData);
+        return $scope.employee;
     };
 
     //-----------------------------------------------------------------------------------------
     // This is to get node information from the zTree
     $scope.employeeFormSubmit = function(){
 
-        if(validateDepartmentForm() === true){
+        if(validateEmployeeForm($scope) === true){
             //send request to tree for currrent node and the father node information
             var message = {type:"createOrUpdateEmployee", data:{}};
             $scope.$emit("RequestCurrentTreeNodeInfo", message);
@@ -134,10 +238,11 @@ angular.module("app").controller("EmployeeFormController", ["$scope","employeeSe
             var nodeInfo = msg.obj;
 
             if(msg.type === 'createOrUpdateEmployee'){                                
-                saveOrUpdateDepartment(nodeInfo);
+                saveOrUpdateEmployee(nodeInfo);
             }else if(msg.type === 'deleteEmployee'){
                 console.log("delete employee");
                 deleteEmployee(nodeInfo);
+                $scope.$emit("removeEmployeeNode");
             }
         }               
 
@@ -150,11 +255,11 @@ angular.module("app").controller("EmployeeFormController", ["$scope","employeeSe
 
         $scope.delete++;    //only allow delete once
 
-        departmentService.deleteDepartmentById($scope, $location, nodeInfo).then(
+        employeeService.deleteEmployeeById($scope, $location, nodeInfo).then(
             function(data){
                 if(data.hasOwnProperty('validated')){
                     if(data.validated === true){
-                        var str = "<h4 style='color:green'>The deletion was successfully done!</h4> <hr>"
+                        var str = "<h4 style='color:green'>The deletion was successfully done!</h4> <hr>";
 
                         $scope.$emit("DirectiveToUpdateBindPage", str);
                         clearContent();
@@ -188,12 +293,12 @@ angular.module("app").controller("EmployeeFormController", ["$scope","employeeSe
 
         var jsonData = getJsonDataFromEmployeeForm();                           
         console.log(jsonData);
-        employeeService.createOrUpateDepartment($scope, $location, jsonData, nodeInfo).then(
+        employeeService.createOrUpateEmployee($scope, $location, jsonData, nodeInfo).then(
             function(data){
                 if(data.hasOwnProperty('validated')){
                     if(data.validated === true){
 
-                        var str = "<h4 style='color:green'>The Process was successfully done!</h4> <hr>"
+                        var str = "<h4 style='color:green'>The Process was successfully done!</h4> <hr>";
 
                         if($scope.button === 'Update'){
                             str = "<h4 style='color:green'>The Employee was successfully Updated!</h4> <hr>";
@@ -227,54 +332,54 @@ angular.module("app").controller("EmployeeFormController", ["$scope","employeeSe
     //-----------------------------------------------------------------
     //functions handling name changes
     $scope.nameChange = function(){
-
-        $scope.$emit("nameChangedToBeSent", $scope.formData.name);
-        formChanged();
+                            //$scope.currentTab.invalid = this.formData.$invalid;
+        //console.log($scope.employee.first_name);                    
+        $scope.$emit("nameChangedToBeSent", $scope.employee.firstName + " " + $scope.employee.middleName + " " + $scope.employee.lastName);
+        formChanged($scope, this);
         //reset submit as zero
         if($scope.submit > 0){
             $scope.submit = 0;
             //reset the error messages                            
-            $("#employee_name").nextAll().remove();
+            //$("#employee_first_name").nextAll().remove();
         };
 
     };
 
     $scope.addressChange = function(){
-        formChanged();
+                            //$scope.currentTab.invalid = this.formData.$invalid;
+        formChanged($scope, this);
     };
 
-    $scope.beginTimeChange = function(){
-        formChanged();
+    $scope.birthDateChange = function(){
+
+        formChanged($scope, this);
     };
 
-    function formChanged(){
+    function formChanged($scope, self){
+        $scope.currentTab.invalid = self.formData.$invalid;
+
+        if($scope.employee.hasOwnProperty('firstName') && $scope.employee.firstName !== ''
+                && $scope.employee.hasOwnProperty('lastName') && $scope.employee.lastName !== ''){
+                $scope.currentTab.invalid = false;
+
+        }else{
+                $scope.currentTab.invalid = true;
+        }
+
+        if($scope.employee.hasOwnProperty('home_address') && $scope.employee.home_address !== ''){
+                $scope.currentTab.invalid = false;
+
+        }else{
+                $scope.currentTab.invalid = true;
+        }
+
         $scope.$emit("employeeForm_changed");
     };
 
     //this function is not requried.
     $scope.$on("rootMsg_zTreeNodeNameUpdated", function(event, msg){
 
-    });
-
-    $scope.$on("EmployeePageFormToBeFilled", function(event, obj){
-
-        $scope.formTitle = 'EMPLOYEE UPDATE FORM';
-        $scope.button = 'Update';     
-        $scope.displayDeleteButton = true;
-
-        /*employeeService.employeeById($scope, $location, obj).then(
-            function(data){
-                console.log(data);
-                $scope.formData.name = data.name;
-                $scope.formData.address = data.address;
-                $scope.formData.beginTime = data.begin_time;                            
-            },
-            function(errResponse){
-                console.error("Error while fetching the indicated employee");
-            }  
-
-        );*/
-    });
+    });               
 
     //--------------------------------------------------------------------------
     $scope.employeeFormDelete = function(){
@@ -287,7 +392,19 @@ angular.module("app").controller("EmployeeFormController", ["$scope","employeeSe
     };
 
     $scope.employeeFormCancel = function(){
-        alert("cancel button");
+        //send the following message to root controller
+        if($scope.employee.hasOwnProperty('id')){
+            console.log('$scope has the property of id');
+            if($scope.employee.id >= 0){
+                console.log('$scope has the property of id which is bigger than 1');
+                console.log($scope.employee_original_data);
+                $scope.$emit('employeeForm_edit_cancel', $scope.employee_original_data);
+            }
+        }else{
+            console.log('$scope does not have the property of id');
+            $scope.$emit('employeeForm_creation_cancel');
+        }
+        //$scope.$emit("employeeForm_cancel");
     };
 
 }]);

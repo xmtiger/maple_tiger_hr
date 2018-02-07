@@ -78,7 +78,7 @@ angular.module("app").factory("employeeService", ["$http", "$q", function($http,
         return deferred.promise;
     }
     
-    function createOrUpateEmployee($scope, $location, department, nodeInfo){
+    function createOrUpateEmployee($scope, $location, employee, nodeInfo){
         
         var curNodeId = nodeInfo.id;
         var curNodeType = nodeInfo.type;       
@@ -101,7 +101,7 @@ angular.module("app").factory("employeeService", ["$http", "$q", function($http,
         
         console.log(request);
                 
-        $http.post(request, department).then(
+        $http.post(request, employee).then(
             function(response){
                 //deferred.resolve function will send the data the upper level function whith .then(...)
                 deferred.resolve(response.data);
