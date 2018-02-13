@@ -6,7 +6,7 @@
 
 "use strict";
 
-angular.module("app_department").controller("departmentNavMenuController", ["$scope", "departmentService", "$location", function($scope, departmentService, $location){
+angular.module("app").controller("departmentNavMenuController", ["$scope", "departmentService", "$location", function($scope, departmentService, $location){
         
     //var self = this;
     //self.departmentsFromServer = {};

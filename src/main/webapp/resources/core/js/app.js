@@ -6,8 +6,8 @@
 'use strict';
 
 var app_utils = angular.module("app_utils", []);
-var app_department = angular.module("app_department", ["app_utils"]);
-var app = angular.module("app",["ngRoute","ngSanitize","app_department", "ui.bootstrap", "ui.grid"]);
+//var app_department = angular.module("app_department", ["app_utils"]);
+var app = angular.module("app",["ngRoute","ngSanitize","app_utils", "ui.bootstrap", "ui.grid"]);
 
 //For time being, the route setting is not required.
 /*app.config(['$routeProvider', function($routeProvider){
